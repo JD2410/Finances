@@ -62,8 +62,12 @@ def index(request):
             })
 
         investments = Investments.objects.all().values()
+
         for investment in investments:
             record = InvestmentRecords.objects.filter(investment = investment['id']).values().order_by('-date').first()
+
+            total += Decimal(record['value'])
+
             if record != None:
                 account_totals.append({
                     'name': investment['name'],
