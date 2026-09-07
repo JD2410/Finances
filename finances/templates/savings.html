@@ -106,12 +106,12 @@
             <input type="submit" name="addAccount">
         </form>
     </div>
-    <div class="modal" id="updateSavingAccount">
+    <div class="modal" id="updateAccount">
         <form action="" method="post" class="form">
-            <div class="form-header">Savings Accounts</div>
+            <div class="form-header">Update Savings Accounts</div>
             {% csrf_token %}
             {{ savings }}
-            <input type="hidden" name="id">
+            <input type="hidden" name="accountId" id="accountId">
             <input type="submit" name="updateAccount">
         </form>
     </div>

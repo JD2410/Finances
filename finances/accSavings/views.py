@@ -26,19 +26,7 @@ def index(request):
             form = TransactionForm(request.POST)
             if form.is_valid():
                 form.save()
-        elif 'addAccount' in request.POST:
-            accountForm = SavingsAccountForm(request.POST)
-            if accountForm.is_valid():
-                accountForm.save()
-        elif 'deleteAccount' in request.POST:
-            try:
-                getDeleteRecord = Accounts.objects.get(id=request.POST['accountId'])
-                getDeleteRecord.delete()
-                messages.success(request, "Account deleted successfully.")
-            except Accounts.DoesNotExist:
-                messages.warning(request, "Account was not found or was already deleted.")
         elif 'deleteTransaction' in request.POST:
-            print('transaction')
             try:
                 getDeleteRecord = Transactions.objects.get(id=request.POST['deleteTransaction'])
                 getDeleteRecord.delete()
@@ -59,6 +47,26 @@ def index(request):
                 messages.warning(request, "Transaction was not found")
             except Accounts.DoesNotExist:
                 messages.warning(request, "Account was not found")
+        elif 'addAccount' in request.POST:
+            accountForm = SavingsAccountForm(request.POST)
+            if accountForm.is_valid():
+                accountForm.save()
+        elif 'deleteAccount' in request.POST:
+            try:
+                getDeleteRecord = Accounts.objects.get(id=request.POST['accountId'])
+                getDeleteRecord.delete()
+                messages.success(request, "Account deleted successfully.")
+            except Accounts.DoesNotExist:
+                messages.warning(request, "Account was not found or was already deleted.")
+        elif 'updateAccount' in request.POST:
+            try:
+                getRecord = Accounts.objects.get(id=request.POST['accountId'])
+                getRecord.name = request.POST['name']
+                getRecord.save()
+                messages.success(request, "Account updated")
+            except Accounts.DoesNotExist:
+                messages.warning(request, "Account was not found")
+        
         else:
             csvForm = CsvUploader(request.POST, request.FILES)
             csvContents = []

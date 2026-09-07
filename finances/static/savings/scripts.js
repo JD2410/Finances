@@ -8,12 +8,11 @@ let savingScript = {
         init() {
             $editButtons = document.querySelectorAll('.account-edit')
             $editButtons.forEach(button => {
-                button.addEventListener('click', function(ele) {
+                button.addEventListener('click', ele => {
                     ele.preventDefault()
                     let id = button.dataset.value
-                    let value = savingScript.editAccount.getElements(id)
-                    console.log(value)
-
+                    let value = this.getElements(id)
+                    this.updateForm(value)
                 })
             })
         },
@@ -26,16 +25,19 @@ let savingScript = {
             return obj
         },
         updateForm(value) {
-
+            let $form = document.getElementById('updateAccount')
+            $form.querySelector('input[name=accountId]').value = value.id
+            $form.querySelector('input[name=name]').value = value.name
+            $form.classList.add('show')
         }
     },
     'editRecord': {
         init() {
             $updateButtons = document.querySelectorAll('.update-transaction')
-            $updateButtons.forEach(function(element) {
-                element.addEventListener('click', function() {
-                    let values = savingScript.edit.getElements(element.dataset.value)
-                    savingScript.edit.updateForm(values)
+            $updateButtons.forEach(element => {
+                element.addEventListener('click', () => {
+                    let values = this.getElements(element.dataset.value)
+                    this.updateForm(values)
                 })
             })
         },
