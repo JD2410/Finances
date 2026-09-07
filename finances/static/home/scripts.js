@@ -23,8 +23,8 @@ let homeSc = {
                 return finaDateFormat
             } 
             return `${finaDateFormat.year}-${finaDateFormat.month}-${finaDateFormat.day}`
-
-        }
+        },
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     'transactions': {
         init() {
@@ -212,7 +212,12 @@ let homeSc = {
                             valueToAdd = runningTotal[index]
                         } else {
                             if (i == numberOfDates) {
-                                valueToAdd = runningTotal[index]
+                                valueToAdd = valueToAdd = {
+                                    y: runningTotal[index],
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }
                             }
                         }
                     } else {
@@ -222,7 +227,12 @@ let homeSc = {
                             valueToAdd = runningTotal[index]
                         } else {
                             if (i == numberOfDates) {
-                                valueToAdd = runningTotal[index]
+                                valueToAdd = {
+                                    y: runningTotal[index],
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }
                             }
                         }
                     }
@@ -239,11 +249,12 @@ let homeSc = {
                 tooltip: {
                     formatter: function () {
                         let amount = parseFloat(this.y).toFixed(2)
+                        const date = new Date(this.x)
                         if (amount >= 1000) {
                             let where = amount.indexOf('.') - 3
                             amount = amount.slice(0, where) + "," + amount.slice(where)
                         }
-                        return `${this.series.name}<br><strong>£${amount}</strong>`;
+                        return `${this.series.name}<br><strong>£${amount}</strong><br>${date.getDate()} ${homeSc.utils.months[date.getMonth()]} ${date.getFullYear()}`;
                     }
                 },
                 title: {
