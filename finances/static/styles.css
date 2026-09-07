@@ -1,0 +1,111 @@
+
+/* .container {
+    display: flex;
+    width: 100%;
+
+    form {
+        flex-basis: 300px;
+    }
+    .transaction {
+        flex-basis: calc(100% - 300px);
+
+        table {
+            text-align: left;
+            width: 100%;
+            td {
+                padding: 4px;
+            }
+            th:nth-child(4), td:nth-child(4) {
+                text-align: right;
+            }
+        }
+    }
+} */
+
+.container {
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin: auto;
+}
+.grouped {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+
+    & > div {
+        width: 50%;
+    }
+}
+.widget-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#recentTransactions {
+    width: 100%;
+    display: none;
+
+    &.show {
+        display: block;
+    }
+
+    table {
+        width: 100%;
+
+        td,th {
+            text-align: left;
+        }
+
+        td.account, th.account {
+            text-align: right;
+        }
+    }
+}
+#recentInvestments {
+    display: none;
+    width: 100%;
+
+    &.show {
+        display: block;
+    }
+
+    table {
+        width: 100%;
+
+        td,th {
+            text-align: left;
+        }
+        td.account, th.account {
+            text-align: right;
+        }
+    }
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > div {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+}
+.investment-records {
+
+    table {
+        width: 100%;
+
+        th, td {
+            text-align: left;
+        }
+
+        th.right-align, td.right-align {
+            text-align: right;
+        }
+    }
+}

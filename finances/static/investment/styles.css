@@ -1,0 +1,16 @@
+.account-cards {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    & > .card {
+        border: 1px solid rgba(128, 128, 128, 0.11);
+        padding: 6px 8px;
+        border-radius: 4px;
+
+        .id {
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+    }
+}

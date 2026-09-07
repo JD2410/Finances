@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
+    <script src="{% static 'script.js' %}?{% now "U" %}"></script>
+    
+    <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
+    <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
+
+    <link rel="stylesheet" href="{% static 'savings/styles.css' %}?{% now "U" %}">
+    <script src="{% static 'savings/scripts.js' %}?{% now "U" %}"></script>
+
+</head>
+<body>
+    {% include "_partials/header.html" %}
+    {% include "_partials/errors.html" %}
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>Savings</h1><button class='open-modal' data-modal="savingAccount">Create Savings Account</button></div>
+            <div>
+                <button class='open-modal' data-modal="savingAccountsRecord">Add Transaction</button>
+                <button class='open-modal' data-modal="uploadCSV">Bulk Transaction Upload</button>
+            </div>
+        </div>
+        {% if accounts %}
+                <div class="account-cards">
+                    {% for acc in accounts %}
+                        <form action="" method="post" class="card" id="account_{{ acc.id }}">
+                            {% csrf_token %}
+                            <div class="name" data-value="{{ acc.name }}">{{ acc.name }} (ID: {{ acc.id }})</div>
+                            <div class="id">Starting Value: </div>
+                            {% if acc.firstDate != None %}
+                                <div class="id">£{{ acc.first }} ({{ acc.firstDate|date:"jS M Y" }})</div>
+                            {% else %}
+                                <div class="id">Not Set</div>
+                            {% endif %}
+                            <input type="hidden" name="accountId" value="{{acc.id}}">
+                            <input type="submit" name="deleteAccount" value="Delete">
+                            <button class="account-edit" data-value="{{ acc.id }}">Edit</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if transactions %}
+                <div class="transactions">
+                    <table>
+                        <thead>
+                            <th>Account</th>
+                            <th>Transaction Date</th>
+                            <th>Action Name</th>
+                            <th>Created</th>
+                            <th class="right-align">Amount</th>
+                            <th class="right-align">Action</th>
+                        </thead>
+                        <tbody>
+                        {% for action in transactions %}
+                            <tr id="record_{{ action.id }}">
+                                <td class="accountId" data-value="{{ action.accountId.id }}">{{ action.accountId.name }}</td>
+                                <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
+                                <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
+                                <td>{{ action.created_at|date:"jS M Y" }}</td>
+                                <td class="right-align amount" data-value="{{ action.amount }}">£{{ action.amount }}</td>
+                                <td class="right-align">
+                                    <button class="delete-transaction" data-value="{{ action.id }}">Delete</button>
+                                    <button class="update-transaction" data-value="{{ action.id }}">Edit</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="transactions">
+                    <p>There are no transactions in the database</p>
+                </div>
+            {% endif %}
+    </div>
+    <div class="modal" id="recordUpdate" >
+        <form action="" method="post">
+            <div class="form-header">Update Transaction</div>
+                {% csrf_token %}
+                {{ form }}
+                <input type="hidden" name="id" id="id">
+            <input type="submit" name="updateTransaction">
+        </form>
+    </div>
+    <div class="modal" id="savingAccountsRecord">
+        <form action="" method="post" class="form">
+            <div class="form-header">Add Transaction</div>
+            {% csrf_token %}
+            {{ form }}
+            <input type="hidden" name="addTransaction">
+            <input type="submit">
+        </form>
+    </div>
+    <div class="modal" id="savingAccount">
+        <form action="" method="post" class="form">
+            <div class="form-header">Savings Accounts</div>
+            {% csrf_token %}
+            {{ savings }}
+            <input type="submit" name="addAccount">
+        </form>
+    </div>
+    <div class="modal" id="updateSavingAccount">
+        <form action="" method="post" class="form">
+            <div class="form-header">Savings Accounts</div>
+            {% csrf_token %}
+            {{ savings }}
+            <input type="hidden" name="id">
+            <input type="submit" name="updateAccount">
+        </form>
+    </div>
+    <div class="modal" id="uploadCSV">
+        <form action="" method="post" class="form" enctype="multipart/form-data">
+            <div class="form-header">CSV</div>
+            {% csrf_token %}
+            {{ csv }}
+            <input type="submit">
+        </form>
+    </div>
+    <form action="" method="post" id="deleteForm" >
+        {% csrf_token %}
+    <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
+    </form>
+</body>
+</html>

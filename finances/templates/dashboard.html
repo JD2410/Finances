@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
+    <script src="{% static 'highcharts.js' %}"></script>
+    {{ savings|json_script:"savings" }}
+    {{ account_total|json_script:"accounts" }}
+    {{ total|json_script:"total" }}
+
+    <script src="{% static 'home/scripts.js' %}?{% now "U" %}"></script>
+    <style>
+        #noTransaction, .hideTable {
+            display: none;
+        }
+        #noTransaction.showMessage {
+            display: block;
+        }
+    </style>
+</head>
+<body class="home">
+    {% include "_partials/header.html" %}
+    <div class="container">
+        <div>
+            <div class="widget-header"></div>
+            <h2>Account Progress</h2>
+            <div id="accountProgress" class="highcharts-light"></div>
+
+        </div>
+        <div class="grouped transaction">
+            <div class="transactions_block">
+                <div class="widget-header">
+                    <h2>Transactions</h2><div><button id="transactionState">Investment</button></div>
+                </div>
+                <div id="recentTransactions" class="show">
+                    {% if recent_transactions %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tansaction Description</th>
+                                    <th >Account</th>
+                                    <th>Date</th>
+                                    <th class="account">Amount</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                            {% for transaction in recent_transactions %}
+                            <tr>
+                                <td>{{ transaction.name }}</td>
+                                <td>{{ transaction.account_name }} </td>
+                                <td>{{ transaction.date|date:"jS M Y" }} </td>
+                                <td class="account">£{{ transaction.amount|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <div id="noTransaction">
+                            <p>No transaction on date selected</p>
+                        </div>
+                    {% else %}
+                        <p>No transaction on date selected</p>
+                    {% endif %}
+                </div>
+                <div id="recentInvestments">
+                    {% if recent_investments %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tansaction Description</th>
+                                    <th >Account</th>
+                                    <th>Date</th>
+                                    <th class="account">Value</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                            {% for transaction in recent_investments %}
+                            <tr>
+                                <td>{{ transaction.name }}</td>
+                                <td>{{ transaction.account_name }} </td>
+                                <td>{{ transaction.date|date:"jS M Y" }} </td>
+                                <td class="account">£{{ transaction.amount|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        <div id="noTransaction">
+                            <p>No transaction on date selected</p>
+                        </div>
+                    {% else %}
+                        <p>No transaction on date selected</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="piechart">
+                <div class="widget-header">
+                    <h2>Accounts</h2>
+                </div>
+                <div id="piechart"  class="highcharts-light"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
