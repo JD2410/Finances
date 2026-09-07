@@ -34,9 +34,10 @@
                         {% for investment in investments %}
                             <form class="investment-container card" action="" method="POST">
                                 {% csrf_token %}
-                                {{ investment.name }} 
+                                <div>{{ investment.name }} (ID: {{ investment.id }})</div>
+                                
                                 <input type="submit" name="deleteInvestment" value="delete"><br>
-                                <div class="id">ID: {{ investment.id }}</div>
+                                <div class="id"></div>
                                 <input type="hidden" name="investmentId" value="{{ investment.id }}">
                             </form>
                         {% endfor %}
