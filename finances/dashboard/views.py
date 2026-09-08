@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from accSavings.models import Transactions, Accounts
-from accInvestments.models import InvestmentRecords, Investments
 from django.db.models import Sum
 import datetime
 from decimal import Decimal

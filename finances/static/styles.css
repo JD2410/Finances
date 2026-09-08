@@ -45,12 +45,6 @@
 }
 
 #recentTransactions {
-    width: 100%;
-    display: none;
-
-    &.show {
-        display: block;
-    }
 
     table {
         width: 100%;
@@ -59,25 +53,6 @@
             text-align: left;
         }
 
-        td.account, th.account {
-            text-align: right;
-        }
-    }
-}
-#recentInvestments {
-    display: none;
-    width: 100%;
-
-    &.show {
-        display: block;
-    }
-
-    table {
-        width: 100%;
-
-        td,th {
-            text-align: left;
-        }
         td.account, th.account {
             text-align: right;
         }

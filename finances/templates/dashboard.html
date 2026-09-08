@@ -11,14 +11,6 @@
     {{ total|json_script:"total" }}
 
     <script src="{% static 'home/scripts.js' %}?{% now "U" %}"></script>
-    <style>
-        #noTransaction, .hideTable {
-            display: none;
-        }
-        #noTransaction.showMessage {
-            display: block;
-        }
-    </style>
 </head>
 <body class="home">
     {% include "_partials/header.html" %}
@@ -32,9 +24,9 @@
         <div class="grouped transaction">
             <div class="transactions_block">
                 <div class="widget-header">
-                    <h2>Transactions</h2><div><button id="transactionState">Investment</button></div>
+                    <h2>Transactions</h2>
                 </div>
-                <div id="recentTransactions" class="show">
+                <div id="recentTransactions">
                     {% if recent_transactions %}
                         <table>
                             <thead>
@@ -56,38 +48,6 @@
                             {% endfor %}
                         </tbody>
                         </table>
-                        <div id="noTransaction">
-                            <p>No transaction on date selected</p>
-                        </div>
-                    {% else %}
-                        <p>No transaction on date selected</p>
-                    {% endif %}
-                </div>
-                <div id="recentInvestments">
-                    {% if recent_investments %}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Tansaction Description</th>
-                                    <th >Account</th>
-                                    <th>Date</th>
-                                    <th class="account">Value</th>
-                                </tr>
-                            </thead>
-                        <tbody>
-                            {% for transaction in recent_investments %}
-                            <tr>
-                                <td>{{ transaction.name }}</td>
-                                <td>{{ transaction.account_name }} </td>
-                                <td>{{ transaction.date|date:"jS M Y" }} </td>
-                                <td class="account">£{{ transaction.amount|floatformat:2 }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        </table>
-                        <div id="noTransaction">
-                            <p>No transaction on date selected</p>
-                        </div>
                     {% else %}
                         <p>No transaction on date selected</p>
                     {% endif %}
