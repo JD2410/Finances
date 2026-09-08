@@ -6,45 +6,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-        <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
     <script src="{% static 'script.js' %}?{% now "U" %}"></script>
 
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
+
+    <link rel="stylesheet" href="{% static 'settings/accountType/styles.css' %}?{% now "U" %}">
+    <script src="{% static 'settings/accountType/scripts.js' %}?{% now "U" %}"></script>
 </head>
 <body>
     {% include "_partials/header.html" %}
     {% include "_partials/errors.html" %}
 
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>Account Types</h1>
+                <button class='open-modal' data-modal="createType">Create Type</button>
+            </div>
+        </div>
+        <div class="account_types">
+            {% if types %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type Name</th>
+                            <th>Accumulate</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for type in types %}
+                        <tr id="record_{{ type.id }}">
+                            <td class="name" data-value="{{ type.name }}">{{ type.name }}</td>
+                            <td class="accumulate" data-value="{{ type.accumulate }}">{{ type.accumulate }}</td>
+                            <td>{{ type.created_at|date:"jS M Y" }}</td>
+                            <td>
+                                <button class="delete-type" data-value="{{ type.id }}">Delete</button>
+                                <button class="update-type" data-value="{{ type.id }}">Edit</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No Types availalbe</p>
+            {% endif %}
+        </div>
+    </div>
+
     {% if createFrom %}
+    <div class="modal" id="createType">
         <form action="" method="post">
+            <div class="form-header">Add Account Type</div>
             {% csrf_token %}
             {{ createFrom }}
             <input type="submit" name="createType">
         </form>
-    {% endif %}
-
-    {% if types %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Type Name</th>
-                    <th>Accumulate</th>
-                    <th>Created Date</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for type in types %}
-                <tr>
-                    <td>{{ type.name }}</td>
-                    <td>{{ type.accumulate }}</td>
-                    <td>{{ type.created_at }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No Types availalbe</p>
+    </div>
+    <div class="modal" id="updateType">
+        <form action="" method="post">
+            <div class="form-header">Update Account Type</div>
+            {% csrf_token %}
+            {{ createFrom }}
+            <input type="hidden" name="typeId">
+            <input type="submit" name="updateType">
+        </form>
+    </div>
+    <form action="" method="post" id="deleteType">
+        {% csrf_token %}
+        <input type="hidden" name="deleteId">
+    </form>
     {% endif %}
 </body>
 </html>

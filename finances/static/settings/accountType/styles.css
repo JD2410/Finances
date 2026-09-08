@@ -1,0 +1,14 @@
+.account_types {
+    width: 100%;
+
+    table {
+        width: 100%;
+        td, th {
+            text-align: left;
+        }
+        td:last-child, th:last-child {
+            text-align: right;
+        }
+    }
+   
+}
