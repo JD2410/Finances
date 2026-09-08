@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
     <script src="{% static 'highcharts.js' %}"></script>
     {{ savings|json_script:"savings" }}
-    {{ account_total|json_script:"accounts" }}
     {{ total|json_script:"total" }}
 
     <script src="{% static 'home/scripts.js' %}?{% now "U" %}"></script>

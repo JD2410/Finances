@@ -27,19 +27,6 @@ let homeSc = {
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     'transactions': {
-        init() {
-            document.getElementById('transactionState').addEventListener('click', function() {
-
-                document.getElementById('recentTransactions').classList.toggle('show')
-                document.getElementById('recentInvestments').classList.toggle('show')
-
-                if (this.innerText == 'Investment') {
-                    this.innerText = 'Savings'
-                } else {
-                    this.innerText = 'Investment'
-                }
-            })
-        },
         getToken(cname) {
             let name = cname + "=";
             let decodedCookie = decodeURIComponent(document.cookie);
@@ -104,7 +91,7 @@ let homeSc = {
     },
     'accountTotals': {
         init() {
-            const $accounts = JSON.parse(document.getElementById('accounts').textContent)
+            const $accounts = JSON.parse(document.getElementById('savings').textContent)
             const $total = parseFloat(JSON.parse(document.getElementById('total').textContent))
             let piePieces = []
 
@@ -183,10 +170,6 @@ let homeSc = {
             })
             transactionDates = Array.from(transactionDates).sort((d1,d2) => new Date(d1) - new Date(d2))
 
-            // This got the date spac on the transactions
-            //const numberOfDates = homeSc.utils.totalDates(transactionDates[0], transactionDates[transactionDates.length - 1])
-            //startDate = new Date(transactionDates[0])
-
             const numberOfDates = 80
             let startDate = new Date()
             startDate.setDate(startDate.getDate() - numberOfDates)
@@ -204,7 +187,7 @@ let homeSc = {
                         series_data[index].pointStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
                     }
 
-                    if (account.type == 'saving') {
+                    if (account.type_details.accumulate) {
 
                         if (typeof account.daily_totals[dateFormatted] != 'undefined') {
                             value = parseFloat(account.daily_totals[dateFormatted])
@@ -289,6 +272,5 @@ let homeSc = {
 
 window.addEventListener("load", e => {
     homeSc.accountProgress.init()
-    homeSc.transactions.init()
     homeSc.accountTotals.init()
 })
