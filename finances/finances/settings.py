@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'dashboard',
     'accSavings',
     'accInvestments',
+    'accountType',
 ]
 
 MIDDLEWARE = [

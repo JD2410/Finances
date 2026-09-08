@@ -3,7 +3,7 @@ import csv
 import io
 import json
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.contrib import messages
@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 
 from .models import Transactions, Accounts
+from accountType.models import Type
 from .forms import TransactionForm, SavingsAccountForm, CsvUploader, SavingsRecordFormSet
 
 
@@ -60,12 +61,16 @@ def index(request):
                 messages.warning(request, "Account was not found or was already deleted.")
         elif 'updateAccount' in request.POST:
             try:
+                getAccountType = Type.objects.get(id=request.POST['accountType'])
                 getRecord = Accounts.objects.get(id=request.POST['accountId'])
                 getRecord.name = request.POST['name']
+                getRecord.accountType = getAccountType
                 getRecord.save()
                 messages.success(request, "Account updated")
             except Accounts.DoesNotExist:
                 messages.warning(request, "Account was not found")
+            except Type.DoesNotExist:
+                messages.warning(request, "Account type was not found")
         
         else:
             csvForm = CsvUploader(request.POST, request.FILES)

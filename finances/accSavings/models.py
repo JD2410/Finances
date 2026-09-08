@@ -1,10 +1,11 @@
 from django.db import models
 from datetime import date
-
+from accountType.models import Type
 # Create your models here.
 
 class Accounts(models.Model):
     name = models.CharField(max_length=255, default="Savings Account")
+    accountType = models.ForeignKey(Type, on_delete=models.PROTECT, related_name='AccountType')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
