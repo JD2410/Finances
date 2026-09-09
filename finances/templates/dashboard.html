@@ -16,57 +16,55 @@
 </head>
 <body class="home">
     <div class="page-container">
-    {% include "_partials/header.html" %}
-    <div class="main-area">
-        <div class="container">
-        <div>
-            <h2>Account Progress</h2>
-            <div id="accountProgress" class="highcharts-light"></div>
-        </div>
-        <div class="grouped transaction">
-            <div class="transactions_block">
-                <div class="widget-header">
-                    <h2>Transactions</h2>
+        {% include "_partials/header.html" %}
+        <div class="main-area">
+            <div class="container widget-area">
+                <div class="widget full">
+                    <div class="header">
+                        <h2>Account Progress</h2>
+                    </div>
+                    <div id="accountProgress" class="highcharts-light"></div>
                 </div>
-                <div id="recentTransactions">
-                    {% if recent_transactions %}
-                        <table>
-                            <thead>
+                <div class="widget">
+                    <div class="header">
+                        <h2>Transactions</h2>
+                    </div>
+                    <div id="recentTransactions">
+                        {% if recent_transactions %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tansaction Description</th>
+                                        <th>Account</th>
+                                        <th>Date</th>
+                                        <th class="account">Amount</th>
+                                    </tr>
+                                </thead>
+                            <tbody>
+                                {% for transaction in recent_transactions %}
                                 <tr>
-                                    <th>Tansaction Description</th>
-                                    <th>Account</th>
-                                    <th>Date</th>
-                                    <th class="account">Amount</th>
+                                    <td>{{ transaction.name }}</td>
+                                    <td>{{ transaction.accountId.name }} </td>
+                                    <td>{{ transaction.date|date:"jS M Y" }} </td>
+                                    <td class="account">£{{ transaction.amount|floatformat:2 }}</td>
                                 </tr>
-                            </thead>
-                        <tbody>
-                            {% for transaction in recent_transactions %}
-                            <tr>
-                                <td>{{ transaction.name }}</td>
-                                <td>{{ transaction.accountId.name }} </td>
-                                <td>{{ transaction.date|date:"jS M Y" }} </td>
-                                <td class="account">£{{ transaction.amount|floatformat:2 }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        </table>
-                    {% else %}
-                        <p>No transaction on date selected</p>
-                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        {% else %}
+                            <p>No transaction on date selected</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="widget">
+                    <div class="header">
+                        <h2>Accounts</h2>
+                    </div>
+                    <div id="piechart"  class="highcharts-light"></div>
                 </div>
             </div>
-            <div class="piechart">
-                <div class="widget-header">
-                    <h2>Accounts</h2>
-                </div>
-                <div id="piechart"  class="highcharts-light"></div>
-            </div>
-        </div>
+        </div> 
     </div>
-    </div> 
-    </div>
-    
-
     {% include "_partials/errors.html" %}
 </body>
 </html>
