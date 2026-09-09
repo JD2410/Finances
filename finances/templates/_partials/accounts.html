@@ -1,0 +1,9 @@
+{% if records %}
+<ul>
+    {% for record in records %}
+        <li>{{ record.name }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No accounts have been setup</p>
+{% endif %}

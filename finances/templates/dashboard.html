@@ -13,7 +13,6 @@
     <script src="{% static 'home/scripts.js' %}?{% now "U" %}"></script>
 </head>
 <body class="home">
-    {% include "_partials/errors.html" %}
     {% include "_partials/header.html" %}
     <div class="container">
         <div>
@@ -62,5 +61,7 @@
             </div>
         </div>
     </div>
+    {% include "_partials/errors.html" %}
+
 </body>
 </html>

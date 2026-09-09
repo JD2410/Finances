@@ -1,3 +1,7 @@
+{% load nav_accounts %}
+
 <a href="{% url 'home' %}">Home</a>
 <a href="{% url 'savings' %}">Accounts</a>
 <a href="{% url 'accountType' %}">Account Types</a>
+
+{% render_accounts %}
