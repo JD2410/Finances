@@ -71,7 +71,6 @@ def index(request):
                 messages.warning(request, "Account was not found")
             except Type.DoesNotExist:
                 messages.warning(request, "Account type was not found")
-        
         else:
             csvForm = CsvUploader(request.POST, request.FILES)
             csvContents = []
@@ -117,6 +116,7 @@ def index(request):
         accounts.append({
             'id': account.id,
             'name': account.name,
+            'accountType': account.accountType,
             'first': first,
             'firstDate': date
         })

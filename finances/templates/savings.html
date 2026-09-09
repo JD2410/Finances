@@ -39,7 +39,7 @@
                             {% else %}
                                 <div class="id">Not Set</div>
                             {% endif %}
-                            <input type="hidden" name="accountId" value="{{acc.id}}">
+                            <input type="hidden" name="accountType" value="{{acc.accountType.id}}">
                             <input type="submit" name="deleteAccount" value="Delete">
                             <button class="account-edit" data-value="{{ acc.id }}">Edit</button>
                         </form>

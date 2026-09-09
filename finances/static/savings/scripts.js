@@ -20,14 +20,17 @@ let savingScript = {
             const $form = document.getElementById('account_' + accountId);
             const obj = {
                 'id': accountId,
-                'name': $form.querySelector('.name').dataset.value
+                'name': $form.querySelector('.name').dataset.value,
+                'accountType': $form.querySelector('input[name=accountType]').value
             }
+            console.log(obj)
             return obj
         },
         updateForm(value) {
             let $form = document.getElementById('updateAccount')
             $form.querySelector('input[name=accountId]').value = value.id
             $form.querySelector('input[name=name]').value = value.name
+            $form.querySelector('select[name=accountType]').value = value.accountType
             $form.classList.add('show')
         }
     },
