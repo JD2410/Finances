@@ -14,62 +14,70 @@
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
 </head>
 <body>
-    {% include "_partials/header.html" %}
-    {% if results %}
-        <div class="container">
-            <div class="page-header">
-                <h1>Uploader</h1>
-                <div>
-                    <button class='open-modal' data-modal="uploadCSV">Upload CSV</button>
-                    <button id="confirmCSV">Confirm and Send</button>
+    <div class="page-container">
+        {% include '_partials/header.html' %}
+        <div class="main-area">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Uploader</h1>
+                    <div>
+                        <button class='open-modal' data-modal="uploadCSV">Upload CSV</button>
+                        <button id="confirmCSV">Confirm and Send</button>
+                    </div>
                 </div>
+                {% if results %}       
+                <div class="preview-container">
+                    <table>
+                        <thead>
+                            {% for head in results.0 %}
+                                <th class="header-label">
+                                    <select name="" id="" class="column-selection">
+                                        <option value="">Select option</option>
+                                        <option value="name"
+                                            {% if head.label|upper == 'NAME' %}
+                                                selected
+                                            {% endif %}
+                                        >Name</option>
+                                        <option value="amount"
+                                            {% if head.label|upper == 'AMOUNT' %}
+                                                selected
+                                            {% endif %}
+                                        >Amount</option>
+                                        <option value="date"
+                                            {% if head.label|upper == 'DATE' %}
+                                                selected
+                                            {% endif %}
+                                        >Date</option>
+                                        <option value="accountId"
+                                            {% if head.label|upper == 'ACCOUNTID' %}
+                                                selected
+                                            {% endif %}
+                                        >AccountID</option>
+                                    </select>
+                                    {{ head.label }}
+                                </th>
+                            {% endfor %}
+                        </thead>
+                        <tbody>
+                        {% for row in results %}
+                            <tr class="row">
+                            {% for elem in row %}
+                                <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">{{ elem.value }}</td>
+                            {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="error-container" id="errorInfo"></div>
+                </div>
+                {% else %}
+                <p>Please upload a CSV to process</p>
+                {% endif %}
             </div>
-            <div class="preview-container">
-                <table>
-                    <thead>
-                        {% for head in results.0 %}
-                            <th class="header-label">
-                                <select name="" id="" class="column-selection">
-                                    <option value="">Select option</option>
-                                    <option value="name"
-                                        {% if head.label|upper == 'NAME' %}
-                                            selected
-                                        {% endif %}
-                                    >Name</option>
-                                    <option value="amount"
-                                        {% if head.label|upper == 'AMOUNT' %}
-                                            selected
-                                        {% endif %}
-                                    >Amount</option>
-                                    <option value="date"
-                                        {% if head.label|upper == 'DATE' %}
-                                            selected
-                                        {% endif %}
-                                    >Date</option>
-                                    <option value="accountId"
-                                        {% if head.label|upper == 'ACCOUNTID' %}
-                                            selected
-                                        {% endif %}
-                                    >AccountID</option>
-                                </select>
-                                {{ head.label }}
-                            </th>
-                        {% endfor %}
-                    </thead>
-                    <tbody>
-                    {% for row in results %}
-                        <tr class="row">
-                        {% for elem in row %}
-                            <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">{{ elem.value }}</td>
-                        {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+            
         </div>
-        <div class="error-container" id="errorInfo"></div>
-        </div>
-    {% endif %}
+    </div>
+    
     <div class="modal" id="uploadCSV">
         <form action="" method="post" class="form" enctype="multipart/form-data">
             {% csrf_token %}
@@ -77,5 +85,7 @@
             <input type="submit">
         </form>
     </div>
+    {% include "_partials/header.html" %}
+
 </body>
 </html>

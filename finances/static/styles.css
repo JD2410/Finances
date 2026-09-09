@@ -1,27 +1,23 @@
-
-/* .container {
+* {
+    margin: 0;
+    padding: 0;
+}
+.page-container {
     display: flex;
-    width: 100%;
-
-    form {
-        flex-basis: 300px;
+    align-items: stretch;
+    height: 100vh;
+    flex-wrap: nowrap;
+    flex: 1 1;
+    .side-bar {
+        flex: 250px;
+        flex-shrink: 0;
+        background-color: grey;
     }
-    .transaction {
-        flex-basis: calc(100% - 300px);
-
-        table {
-            text-align: left;
-            width: 100%;
-            td {
-                padding: 4px;
-            }
-            th:nth-child(4), td:nth-child(4) {
-                text-align: right;
-            }
-        }
+    .main-area {
+        width: 100%;
+        overflow-y: auto;
     }
-} */
-
+}
 .container {
     max-width: 1200px;
     display: flex;
@@ -29,36 +25,6 @@
     align-self: center;
     margin: auto;
 }
-.grouped {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-
-    & > div {
-        width: 50%;
-    }
-}
-.widget-header {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-#recentTransactions {
-
-    table {
-        width: 100%;
-
-        td,th {
-            text-align: left;
-        }
-
-        td.account, th.account {
-            text-align: right;
-        }
-    }
-}
-
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -68,19 +34,5 @@
         display: flex;
         align-items: center;
         gap: 12px;
-    }
-}
-.investment-records {
-
-    table {
-        width: 100%;
-
-        th, td {
-            text-align: left;
-        }
-
-        th.right-align, td.right-align {
-            text-align: right;
-        }
     }
 }

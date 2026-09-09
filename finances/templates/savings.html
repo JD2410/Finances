@@ -16,18 +16,19 @@
 
 </head>
 <body>
-    {% include "_partials/header.html" %}
-    {% include "_partials/errors.html" %}
-    <div class="container">
-        <div class="page-header">
-            <div>
-                <h1>Savings</h1><button class='open-modal' data-modal="savingAccount">Create Savings Account</button></div>
-            <div>
-                <button class='open-modal' data-modal="savingAccountsRecord">Add Transaction</button>
-                <button class='open-modal' data-modal="uploadCSV">Bulk Transaction Upload</button>
-            </div>
-        </div>
-        {% if accounts %}
+    <div class="page-container">
+        {% include "_partials/header.html" %}
+        <div class="main-area">
+            <div class="container">
+                <div class="page-header">
+                    <div>
+                        <h1>Savings</h1><button class='open-modal' data-modal="savingAccount">Create Savings Account</button></div>
+                    <div>
+                        <button class='open-modal' data-modal="savingAccountsRecord">Add Transaction</button>
+                        <button class='open-modal' data-modal="uploadCSV">Bulk Transaction Upload</button>
+                    </div>
+                </div>
+                {% if accounts %}
                 <div class="account-cards">
                     {% for acc in accounts %}
                         <form action="" method="post" class="card" id="account_{{ acc.id }}">
@@ -45,8 +46,8 @@
                         </form>
                     {% endfor %}
                 </div>
-            {% endif %}
-            {% if transactions %}
+                {% endif %}
+                {% if transactions %}
                 <div class="transactions">
                     <table>
                         <thead>
@@ -74,12 +75,17 @@
                         </tbody>
                     </table>
                 </div>
-            {% else %}
+                {% else %}
                 <div class="transactions">
                     <p>There are no transactions in the database</p>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
+        </div>
     </div>
+
+    {% include "_partials/errors.html" %}
+
     <div class="modal" id="recordUpdate" >
         <form action="" method="post">
             <div class="form-header">Update Transaction</div>

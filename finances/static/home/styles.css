@@ -1,0 +1,29 @@
+#recentTransactions {
+
+    table {
+        width: 100%;
+
+        td,th {
+            text-align: left;
+        }
+
+        td.account, th.account {
+            text-align: right;
+        }
+    }
+}
+
+.grouped {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+
+    & > div {
+        width: 50%;
+    }
+}
+.widget-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}

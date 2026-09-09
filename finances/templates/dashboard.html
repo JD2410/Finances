@@ -11,15 +11,17 @@
     {{ total|json_script:"total" }}
 
     <script src="{% static 'home/scripts.js' %}?{% now "U" %}"></script>
+    <link rel="stylesheet" href="{% static 'home/styles.css' %}?{% now "U" %}">
+
 </head>
 <body class="home">
+    <div class="page-container">
     {% include "_partials/header.html" %}
-    <div class="container">
+    <div class="main-area">
+        <div class="container">
         <div>
-            <div class="widget-header"></div>
             <h2>Account Progress</h2>
             <div id="accountProgress" class="highcharts-light"></div>
-
         </div>
         <div class="grouped transaction">
             <div class="transactions_block">
@@ -61,7 +63,10 @@
             </div>
         </div>
     </div>
-    {% include "_partials/errors.html" %}
+    </div> 
+    </div>
+    
 
+    {% include "_partials/errors.html" %}
 </body>
 </html>
