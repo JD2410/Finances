@@ -18,18 +18,20 @@
     <div class="page-container">
         {% include "_partials/header.html" %}
         <div class="main-area">
+            
             <div class="container widget-area">
+                <h1>Dashbaord</h1>
                 <div class="widget full">
                     <div class="header">
                         <h2>Account Progress</h2>
                     </div>
-                    <div id="accountProgress" class="highcharts-light"></div>
+                    <div id="accountProgress" class="highcharts-light body"></div>
                 </div>
                 <div class="widget">
                     <div class="header">
                         <h2>Transactions</h2>
                     </div>
-                    <div id="recentTransactions">
+                    <div class="body">
                         {% if recent_transactions %}
                             <table>
                                 <thead>
@@ -37,7 +39,7 @@
                                         <th>Tansaction Description</th>
                                         <th>Account</th>
                                         <th>Date</th>
-                                        <th class="account">Amount</th>
+                                        <th class="right">Amount</th>
                                     </tr>
                                 </thead>
                             <tbody>
@@ -46,7 +48,7 @@
                                     <td>{{ transaction.name }}</td>
                                     <td>{{ transaction.accountId.name }} </td>
                                     <td>{{ transaction.date|date:"jS M Y" }} </td>
-                                    <td class="account">£{{ transaction.amount|floatformat:2 }}</td>
+                                    <td class="right">£{{ transaction.amount|floatformat:2 }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -60,7 +62,7 @@
                     <div class="header">
                         <h2>Accounts</h2>
                     </div>
-                    <div id="piechart"  class="highcharts-light"></div>
+                    <div id="piechart"  class="highcharts-light body"></div>
                 </div>
             </div>
         </div> 

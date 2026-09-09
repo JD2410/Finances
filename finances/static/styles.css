@@ -4,6 +4,7 @@
 }
 body {
     background-color: rgb(247, 247, 247);
+    font-size: 16px;
 }
 .page-container {
     display: flex;
@@ -51,6 +52,7 @@ body {
 }
 .container {
     max-width: 1200px;
+    
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -76,9 +78,44 @@ body {
 
     .widget {
         background-color: #fff;
+        border-radius: 4px;
+
+        .header {
+            padding: 12px 20px 6px 20px;
+            h2 {
+                font-size: 1.2em;
+            }
+        }
+        .body {
+            padding: 6px 20px 12px 20px;
+
+            table {
+                width: 100%;
+                td, th {
+                    text-align: left;
+                    padding: 3px 6px;
+
+                    &:first-child {
+                        padding-left: 0;
+                    }
+                    &:last-child {
+                        padding-right: 0;
+                    }
+                    &.right {
+                        text-align: right;
+                    }
+                }
+            }
+        }
     
         &.full {
             grid-column: 1 / span 2;
         }
     }
+}
+.page {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    height: 100%;
 }
