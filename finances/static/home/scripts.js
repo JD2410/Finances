@@ -105,6 +105,21 @@ let homeSc = {
             this.loadChart(piePieces)
         },
         loadChart(data) {
+            Highcharts.setOptions({
+                colors: [
+                    '#32CD32', // Lime Green (Vivid Accent)
+                    '#990099', // Bright Purple
+                    '#7C997C', // Sage Green (Muted Neutral)
+                    '#B500B5', // Rich Orchid
+                    '#D100D1', // Light Magenta-Purple
+                    '#260026', // Deep Midnight Purple
+                    '#005E38',  // Emerald Green (Rich Jewel Tone)
+                    '#007C00', // Inverted True Green (Direct RGB Complement)
+                    '#420042', // Dark Plum / Eggplant
+                    '#5E005E', // Deep Purple
+                    '#7C007C', // Classic Purple - rgb(124, 0, 124)
+                ]
+            })
             Highcharts.chart('piechart', {
                 chart: {
                     type: 'pie'
@@ -227,7 +242,21 @@ let homeSc = {
 
                 })
             }
-
+            Highcharts.setOptions({
+                colors: [
+                    '#32CD32', // Lime Green (Vivid Accent)
+                    '#990099', // Bright Purple
+                    '#7C997C', // Sage Green (Muted Neutral)
+                    '#B500B5', // Rich Orchid
+                    '#D100D1', // Light Magenta-Purple
+                    '#260026', // Deep Midnight Purple
+                    '#005E38',  // Emerald Green (Rich Jewel Tone)
+                    '#007C00', // Inverted True Green (Direct RGB Complement)
+                    '#420042', // Dark Plum / Eggplant
+                    '#5E005E', // Deep Purple
+                    '#7C007C', // Classic Purple - rgb(124, 0, 124)
+                ]
+            })
             Highcharts.chart('accountProgress', {
                 tooltip: {
                     formatter: function () {
