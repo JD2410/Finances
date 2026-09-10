@@ -1,7 +1,11 @@
+{% load humanize %}
 {% if records %}
 <ul>
     {% for record in records %}
-        <li>{{ record.name }}</li>
+        <li>
+            {{ record.name }}
+            £{{ record.total|floatformat:2|intcomma }}
+        </li>
     {% endfor %}
 </ul>
 {% else %}

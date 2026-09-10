@@ -1,13 +1,12 @@
 {% load nav_accounts %}
 <div class="side-bar">
-    <p>Logo</p>
     <nav>
+        <p>Logo</p>
         <a href="{% url 'home' %}"><i class="fa-solid fa-house"></i>Dashboard</a>
         <a href="{% url 'savings' %}"><i class="fa-solid fa-vault"></i>Accounts</a>
         <a href="{% url 'accountType' %}"><i class="fa-solid fa-gear"></i>Settings</a>
     </nav>
     <div class="accounts">
-        <h2>Accounts</h2>
         {% render_accounts %}
     </div>
 </div>

@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +39,7 @@
                             <div class="name" data-value="{{ acc.name }}">{{ acc.name }} (ID: {{ acc.id }})</div>
                             <div class="id">Starting Value: </div>
                             {% if acc.firstDate != None %}
-                                <div class="id">£{{ acc.first }} ({{ acc.firstDate|date:"jS M Y" }})</div>
+                                <div class="id">£{{ acc.first|floatformat:2|intcomma  }} ({{ acc.firstDate|date:"jS M Y" }})</div>
                             {% else %}
                                 <div class="id">Not Set</div>
                             {% endif %}
@@ -67,7 +68,7 @@
                                 <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
                                 <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
                                 <td>{{ action.created_at|date:"jS M Y" }}</td>
-                                <td class="right-align amount" data-value="{{ action.amount }}">£{{ action.amount }}</td>
+                                <td class="right-align amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
                                 <td class="right-align">
                                     <button class="delete-transaction" data-value="{{ action.id }}">Delete</button>
                                     <button class="update-transaction" data-value="{{ action.id }}">Edit</button>
