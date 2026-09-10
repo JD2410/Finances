@@ -1,29 +1,3 @@
-.account-cards {
-    display: flex;
-    gap: 8px;
-
-    & > .card {
-        border: 1px solid rgba(128, 128, 128, 0.11);
-        padding: 6px 8px;
-        border-radius: 4px;
-        margin-bottom: 20px;
-
-        .id {
-            font-size: 0.8em;
-            opacity: 0.6;
-        }
-    }
-}
-
-.transactions {
-    table {
-        width: 100%;
-
-        td, th {
-            text-align: left;
-        }
-        td.right-align, th.right-align {
-            text-align: right;
-        }
-    }
+.page-section {
+    height: 100%;
 }

@@ -257,57 +257,30 @@ body {
     }
     .page-cards {
         display: flex;
-        flex-direction: row;
-        gap: 20px;
+        flex-direction: column;
+        gap: 12px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
+        padding: 12px;
 
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
-            overflow: hidden;
+        h2 {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            padding-bottom: 8px;
+            font-size: 1.2em;
+        }
 
-            .lead {
-                font-size: 1.4em;
-                font-weight: 600;
-            }
-            .sub {
-                font-size: 0.9em;
-            }
+        .cards-inline {
+            display: flex;
+            gap: 20px;
 
-            &.savings {
-                display: flex;
-                flex-direction: row;
-                gap: 0;
-
-                .info {
-                    padding: 12px;
+            form {
+                .lead {
                     display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                }
-
-                .actions {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0;
-                    line-height: 0;
-
-                    button {
-                        height: 50%;
-                        width: 30px;
-                        border: 0px;
-                        color: #fff;
-
-                        img {
-                            width: 100%;
-                        }
-                        &.account-edit {
-                            background-color: color(srgb 0.0415 0.83 0.2539);
-                        }
-                        &.account-delete {
-                            background-color: color(srgb 0.83 0.0415 0.2621);
-                        }
-                    }
+                    gap: 10px;
+                    justify-content: space-between;
+                    font-size: 1.2em;
+                    font-weight: 600;
                 }
             }
         }

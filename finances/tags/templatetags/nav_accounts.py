@@ -20,7 +20,7 @@ def render_accounts():
                 total = get_transactions_total[0]['total']
         else:
             get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
-            if len(get_transactions_total):
+            if get_transactions_total != None:
                 total = get_transactions_total['amount']
         
         accountDetails.append({

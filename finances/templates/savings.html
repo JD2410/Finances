@@ -31,35 +31,50 @@
                 </div>
             </div>
             <div class="page-cards">
-                {% if accounts %}
-                    {% for acc in accounts %}
-                        <form action="" method="post" class="card savings" id="account_{{ acc.id }}">
-                            {% csrf_token %}
-                            <div class="info">
-                                <div class="name lead" data-value="{{ acc.name }}">{{ acc.name }} (ID: {{ acc.id }})</div>
-                                <div class="sub" title="Starting Amount">
-                                    SD:
+                <h2>Account</h2>
+                <div class="cards-inline">
+                    {% if accounts %}
+                        {% for acc in accounts %}
+                            <form action="" method="post" class="card savings" id="account_{{ acc.id }}">
+                                {% csrf_token %}
+                                <div class="info">
+                                    <div class="name lead" data-value="{{ acc.name }}">
+                                        {{ acc.name }}
+                                        <div class="actions">
+                                            <button class="account-edit" data-value="{{ acc.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                            <button class="account-delete" type="submit" name="deleteAccount" value="Delete"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="accid">ID: {{ acc.id }}</div>
+                                    <div class="sub" title="Start Date">
+                                        SD:
+                                        {% if acc.firstDate != None %}
+                                            ({{ acc.firstDate|date:"jS M Y" }})
+                                        {% else %}
+                                            Not Set
+                                        {% endif %}
+                                    </div>
                                     {% if acc.firstDate != None %}
-                                        ({{ acc.firstDate|date:"jS M Y" }})
-                                    {% else %}
-                                        Not Set
+                                    <div class="sub" title="Start Amount">
+                                        SA: £{{ acc.first|floatformat:2|intcomma }}
+                                    </div>
                                     {% endif %}
-                                </div>
-                            </div>
-                            <div class="actions">
-                                <button class="account-delete" type="submit" name="deleteAccount" value="Delete"><i class="fa-solid fa-trash"></i></button>
-                                <button class="account-edit" data-value="{{ acc.id }}"><i class="fa-solid fa-pencil"></i></button>
-                            </div>
-                            <input type="hidden" name="accountId" value="{{acc.id}}">
-                            <input type="hidden" name="accountType" value="{{acc.accountType.id}}">
 
-                        </form>
-                    {% endfor %}
-                {% endif %}
+                                </div>
+                                <div class="actions">
+                                    
+                                </div>
+                                <input type="hidden" name="accountId" value="{{acc.id}}">
+                                <input type="hidden" name="accountType" value="{{acc.accountType.id}}">
+                            </form>
+                        {% endfor %}
+                    {% else %}
+                        <p>Need to create an account or two</p>
+                    {% endif %}
+                </div>
             </div>
             <div class="page-section">
                 {% if transactions %}
-                <div class="transactions">
                     <table>
                         <thead>
                             <th>Account</th>
@@ -85,11 +100,8 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                </div>
                 {% else %}
-                <div class="transactions">
                     <p>There are no transactions in the database</p>
-                </div>
                 {% endif %}
             </div>
         </div>
