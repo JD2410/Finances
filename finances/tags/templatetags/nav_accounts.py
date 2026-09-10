@@ -9,6 +9,7 @@ register = template.Library()
 def render_accounts():
     accounts = Accounts.objects.all()
     accountDetails = []
+    finalTotal = 0.00
     
     for account in accounts:
 
@@ -21,13 +22,15 @@ def render_accounts():
             get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
             if len(get_transactions_total):
                 total = get_transactions_total['amount']
-
+        
         accountDetails.append({
             'name': account.name,
             'total': total
         })
-
-        print(accountDetails)
+        finalTotal += float(total)
         
 
-    return {'records': accountDetails}
+    return {
+        'records': accountDetails,
+        'total': finalTotal
+        }
