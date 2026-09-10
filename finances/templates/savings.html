@@ -18,38 +18,46 @@
     <script src="{% static 'savings/scripts.js' %}?{% now "U" %}"></script>
 
 </head>
-<body>
+<body class="full-page">
     <div class="page-container">
         {% include "_partials/header.html" with page='savings' %}
         <div class="main-area">
-            <div class="container page">
-                <div class="page-header">
-                    <div>
-                        <h1>Savings</h1><button class='open-modal' data-modal="savingAccount">Create Savings Account</button></div>
-                    <div>
-                        <button class='open-modal' data-modal="savingAccountsRecord">Add Transaction</button>
-                        <button class='open-modal' data-modal="uploadCSV">Bulk Transaction Upload</button>
-                    </div>
+            <div class="page-header">
+                <h1>Savings</h1>
+                <div>
+                    <button class='open-modal button primary' data-modal="savingAccount">Create Savings Account</button>
+                    <button class='open-modal button' data-modal="savingAccountsRecord">Add Transaction</button>
+                    <button class='open-modal button' data-modal="uploadCSV">Bulk Transaction Upload</button>
                 </div>
+            </div>
+            <div class="page-cards">
                 {% if accounts %}
-                <div class="account-cards">
                     {% for acc in accounts %}
-                        <form action="" method="post" class="card" id="account_{{ acc.id }}">
+                        <form action="" method="post" class="card savings" id="account_{{ acc.id }}">
                             {% csrf_token %}
-                            <div class="name" data-value="{{ acc.name }}">{{ acc.name }} (ID: {{ acc.id }})</div>
-                            <div class="id">Starting Value: </div>
-                            {% if acc.firstDate != None %}
-                                <div class="id">£{{ acc.first|floatformat:2|intcomma  }} ({{ acc.firstDate|date:"jS M Y" }})</div>
-                            {% else %}
-                                <div class="id">Not Set</div>
-                            {% endif %}
+                            <div class="info">
+                                <div class="name lead" data-value="{{ acc.name }}">{{ acc.name }} (ID: {{ acc.id }})</div>
+                                <div class="sub" title="Starting Amount">
+                                    SD:
+                                    {% if acc.firstDate != None %}
+                                        ({{ acc.firstDate|date:"jS M Y" }})
+                                    {% else %}
+                                        Not Set
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="account-delete" type="submit" name="deleteAccount" value="Delete"><i class="fa-solid fa-trash"></i></button>
+                                <button class="account-edit" data-value="{{ acc.id }}"><i class="fa-solid fa-pencil"></i></button>
+                            </div>
+                            <input type="hidden" name="accountId" value="{{acc.id}}">
                             <input type="hidden" name="accountType" value="{{acc.accountType.id}}">
-                            <input type="submit" name="deleteAccount" value="Delete">
-                            <button class="account-edit" data-value="{{ acc.id }}">Edit</button>
+
                         </form>
                     {% endfor %}
-                </div>
                 {% endif %}
+            </div>
+            <div class="page-section">
                 {% if transactions %}
                 <div class="transactions">
                     <table>

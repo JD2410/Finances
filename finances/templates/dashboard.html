@@ -20,9 +20,8 @@
     <div class="page-container">
         {% include "_partials/header.html" with page='home' %}
         <div class="main-area">
-            
             <div class="container widget-area">
-                <h1>Dashbaord</h1>
+                <h1>Dashboard</h1>
                 <div class="widget full">
                     <div class="header">
                         <h2>Account Progress</h2>
@@ -32,6 +31,7 @@
                 <div class="widget">
                     <div class="header">
                         <h2>Transactions</h2>
+                        <a href="{% url 'savings' %}" class="button primary">All Transactions</a>
                     </div>
                     <div class="body">
                         {% if recent_transactions %}
