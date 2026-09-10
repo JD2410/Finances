@@ -2,19 +2,21 @@
 {% load static %}
 <div class="side-bar">
     <nav>
-        <div class="logo">
+        <a href="{% url 'home' %}" class="logo">
             <img src="{% static 'images/bunny-shape.svg' %}" > <span>RUNNING FINANCE</span>
+        </a>
+        <div class="sections">
+            <a href="{% url 'home' %}" 
+            {% if page == 'home' %} class="selected" {% endif %}><i class="fa-solid fa-house"></i>Dashboard</a>
+            <a href="{% url 'savings' %}"
+            {% if page == 'savings' or page == 'bulk' %} class="selected" {% endif %}
+            ><i class="fa-solid fa-vault"></i>Accounts</a>
+            <a href="{% url 'accountType' %}"
+            {% if page == 'settings' %} class="selected" {% endif %}
+            ><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
-        <a href="{% url 'home' %}" 
-        {% if page == 'home' %} class="selected" {% endif %}><i class="fa-solid fa-house"></i>Dashboard</a>
-        <a href="{% url 'savings' %}"
-        {% if page == 'savings' or page == 'bulk' %} class="selected" {% endif %}
-        ><i class="fa-solid fa-vault"></i>Accounts</a>
-        <a href="{% url 'accountType' %}"
-        {% if page == 'settings' %} class="selected" {% endif %}
-        ><i class="fa-solid fa-gear"></i>Settings</a>
+        
         <img src="{% static 'images/bunny.svg' %}" class="texture">
-
     </nav>
     <div class="accounts">
         {% render_accounts %}
