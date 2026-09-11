@@ -12,6 +12,77 @@ body {
     font-style: normal;
     color: #505053;
 }
+
+table.standard {
+    width: 100%;
+    border-spacing: 0;
+
+    td, th {
+        text-align: left;
+        padding: 6px 0;
+        height: 25px;
+
+        &.right {
+            text-align: right;
+        }
+    }
+    td:first-child, th:first-child {
+        padding-left: 8px;
+    }
+    td:last-child, th:last-child {
+        padding-right: 8px;
+    }
+    thead th {
+        font-weight: 400;
+        background-color: purple;
+        color: #fff
+    }
+    tbody tr:nth-child(odd) {
+        background-color: rgba(247, 247, 247, 1);
+    }
+    .button {
+        display: inline-block;
+        padding: 4px 4px;
+        width: 30px;
+        height: 25px;
+        background-color: transparent;
+        
+        svg {
+            width: 110%;
+        }
+        &.update-transaction svg {
+            color: green;
+            opacity: 0.5;
+        }
+        &.delete-transaction svg {
+            color: red;
+            opacity: 0.5;
+        }
+
+        &:hover svg {
+            opacity: 1;
+        }
+    }
+}
+
+.button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: block;
+    border: 0;
+    font-size: 1em;
+    background-color: lightgray;
+    color: #3b3b3d;
+    cursor: pointer;
+    
+    text-decoration: none;
+
+    &.primary {
+        background-color: purple;
+        color: #fff;
+    }
+}
+
 .page-container {
     display: flex;
     align-items: stretch;
@@ -160,22 +231,7 @@ body {
     align-self: center;
     margin: auto;
 }
-.button {
-    padding: 8px 12px;
-    border-radius: 4px;
-    display: block;
-    border: 0;
-    font-size: 1em;
-    background-color: lightgray;
-    color: #3b3b3d;
-    
-    text-decoration: none;
 
-    &.primary {
-        background-color: purple;
-        color: #fff;
-    }
-}
 .widget-area {
     display: grid;
     grid-template-columns: 49% 49%;
@@ -200,36 +256,6 @@ body {
         }
         .body {
             padding: 0px 16px 12px 16px;
-
-            table {
-                width: 100%;
-                border-spacing: 0;
-
-                td, th {
-                    text-align: left;
-                    padding: 10px 0;
-
-                    &.right {
-                        text-align: right;
-                    }
-                }
-                td:first-child, th:first-child {
-                    padding-left: 8px;
-                }
-                td:last-child, th:last-child {
-                    padding-right: 8px;
-                }
-                thead th {
-                    text-transform: uppercase;
-                    font-weight: 500;
-                    background-color: purple;
-                    color: #fff
-                }
-                tbody tr:nth-child(odd) {
-                    background-color: rgba(247, 247, 247, 1);
-                }
-                
-            }
         }
     
         &.full {
@@ -239,7 +265,6 @@ body {
 }
 
 .full-page {
-
     .main-area {
         gap: 20px;
         display: flex;
@@ -267,18 +292,51 @@ body {
         h2 {
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
             padding-bottom: 8px;
-            font-size: 1.2em;
         }
 
         .cards-inline {
             display: flex;
             gap: 20px;
 
+            .actions {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+
+                .button {
+                    position: relative;
+                    padding: 0;
+                    min-width: 15px;
+                    min-height: 15px;
+                    background-color: transparent;
+
+                    svg {
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        left: 0;
+                        top: 0
+                    }
+                    &.account-edit svg {
+                        color: green;
+                        opacity: 0.5;
+                    }
+                    &.account-delete svg {
+                        color: red;
+                        opacity: 0.5;
+                    }
+
+                    &:hover svg {
+                        opacity: 1;
+                    }
+                }
+            }
+
             form {
                 .lead {
                     display: flex;
-                    gap: 10px;
                     justify-content: space-between;
+                    align-items: center;
                     font-size: 1.2em;
                     font-weight: 600;
                 }
@@ -286,8 +344,24 @@ body {
         }
     }
     .page-section {
+        padding: 12px;
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
+        height: 100%;
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 33px;
+            padding-bottom: 12px;
+
+            div {
+                display: flex;
+                gap: 8px;
+            }
+        }
+        
     }
 }

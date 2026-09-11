@@ -24,11 +24,7 @@
         <div class="main-area">
             <div class="page-header">
                 <h1>Savings</h1>
-                <div>
-                    <button class='open-modal button primary' data-modal="savingAccount">Create Savings Account</button>
-                    <button class='open-modal button' data-modal="savingAccountsRecord">Add Transaction</button>
-                    <button class='open-modal button' data-modal="uploadCSV">Bulk Transaction Upload</button>
-                </div>
+                <button class='open-modal button primary' data-modal="savingAccount">Create Savings Account</button>
             </div>
             <div class="page-cards">
                 <h2>Account</h2>
@@ -41,15 +37,15 @@
                                     <div class="name lead" data-value="{{ acc.name }}">
                                         {{ acc.name }}
                                         <div class="actions">
-                                            <button class="account-edit" data-value="{{ acc.id }}"><i class="fa-solid fa-pencil"></i></button>
-                                            <button class="account-delete" type="submit" name="deleteAccount" value="Delete"><i class="fa-solid fa-trash"></i></button>
+                                            <button class="button account-edit" data-value="{{ acc.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                            <button class="button account-delete" type="submit" name="deleteAccount" value="Delete"><i class="fa-solid fa-trash"></i></button>
                                         </div>
                                     </div>
                                     <div class="accid">ID: {{ acc.id }}</div>
                                     <div class="sub" title="Start Date">
                                         SD:
                                         {% if acc.firstDate != None %}
-                                            ({{ acc.firstDate|date:"jS M Y" }})
+                                            {{ acc.firstDate|date:"jS M Y" }}
                                         {% else %}
                                             Not Set
                                         {% endif %}
@@ -74,15 +70,17 @@
                 </div>
             </div>
             <div class="page-section">
+                <div class="header"><h2>All Records</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
+                    <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
                 {% if transactions %}
-                    <table>
+                    <table class="standard">
                         <thead>
                             <th>Account</th>
                             <th>Transaction Date</th>
                             <th>Action Name</th>
                             <th>Created</th>
-                            <th class="right-align">Amount</th>
-                            <th class="right-align">Action</th>
+                            <th class="right">Amount</th>
+                            <th class="right">Action</th>
                         </thead>
                         <tbody>
                         {% for action in transactions %}
@@ -90,11 +88,11 @@
                                 <td class="accountId" data-value="{{ action.accountId.id }}">{{ action.accountId.name }}</td>
                                 <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
                                 <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
-                                <td>{{ action.created_at|date:"jS M Y" }}</td>
-                                <td class="right-align amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
-                                <td class="right-align">
-                                    <button class="delete-transaction" data-value="{{ action.id }}">Delete</button>
-                                    <button class="update-transaction" data-value="{{ action.id }}">Edit</button>
+                                <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
+                                <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
+                                <td class="right">
+                                    <button class="button update-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="button delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                         {% endfor %}

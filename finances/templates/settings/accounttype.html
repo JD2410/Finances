@@ -16,46 +16,45 @@
     <link rel="stylesheet" href="{% static 'settings/accountType/styles.css' %}?{% now "U" %}">
     <script src="{% static 'settings/accountType/scripts.js' %}?{% now "U" %}"></script>
 </head>
-<body>
+<body class="full-page">
     <div class="page-container">
         {% include "_partials/header.html" with page='settings' %}
         <div class="main-area">
-            <div class="container page">
-                <div class="page-header">
-                    <div>
-                        <h1>Account Types</h1>
-                        <button class='open-modal' data-modal="createType">Create Type</button>
-                    </div>
+            <div class="page-header">
+                <h1>Account Types</h1>
+                <button class='open-modal button primary' data-modal="createType">Create Type</button>
+            </div>
+            <div class="page-section">
+                <div class="header">
+                    <h2>All Account Types</h2>
                 </div>
-                <div class="account_types">
-                    {% if types %}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Type Name</th>
-                                    <th>Accumulate</th>
-                                    <th>Created Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for type in types %}
-                                <tr id="record_{{ type.id }}">
-                                    <td class="name" data-value="{{ type.name }}">{{ type.name }}</td>
-                                    <td class="accumulate" data-value="{{ type.accumulate }}">{{ type.accumulate }}</td>
-                                    <td>{{ type.created_at|date:"jS M Y" }}</td>
-                                    <td>
-                                        <button class="delete-type" data-value="{{ type.id }}">Delete</button>
-                                        <button class="update-type" data-value="{{ type.id }}">Edit</button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>No Types availalbe</p>
-                    {% endif %}
-                </div>
+                {% if types %}
+                    <table class="standard">
+                        <thead>
+                            <tr>
+                                <th>Type Name</th>
+                                <th>Accumulate</th>
+                                <th>Created Date</th>
+                                <th class="right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for type in types %}
+                            <tr id="record_{{ type.id }}">
+                                <td class="name" data-value="{{ type.name }}">{{ type.name }}</td>
+                                <td class="accumulate" data-value="{{ type.accumulate }}">{{ type.accumulate }}</td>
+                                <td>{{ type.created_at|date:"jS M Y" }}</td>
+                                <td class="right">
+                                    <button class="delete-type" data-value="{{ type.id }}">Delete</button>
+                                    <button class="update-type" data-value="{{ type.id }}">Edit</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No Types availalbe</p>
+                {% endif %}
             </div>
         </div>
     </div>
