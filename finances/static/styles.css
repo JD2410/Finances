@@ -53,11 +53,11 @@ table.standard {
         svg {
             width: 110%;
         }
-        &.update-transaction svg {
+        &.edit svg {
             color: green;
             opacity: 0.5;
         }
-        &.delete-transaction svg {
+        &.delete svg {
             color: red;
             opacity: 0.5;
         }

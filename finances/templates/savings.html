@@ -91,8 +91,8 @@
                                 <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
                                 <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
                                 <td class="right">
-                                    <button class="button update-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-pencil"></i></button>
-                                    <button class="button delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
+                                    <button class="button edit update-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                         {% endfor %}

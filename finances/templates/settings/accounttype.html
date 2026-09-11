@@ -45,8 +45,8 @@
                                 <td class="accumulate" data-value="{{ type.accumulate }}">{{ type.accumulate }}</td>
                                 <td>{{ type.created_at|date:"jS M Y" }}</td>
                                 <td class="right">
-                                    <button class="delete-type" data-value="{{ type.id }}">Delete</button>
-                                    <button class="update-type" data-value="{{ type.id }}">Edit</button>
+                                    <button class="button delete delete-type" data-value="{{ type.id }}"><i class="fa-solid fa-trash"></i></button>
+                                    <button class="button edit update-type" data-value="{{ type.id }}"><i class="fa-solid fa-pencil"></i></button>
                                 </td>
                             </tr>
                         {% endfor %}

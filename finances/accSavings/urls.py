@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='savings'),
-    path('import/', views.processRecords, name='processRecords'),
+    path('import/', views.processRecords, name='import'),
 ]
