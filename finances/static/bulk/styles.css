@@ -1,13 +1,17 @@
-.preview-container {
-
-    table {
-        width: 100%;
-
-        td, th {
-            text-align: left;
-        }
+.header-label {
+    .og-label {
+        font-size: 0.8em;
+        padding-bottom: 4px;
+        display: block;
+        opacity: 0.6;
     }
 }
+
+table thead {
+    position: sticky;
+  top: 0;
+}
+
 .error-entry {
     border-bottom: 1px solid #3d3d3b;
     padding: 12px 10px;

@@ -17,6 +17,9 @@ table.standard {
     width: 100%;
     border-spacing: 0;
 
+    tr {
+        table-layout: fixed;
+    }
     td, th {
         text-align: left;
         padding: 6px 0;
@@ -79,6 +82,10 @@ table.standard {
 
     &.primary {
         background-color: purple;
+        color: #fff;
+    }
+    &.positive {
+        background-color: rgb(14, 169, 3);
         color: #fff;
     }
 }
@@ -349,6 +356,13 @@ table.standard {
         border-radius: 8px;
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
         height: 100%;
+        position: relative;
+        
+
+        &.sticky-bottom {
+            padding-bottom: 117px;
+            overflow: hidden;
+        }
 
         .header {
             display: flex;
@@ -361,6 +375,22 @@ table.standard {
                 display: flex;
                 gap: 8px;
             }
+        }
+        .body {
+            height: 100%;
+            overflow-x: hidden;
+
+            
+        }
+        .stick-to-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #fff;
+            box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.07);
+            padding: 14px;
         }
         
     }
