@@ -88,6 +88,11 @@ table.standard {
         background-color: rgb(14, 169, 3);
         color: #fff;
     }
+    &.hollow {
+        border: 1px solid purple;
+        color: purple;
+        background-color: transparent;
+    }
 }
 
 .page-container {

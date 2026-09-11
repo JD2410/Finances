@@ -108,46 +108,86 @@
     {% include "_partials/errors.html" %}
 
     <div class="modal" id="recordUpdate" >
-        <form action="" method="post">
-            <div class="form-header">Update Transaction</div>
+        <form action="" method="post" class="modal-container">
+            <div class="header">
+                <h2>Update Transaction</h2>
+                <div class="close" data-close="recordUpdate"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
                 {% csrf_token %}
                 {{ form }}
                 <input type="hidden" name="id" id="id">
-            <input type="submit" name="updateTransaction">
+            </div>
+            <div class="footer">
+                <input class='button primary' type="submit" name="updateTransaction">
+                <button class="button hollow" data-close="recordUpdate">Cancel</button>
+            </div>
         </form>
     </div>
     <div class="modal" id="savingAccountsRecord">
-        <form action="" method="post" class="form">
-            <div class="form-header">Add Transaction</div>
-            {% csrf_token %}
-            {{ form }}
-            <input type="hidden" name="addTransaction">
-            <input type="submit">
+        <form action="" method="post" class="modal-container">
+            <div class="header">
+                <h2>Add Transaction</h2>
+                <div class="close" data-close="savingAccountsRecord"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ form }}
+                <input type="hidden" name="addTransaction">
+            </div>
+            <div class="footer">
+                <input class="button primary" type="submit">
+                <button class="button hollow" data-close="savingAccountsRecord">Cancel</button>
+            </div>
         </form>
     </div>
     <div class="modal" id="savingAccount">
-        <form action="" method="post" class="form">
-            <div class="form-header">Savings Accounts</div>
-            {% csrf_token %}
-            {{ savings }}
-            <input type="submit" name="addAccount">
+        <form action="" method="post" class="modal-container">
+            <div class="header">
+                <h2>Create Savings Accounts</h2>
+                <div class="close" data-close="savingAccount"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ savings }}
+            </div>
+            <div class="footer">
+                <input class="button primary" type="submit" name="addAccount">
+                <button class="button hollow" data-close="savingAccount">Cancel</button>
+            </div>
         </form>
     </div>
     <div class="modal" id="updateAccount">
-        <form action="" method="post" class="form">
-            <div class="form-header">Update Savings Accounts</div>
-            {% csrf_token %}
-            {{ savings }}
-            <input type="hidden" name="accountId" id="accountId">
-            <input type="submit" name="updateAccount">
+        <form action="" method="post" class="modal-container"">
+            <div class="header">
+                <h2>Update Savings Accounts</h2>
+                <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ savings }}
+                <input type="hidden" name="accountId" id="accountId">
+            </div>
+            <div class="footer">
+                <input class='button primary'type="submit" name="updateAccount">
+                <button class="button hollow" data-close="updateAccount">Cancel</button>
+            </div>
         </form>
     </div>
     <div class="modal" id="uploadCSV">
-        <form action="" method="post" class="form" enctype="multipart/form-data">
-            <div class="form-header">CSV</div>
-            {% csrf_token %}
-            {{ csv }}
-            <input type="submit">
+        <form action="" method="post" class="modal-container" enctype="multipart/form-data">
+            <div class="header">
+                <h2>CSV Upload</h2>
+                <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ csv }}
+            </div>
+            <div class="footer">
+                <input class="button primary" type="submit">
+                <button class="button hollow" data-close="uploadCSV">Cancel</button>
+            </div>
         </form>
     </div>
     <form action="" method="post" id="deleteForm" >

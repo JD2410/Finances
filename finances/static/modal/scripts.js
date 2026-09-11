@@ -10,6 +10,15 @@ window.addEventListener("load", e => {
     let $modals = document.querySelectorAll('.modal')
 
     $modals.forEach(modal => {
+        let $closeButtons = modal.querySelectorAll('[data-close]');
+        
+        $closeButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault()
+                modal.classList.remove('show')
+                modal.getElementsByTagName('form')[0].reset()
+            })
+        })
         modal.addEventListener('click', function() {
             this.classList.remove('show')
             modal.getElementsByTagName('form')[0].reset()

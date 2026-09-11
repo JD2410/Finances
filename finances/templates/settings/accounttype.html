@@ -61,20 +61,36 @@
     {% include "_partials/errors.html" %}
     {% if createFrom %}
     <div class="modal" id="createType">
-        <form action="" method="post">
-            <div class="form-header">Add Account Type</div>
-            {% csrf_token %}
-            {{ createFrom }}
-            <input type="submit" name="createType">
+        <form action="" method="post" class="modal-container">
+            <div class="header">
+                <h2>Add Account Type</h2>
+                <div class="close" data-close="createType"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ createFrom }}
+            </div>
+            <div class="footer">
+                <input type="submit" name="createType" class="button primary">
+                <button class="button hollow" data-close="updateType">Cancel</button>
+            </div>
         </form>
     </div>
     <div class="modal" id="updateType">
-        <form action="" method="post">
-            <div class="form-header">Update Account Type</div>
-            {% csrf_token %}
-            {{ createFrom }}
-            <input type="hidden" name="typeId">
-            <input type="submit" name="updateType">
+        <form action="" method="post" class="modal-container">
+            <div class="header">
+                <h2>Update Account Type</h2>
+                <div class="close" data-close="updateType"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ createFrom }}
+                <input type="hidden" name="typeId">
+            </div>
+            <div class="footer">
+                <input type="submit" name="updateType" class="button primary">
+                <button class="button hollow" data-close="updateType">Cancel</button>
+            </div>
         </form>
     </div>
     <form action="" method="post" id="deleteType">
