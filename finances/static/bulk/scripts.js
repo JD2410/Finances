@@ -15,6 +15,18 @@ let cu = {
                 this.columnSelectorsListner()
             }
             this.firstPass()
+            this.columnEditing.init()
+        },
+        'columnEditing': {
+            init() {
+                let $inputs = document.querySelectorAll('.edit')
+                $inputs.forEach(input => {
+                    input.addEventListener('blur', () => {
+                        input.parentNode.dataset.value = input.value
+                        input.parentNode.querySelector('.display-value').innerHTML = input.value
+                    })
+                })
+            }
         },
         firstPass() {
             let $cells = document.querySelectorAll('.cell')
@@ -51,13 +63,7 @@ let cu = {
         },
         dateChecker(checkDate) {
             const passedDate = Date.parse(checkDate)
-
             return isNaN(checkDate) && !isNaN(passedDate) ? true : false
-            // if(isNaN(checkDate) && !isNaN(passedDate)) {
-            //     return true
-            // } else {
-            //     return false
-            // }
         },
         columnSelectorsListner() {
             let $dropdowns = document.querySelectorAll('.column-selection')

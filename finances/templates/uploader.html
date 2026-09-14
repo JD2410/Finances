@@ -67,7 +67,9 @@
                                 <tr class="row">
                                     <td class="cell"><input type="checkbox" class="select-row" checked></td>
                                 {% for elem in row %}
-                                    <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">{{ elem.value }}</td>
+                                    <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">   <span class="display-value">{{ elem.value }}</span>
+                                        <input type="text" value="{{ elem.value }}" class="edit">
+                                    </td>
                                 {% endfor %}
                                 </tr>
                             {% endfor %}
