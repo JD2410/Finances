@@ -102,7 +102,6 @@ let homeSc = {
                 ]
                 piePieces.push(construct) 
             })
-            console.log(piePieces.length)
             if(piePieces.length) {
                 this.loadChart(piePieces)
             }
@@ -207,7 +206,6 @@ let homeSc = {
                         }
 
                         if (account.type_details.accumulate) {
-
                             if (typeof account.daily_totals[dateFormatted] != 'undefined') {
                                 value = parseFloat(account.daily_totals[dateFormatted])
                                 runningTotal[index] += value
@@ -238,6 +236,7 @@ let homeSc = {
                                 }
                             }
                         }
+                        
                         if (valueToAdd == null && i == 0) {
                             valueToAdd = runningTotal[index]
                         }

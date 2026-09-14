@@ -19,6 +19,7 @@
 
 </head>
 <body class="full-page">
+    {% include "_partials/errors.html" %}
     <div class="page-container">
         {% include "_partials/header.html" with page='savings' %}
         <div class="main-area">
@@ -116,7 +117,6 @@
         </div>
     </div>
 
-    {% include "_partials/errors.html" %}
 
     <div class="modal" id="recordUpdate" >
         <form action="" method="post" class="modal-container">

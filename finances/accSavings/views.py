@@ -27,6 +27,8 @@ def index(request):
             form = TransactionForm(request.POST)
             if form.is_valid():
                 form.save()
+                messages.success(request, "Transaction was successfully added")
+
         elif 'deleteTransaction' in request.POST:
             try:
                 getDeleteRecord = Transactions.objects.get(id=request.POST['deleteTransaction'])
