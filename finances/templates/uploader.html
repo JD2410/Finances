@@ -16,6 +16,7 @@
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
 </head>
 <body class="full-page">
+    <div id="messagesContainer"></div>
     <div class="page-container">
         {% include '_partials/header.html' with page="bulk" %}
         <div class="main-area">
@@ -31,6 +32,7 @@
                     {% if results %}
                         <table class="standard">
                             <thead>
+                                <th></th>
                                 {% for head in results.0 %}
                                     <th class="header-label">
                                         <i class="og-label">CSV Column: {{ head.label }}</i>
@@ -40,7 +42,7 @@
                                                 {% if head.label|upper == 'NAME' %}
                                                     selected
                                                 {% endif %}
-                                            >Name</option>
+                                            >Description</option>
                                             <option value="amount"
                                                 {% if head.label|upper == 'AMOUNT' %}
                                                     selected
@@ -63,6 +65,7 @@
                             <tbody>
                             {% for row in results %}
                                 <tr class="row">
+                                    <td class="cell"><input type="checkbox" class="select-row" checked></td>
                                 {% for elem in row %}
                                     <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">{{ elem.value }}</td>
                                 {% endfor %}
@@ -70,7 +73,6 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div class="error-container" id="errorInfo"></div>
                     {% else %}
                         <p>Please upload a CSV to process</p>
                     {% endif %}

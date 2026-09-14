@@ -93,7 +93,6 @@ def index(request):
                         row_construct.append(keyValue)
                     csvContents.append(row_construct)
 
-
             return render(
                 request, 'uploader.html', {  
                     'form': csvForm,

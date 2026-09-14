@@ -11,8 +11,9 @@ table thead {
     position: sticky;
   top: 0;
 }
-
-.error-entry {
-    border-bottom: 1px solid #3d3d3b;
-    padding: 12px 10px;
+.verfied {
+    background-color: green;
+}
+.error {
+    background-color: red;
 }
