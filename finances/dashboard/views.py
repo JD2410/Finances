@@ -50,8 +50,9 @@ def index(request):
                             daily_totals[day['date'].strftime("%Y-%m-%d")] = day['total']
                 else:
                     get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
-                    if len(get_transactions_total):
-                        transaction_total = get_transactions_total['amount']
+                    if get_transactions_total != None:
+                        if len(get_transactions_total):
+                            transaction_total = get_transactions_total['amount']
 
                     get_transactions_start_total = Transactions.objects.values('amount').filter(
                         date__lte=start_date,

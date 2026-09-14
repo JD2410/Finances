@@ -26,45 +26,83 @@
                     <div class="header">
                         <h2>Account Progress</h2>
                     </div>
+                    {% if savings %}
                     <div id="accountProgress" class="highcharts-light body"></div>
+                    {% else %}
+                    <div class="body centre">
+                        <div class="no-data">
+                            <div class="image">
+                                <i class="fa-solid fa-binoculars"></i>
+                            </div>
+                            <h4>Sorry, can't find any transactions</h4>
+                            <p>There are no transactions availble for you accounts. Click the button below to get started.</p>
+                            <a href="{% url 'savings' %}" class="button primary">Add Transactions</a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="widget">
                     <div class="header">
                         <h2>Transactions</h2>
-                        <a href="{% url 'savings' %}" class="button primary">All Transactions</a>
-                    </div>
-                    <div class="body">
                         {% if recent_transactions %}
-                            <table class="standard">
-                                <thead>
-                                    <tr>
-                                        <th>Tansaction Description</th>
-                                        <th>Account</th>
-                                        <th>Date</th>
-                                        <th class="right">Amount</th>
-                                    </tr>
-                                </thead>
-                            <tbody>
-                                {% for transaction in recent_transactions %}
-                                <tr>
-                                    <td>{{ transaction.name }}</td>
-                                    <td>{{ transaction.accountId.name }} </td>
-                                    <td>{{ transaction.date|date:"jS M Y" }} </td>
-                                    <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            </table>
-                        {% else %}
-                            <p>No transaction on date selected</p>
+                            <a href="{% url 'savings' %}" class="button primary">All Transactions</a>
                         {% endif %}
                     </div>
+                    {% if recent_transactions %}
+                        <div class="body">
+                        <table class="standard">
+                            <thead>
+                                <tr>
+                                    <th>Tansaction Description</th>
+                                    <th>Account</th>
+                                    <th>Date</th>
+                                    <th class="right">Amount</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                            {% for transaction in recent_transactions %}
+                            <tr>
+                                <td>{{ transaction.name }}</td>
+                                <td>{{ transaction.accountId.name }} </td>
+                                <td>{{ transaction.date|date:"jS M Y" }} </td>
+                                <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                        </div>
+                    {% else %}
+                    <div class="body centre">
+                        <div class="no-data">
+                            <div class="image">
+                                <i class="fa-solid fa-binoculars"></i>
+                            </div>
+                            <h4>Sorry, can't find any transactions</h4>
+                            <p>There are no transactions availble for you accounts. Click the button below to get started.</p>
+                            <a href="{% url 'savings' %}" class="button primary">Add Transactions</a>
+                        </div>
+                    </div>
+                    
+                    {% endif %}
                 </div>
                 <div class="widget">
                     <div class="header">
                         <h2>Accounts</h2>
                     </div>
+                    {% if total %}
                     <div id="piechart"  class="highcharts-light body"></div>
+                    {% else %}
+                    <div class="body centre">
+                        <div class="no-data">
+                            <div class="image">
+                                <i class="fa-solid fa-binoculars"></i>
+                            </div>
+                            <h4>Sorry, can't find any accounts or transactions</h4>
+                            <p>There are no accounts or transactions availalble. Click the button below to get started.</p>
+                            <a href="{% url 'savings' %}" class="button primary">Add Account/Transactions</a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div> 

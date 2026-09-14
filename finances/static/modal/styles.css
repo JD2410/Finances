@@ -58,6 +58,21 @@
                 margin-bottom: 6px;
             }
 
+            input[type=text], input[type=number], input[type=date] {
+                padding: 8px;
+                width: 100%;
+                box-sizing: border-box;
+                font-size: 1em;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                border-color: lightgray;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                border: 1px solid rgb(214, 214, 214);
+                min-height: 35px;
+            }
+
             select {
                 padding: 8px;
                 width: 100%;
