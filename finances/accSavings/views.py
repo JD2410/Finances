@@ -14,6 +14,8 @@ from .models import Transactions, Accounts
 from accountType.models import Type
 from .forms import TransactionForm, SavingsAccountForm, CsvUploader, SavingsRecordFormSet
 
+from django.core import serializers
+
 
 # Create your views here.
 def index(request):
@@ -75,6 +77,16 @@ def index(request):
                 messages.warning(request, "Account type was not found")
         else:
             csvForm = CsvUploader(request.POST, request.FILES)
+            accounts = Accounts.objects.all()
+            json_account = serializers.serialize('json', accounts)
+
+            accounts_format = []
+            for account in accounts:
+                accounts_format.append({
+                    'id': account.id,
+                    'name': account.name,
+                })
+
             csvContents = []
             if csvForm.is_valid():
                 csv_file = request.FILES['csv_file']
@@ -96,7 +108,8 @@ def index(request):
             return render(
                 request, 'uploader.html', {  
                     'form': csvForm,
-                    'results': csvContents
+                    'results': csvContents,
+                    'accounts': accounts_format
                 }
             )
 

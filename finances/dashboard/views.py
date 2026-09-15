@@ -5,7 +5,6 @@ from django.db.models import Sum
 import datetime
 
 from decimal import Decimal
-
 # Create your views here.
 def index(request):
 

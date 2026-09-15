@@ -57,10 +57,9 @@ table.standard {
         position: relative;
         cursor: pointer;
         padding: 5px;
-        min-width: 300px;
 
         &:first-child {
-            min-width: 30px;
+            width: 20px;
         }
 
         &.verified {

@@ -154,9 +154,16 @@ let cu = {
                     } else {
                         cell.classList.add('error')
                     }
-                } else if (cell.dataset.key == 'accountid') {
+                } else if (cell.dataset.key == 'accountid') {                    
                     if (this.numberChecker(cell.dataset.value)) {
-                        cell.classList.add('verified')
+                        let check = this.checkAccountIds(cell.dataset.value)
+                        if (check != null) {
+                            cell.classList.add('verified')
+                            cell.querySelector('.display-value').innerHTML = `${cell.dataset.value} (${check})`
+                        } else {
+                            cell.classList.add('error')
+                            cell.querySelector('.display-value').innerHTML = `${cell.dataset.value} (?)`
+                        }
                     } else {
                         cell.classList.add('error')
                     }
@@ -165,6 +172,17 @@ let cu = {
                 }
             }
             this.loadErrorAmount()
+        },
+        checkAccountIds(passedNumber) {
+            const $accounts = JSON.parse(document.getElementById('accounts').textContent)
+            let accountId = null
+            for (let i = 0; i < $accounts.length; i++) {
+                if(passedNumber == $accounts[i].id) {
+                    accountId = $accounts[i].name;
+                    break
+                }
+            }
+            return accountId
         },
         loadErrorAmount() {
             const $display = document.getElementById('errorsIndicator')

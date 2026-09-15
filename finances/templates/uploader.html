@@ -14,6 +14,8 @@
 
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
+
+    {{ accounts|json_script:"accounts" }}
 </head>
 <body class="full-page">
     <div id="messagesContainer"></div>
