@@ -11,9 +11,35 @@ table thead {
     position: sticky;
   top: 0;
 }
-.verfied {
+.verified {
     background-color: green;
 }
 .error {
     background-color: red;
+}
+.row.deselect {
+    opacity: 0.5;
+
+    .cell {
+        &.verified, &.error {
+            background-color: unset;
+        }
+    }
+}
+.cell {
+    input {
+        display: none;
+
+        &:first-child {
+            display: block;
+        }
+    }
+    &.show-editor {
+        input {
+            display: block;
+        }
+        .display-value {
+            display: none;
+        }
+    }
 }

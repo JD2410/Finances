@@ -1,61 +1,141 @@
 window.addEventListener("load", e => {
-    cu.preview.init()
+    cu.init()
 })
 
 let cu = {
-    'preview': {
-        init() {
-            let confirmButton = document.getElementById('confirmCSV')
-            if(confirmButton) {
-                document.getElementById('confirmCSV').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    alert('Sending Stopped')
-                    //cu.sendTransacrions();
-                })
-                this.columnSelectorsListner()
-            }
-            this.firstPass()
-            this.columnEditing.init()
-        },
-        'columnEditing': {
-            init() {
-                let $inputs = document.querySelectorAll('.edit')
-                $inputs.forEach(input => {
-                    input.addEventListener('blur', () => {
-                        input.parentNode.dataset.value = input.value
-                        input.parentNode.querySelector('.display-value').innerHTML = input.value
-                    })
-                })
-            }
-        },
-        firstPass() {
-            let $cells = document.querySelectorAll('.cell')
-            $cells.forEach(cell => {
-                if (cell.dataset.value == '') {
-                    cell.classList.add('error')
-                } else {
-                    if (cell.dataset.key == 'date') {
-                        if (this.dateChecker(cell.dataset.value)) {
-                            cell.classList.add('verfied')
-                        } else {
-                            cell.classList.add('error')
-                        }
-                    } else if (cell.dataset.key == 'amount') {
-                        if (this.numberChecker(cell.dataset.value)) {
-                            cell.classList.add('verfied')
-                        } else {
-                            cell.classList.add('error')
-                        }
-                    } else if (cell.dataset.key == 'accountid') {
-                        if (this.numberChecker(cell.dataset.value)) {
-                            cell.classList.add('verfied')
-                        } else {
-                            cell.classList.add('error')
-                        }
-                    }
-                }
-                
+    init() {
+        let confirmButton = document.getElementById('confirmCSV')
+        if(confirmButton) {
+            document.getElementById('confirmCSV').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Sending Stopped')
+                //cu.sendTransacrions();
             })
+
+            this.columnSelection.columnSelectorsListener()
+            this.inputEditingListener()
+            this.showInputEditorListener()
+            this.resetShowEditorListener()
+            this.rowSelection.init()
+            this.testAllInput()
+        }
+    },
+    inputEditingListener() {
+        let $inputs = document.querySelectorAll('.edit')
+        $inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                let $cell = input.parentNode
+                this.updateDataAttrWithInput($cell)
+            })
+        })
+    },
+    updateDataAttrWithInput(cell) {
+        const $input = cell.querySelector('.edit')
+        cell.dataset.value = $input.value
+        cell.querySelector('.display-value').innerHTML = $input.value
+        this.inputTest.cellTest(cell)
+        cell.classList.remove('show-editor')
+    },
+    resetShowEditorListener() {
+        document.querySelector('.full-page').addEventListener('click', () => {
+            this.resetShowEditor()
+        })
+    },
+    resetShowEditor() {
+        $shownCells = document.querySelectorAll('.show-editor')
+        $shownCells.forEach(cell => {
+            cell.classList.remove('show-editor')
+        })
+    },
+    showInputEditorListener() {
+        let $cell = document.querySelectorAll('.cell')
+        $cell.forEach(element => {
+            element.addEventListener('click', ele => {
+                ele.stopPropagation()
+                this.resetShowEditor()
+                element.classList.add('show-editor')
+            })
+        })
+    },
+    'rowSelection': {
+        init() {
+            let $rowSelection = document.querySelectorAll('.select-row')
+            $rowSelection.forEach(chekcbox => {
+                chekcbox.addEventListener('click', () => {
+                    let $row = chekcbox.parentNode.parentNode
+                    $row.classList.toggle('deselect')
+                })
+            })
+        }
+    },
+    'columnSelection': {
+        columnSelectorsListener() {
+            let $dropdowns = document.querySelectorAll('.column-selection')
+            $dropdowns.forEach((elem, index) => {
+                elem.addEventListener('change', function() {
+                    const value = this.value
+                    cu.columnSelection.resetDuplicateColumnSelection(value, index)
+                    cu.columnSelection.updateRow(value.toLowerCase(), index)
+                })
+            })
+        },
+        resetDuplicateColumnSelection(which, notIndex) {
+            let $columnSelectors = document.querySelectorAll('.column-selection');
+            let whichIndex = null;
+
+            $columnSelectors.forEach((element, index) => {
+                if(element.value == which && index != notIndex) {
+                    element.value = ''
+                    whichIndex = index
+                }
+            })
+            if (whichIndex != null) {
+                this.updateRow("", whichIndex)
+            }
+        },
+        updateRow(what, which) {
+            let $getColumns = document.querySelectorAll('.row')
+            $getColumns.forEach((ele) => {
+                let cell = ele.querySelectorAll('.cell')
+                cell[which+1].dataset.key = what
+                cu.inputTest.cellTest(cell[which+1])
+            })
+        }
+    },
+    testAllInput() {
+        let $cells = document.querySelectorAll('.cell')
+        $cells.forEach(cell => {
+            this.inputTest.cellTest(cell)
+        })
+    },
+    inputTest: {
+        cellTest(cell) {
+            cell.className = 'cell'
+            if (cell.dataset.value == '') {
+                cell.classList.add('error')
+            } else {
+                if (cell.dataset.key == 'date') {
+                    if (this.dateChecker(cell.dataset.value)) {
+                        cell.classList.add('verified')
+                    } else {
+                        cell.classList.add('error')
+                    }
+                } else if (cell.dataset.key == 'amount') {
+                    if (this.numberChecker(cell.dataset.value)) {
+                        cell.classList.add('verified')
+                    } else {
+                        cell.classList.add('error')
+                    }
+                } else if (cell.dataset.key == 'accountid') {
+                    if (this.numberChecker(cell.dataset.value)) {
+                        cell.classList.add('verified')
+                    } else {
+                        cell.classList.add('error')
+                    }
+                } else if (cell.dataset.key == 'name') {
+                    cell.classList.add('verified')
+                }
+            }
         },
         numberChecker(value) {
             const num = parseFloat(value);
@@ -65,22 +145,7 @@ let cu = {
             const passedDate = Date.parse(checkDate)
             return isNaN(checkDate) && !isNaN(passedDate) ? true : false
         },
-        columnSelectorsListner() {
-            let $dropdowns = document.querySelectorAll('.column-selection')
-            $dropdowns.forEach((elem, index) => {
-                elem.addEventListener('change', function() {
-                    const value = this.value
-                    let getColumns = document.querySelectorAll('.row')
-                    getColumns.forEach((ele) => {
-                        let cell = ele.querySelectorAll('.cell')
-                        cell[index+1].dataset.key = value
-                    })
-                })
-            })
-        },
     },
-    
-    
     async sendTransacrions() {
         let records = [];
 
