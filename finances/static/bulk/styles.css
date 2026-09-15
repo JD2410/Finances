@@ -13,6 +13,12 @@ table thead {
 }
 .verified {
     background-color: green;
+
+    /* &:after {
+        font-family: 'Font Awesome Kit';
+        font: var(--fa-font-solid);
+        content: '\f6e2'
+    } */
 }
 .error {
     background-color: red;
@@ -25,13 +31,21 @@ table thead {
             background-color: unset;
         }
     }
+
 }
 .cell {
     input {
         display: none;
+        width: calc(100% - 10px);
+        height: 100%;
+        box-sizing: border-box;
+        margin: 2px 5px;
 
         &:first-child {
             display: block;
+            width: unset;
+            height: unset;
+            margin: 0;
         }
     }
     &.show-editor {

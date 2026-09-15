@@ -16,7 +16,7 @@ let cu = {
             this.inputEditingListener()
             this.showInputEditorListener()
             this.resetShowEditorListener()
-            this.rowSelection.init()
+            this.rowSelection()
             this.testAllInput()
         }
     },
@@ -54,19 +54,20 @@ let cu = {
                 ele.stopPropagation()
                 this.resetShowEditor()
                 element.classList.add('show-editor')
+                $input = element.querySelector('.edit')
+                $input.focus();
+                $input.select();
             })
         })
     },
-    'rowSelection': {
-        init() {
-            let $rowSelection = document.querySelectorAll('.select-row')
-            $rowSelection.forEach(chekcbox => {
-                chekcbox.addEventListener('click', () => {
-                    let $row = chekcbox.parentNode.parentNode
-                    $row.classList.toggle('deselect')
-                })
+    rowSelection() {
+        let $rowSelection = document.querySelectorAll('.select-row')
+        $rowSelection.forEach(chekcbox => {
+            chekcbox.addEventListener('click', () => {
+                let $row = chekcbox.parentNode.parentNode
+                $row.classList.toggle('deselect')
             })
-        }
+        })
     },
     'columnSelection': {
         columnSelectorsListener() {
