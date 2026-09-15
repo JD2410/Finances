@@ -8,8 +8,7 @@ let cu = {
         if(confirmButton) {
             document.getElementById('confirmCSV').addEventListener('click', (e) => {
                 e.preventDefault();
-                alert('Sending Stopped')
-                //cu.sendTransacrions();
+                cu.checkUserInput()
             })
 
             this.columnSelection.columnSelectorsListener()
@@ -18,6 +17,7 @@ let cu = {
             this.resetShowEditorListener()
             this.rowSelection()
             this.testAllInput()
+            this.columnSelection.updateSelectColumnsIndicator()
         }
     },
     inputEditingListener() {
@@ -62,10 +62,8 @@ let cu = {
                         $input.focus();
                         $input.select();
                     }
-                    
                 })
             }
-            
         })
     },
     rowSelection() {
@@ -74,10 +72,12 @@ let cu = {
             chekcbox.addEventListener('click', () => {
                 let $row = chekcbox.parentNode.parentNode
                 $row.classList.toggle('deselect')
+                this.inputTest.loadErrorAmount()
             })
         })
     },
     'columnSelection': {
+        columnsSelected: 0,
         columnSelectorsListener() {
             let $dropdowns = document.querySelectorAll('.column-selection')
             $dropdowns.forEach((elem, index) => {
@@ -85,6 +85,7 @@ let cu = {
                     const value = this.value
                     cu.columnSelection.resetDuplicateColumnSelection(value, index)
                     cu.columnSelection.updateRow(value.toLowerCase(), index)
+                    cu.columnSelection.updateSelectColumnsIndicator()
                 })
             })
         },
@@ -109,6 +110,23 @@ let cu = {
                 cell[which+1].dataset.key = what
                 cu.inputTest.cellTest(cell[which+1])
             })
+        },
+        updateSelectColumnsIndicator() {
+            let $columnSelectors = document.querySelectorAll('.column-selection');
+            let count = 0
+            $columnSelectors.forEach(dropdown => {
+                if (dropdown.value != 0) {
+                    count++
+                }
+            })
+            $indicator = document.getElementById('selectionIndicator')
+            $indicator.innerHTML = count
+            if (count < 4) {
+                $indicator.classList.add('problem')
+            } else {
+                $indicator.classList.remove('problem')
+            }
+            this.columnsSelected = count
         }
     },
     testAllInput() {
@@ -118,6 +136,7 @@ let cu = {
         })
     },
     inputTest: {
+        errorsRemaining: 0,
         cellTest(cell) {
             cell.className = 'cell'
             if (cell.dataset.value == '') {
@@ -145,6 +164,25 @@ let cu = {
                     cell.classList.add('verified')
                 }
             }
+            this.loadErrorAmount()
+        },
+        loadErrorAmount() {
+            const $display = document.getElementById('errorsIndicator')
+            const $errors = document.querySelectorAll('.error')
+            let count = 0;
+            $errors.forEach(err => {
+                const $parent = err.parentNode.classList.contains('deselect')
+                if (!$parent) {
+                    count++
+                }
+            })
+            if (count > 0) {
+                $display.classList.add('problem')
+            } else {
+                $display.classList.remove('problem')
+            }
+            this.errorsRemaining = count;
+            $display.innerHTML = count
         },
         numberChecker(value) {
             const num = parseFloat(value);
@@ -154,6 +192,27 @@ let cu = {
             const passedDate = Date.parse(checkDate)
             return isNaN(checkDate) && !isNaN(passedDate) ? true : false
         },
+    },
+    createMessage(details, type='warning') {
+        let message = document.createElement('div');
+        message.classList.add('alert')
+        message.classList.add(`alert-${type}`);
+        message.innerHTML = details
+        message.addEventListener('click', () => {
+            message.classList.add("clear")
+        })
+        document.getElementById('messagesContainer').appendChild(message)
+    },
+    checkUserInput() {
+        if(this.columnSelection.columnsSelected == 4) {
+            if (this.inputTest.errorsRemaining > 0) {
+                this.createMessage("There are still errors remaining.")
+            } else {
+                this.sendTransacrions()
+            }
+        } else {
+            this.createMessage("You need to select 4 columns: <ul><li>Amount</li><li>Description</li><li>AccountId</li><li>Date</li></ul>")
+        }
     },
     async sendTransacrions() {
         let records = [];
@@ -178,7 +237,7 @@ let cu = {
                 })
             }
         })
-
+        
         let options = {
             method: "POST",
             headers: {
@@ -193,10 +252,6 @@ let cu = {
             .then(data => {
                 if(data.status == 'error') {
                     data.row_errors.forEach(ele => {
-                        let message = document.createElement('div');
-                        message.classList.add('alert')
-                        message.classList.add('alert-warning')
-
                         let errorConstruct = `<p>Issue on line ${parseInt(ele.row_index) + 1} :</p>`
                         for (const [key, value] of Object.entries(ele.errors)) {
                             errorConstruct += (`Field: ${key}:<ul>`);
@@ -205,11 +260,7 @@ let cu = {
                             })
                             errorConstruct += (`</ul>`);
                         }
-                        message.addEventListener('click', () => {
-                            message.classList.add("clear")
-                        })
-                        message.innerHTML = errorConstruct;
-                        document.getElementById('messagesContainer').appendChild(message)
+                        cu.createMessage(errorConstruct)
                         
                     })
                 } else if(data.status == 'success') {

@@ -1,3 +1,31 @@
+#errorsIndicator {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: green;
+
+    &.problem {
+        color: red;
+    }
+    &::before {
+        content: 'Amount of Errors: ';
+    }
+}
+#selectionIndicator {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: green;
+
+    &.problem {
+        color: red;
+    }
+    &::before {
+        content: 'Selected Columns: ';
+    }
+    &::after {
+        content: '/4';
+    }
+}
+
 table thead {
     position: sticky;
     z-index: 3000;
@@ -29,6 +57,11 @@ table.standard {
         position: relative;
         cursor: pointer;
         padding: 5px;
+        min-width: 300px;
+
+        &:first-child {
+            min-width: 30px;
+        }
 
         &.verified {
             background-color: rgba(0,128,0,0.15);

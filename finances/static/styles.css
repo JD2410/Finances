@@ -393,7 +393,7 @@ table.standard {
         }
         .body {
             height: 100%;
-            overflow-x: hidden;
+            overflow: auto;
         }
         .stick-to-bottom {
             position: absolute;
@@ -453,6 +453,10 @@ table.standard {
         border: 1px solid rgb(219, 219, 219);
         backdrop-filter: blur(10px);
         margin-top: 20px;
+
+        ul {
+            margin-left: 20px;
+        }
 
         &.clear {
             display: none;
