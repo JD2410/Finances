@@ -12,9 +12,9 @@ table thead {
 }
 .row.deselect {
     opacity: 0.5;
-    
 
     .cell {
+        cursor: auto;
         &.verified, &.error {
             background-color: unset;
         }
@@ -23,50 +23,56 @@ table thead {
         }
     }
 }
-.cell {
-    position: relative;
-    cursor: pointer;
+table.standard {
+    
+    td.cell {
+        position: relative;
+        cursor: pointer;
+        padding: 5px;
 
-    &.verified {
-        &:before {
-            font-family: 'Font Awesome Kit';
-            color: green;
-            font: var(--fa-font-solid);
-            content: '\f058';
+        &.verified {
+            background-color: rgba(0,128,0,0.15);
+            &:before {
+                font-family: 'Font Awesome Kit';
+                color: green;
+                font: var(--fa-font-solid);
+                content: '\f058';
+            }
         }
-    }
-    &.error {
-        &:before {
-            color: red;
-            font-family: 'Font Awesome Kit';
-            font: var(--fa-font-solid);
-            content: '\f057';
+        &.error {
+            background-color: rgba(255, 0, 0, 0.15);
+            &:before {
+                color: red;
+                font-family: 'Font Awesome Kit';
+                font: var(--fa-font-solid);
+                content: '\f057';
+            }
         }
-    }
 
-    input {
-        display: none;
-        width: calc(100% - 10px);
-        height: 100%;
-        box-sizing: border-box;
-        margin: 2px 5px;
-
-        &:first-child {
-            display: block;
-            width: unset;
-            height: unset;
-            margin: 0;
-        }
-    }
-    &.show-editor {
-        &::before {
-            display: none;
-        }
         input {
-            display: block;
-        }
-        .display-value {
             display: none;
+            width: calc(100% - 10px);
+            height: 100%;
+            box-sizing: border-box;
+            margin: 2px 5px;
+
+            &:first-child {
+                display: block;
+                width: unset;
+                height: unset;
+                margin: 0;
+            }
+        }
+        &.show-editor {
+            &::before {
+                display: none;
+            }
+            input {
+                display: block;
+            }
+            .display-value {
+                display: none;
+            }
         }
     }
 }

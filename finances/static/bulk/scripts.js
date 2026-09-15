@@ -50,14 +50,22 @@ let cu = {
     showInputEditorListener() {
         let $cell = document.querySelectorAll('.cell')
         $cell.forEach(element => {
-            element.addEventListener('click', ele => {
-                ele.stopPropagation()
-                this.resetShowEditor()
-                element.classList.add('show-editor')
-                $input = element.querySelector('.edit')
-                $input.focus();
-                $input.select();
-            })
+            const $inputIgnore = element.querySelector('.select-row')
+            if ($inputIgnore == null) {
+                element.addEventListener('click', ele => {
+                    
+                    if (!element.parentNode.classList.contains('deselect')) {
+                        ele.stopPropagation()
+                        this.resetShowEditor()
+                        element.classList.add('show-editor')
+                        $input = element.querySelector('.edit')
+                        $input.focus();
+                        $input.select();
+                    }
+                    
+                })
+            }
+            
         })
     },
     rowSelection() {
