@@ -50,19 +50,19 @@ table.standard {
         height: 25px;
         background-color: transparent;
         
-        svg {
+        i {
             width: 110%;
         }
-        &.edit svg {
+        &.edit i {
             color: green;
             opacity: 0.5;
         }
-        &.delete svg {
+        &.delete i {
             color: red;
             opacity: 0.5;
         }
 
-        &:hover svg {
+        &:hover i {
             opacity: 1;
         }
     }
@@ -126,7 +126,6 @@ table.standard {
             padding: 12px;
             margin-bottom: 12px;
             background: linear-gradient(157deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.12));
-            /* border-bottom: 1px solid rgba(255, 255, 255, 0.23); */
             color: #fff;
             z-index: 1;
             text-decoration: none;
@@ -156,14 +155,15 @@ table.standard {
                     transition: border 0.1s, background 0.1s, color 0.1s, opacity 0.1s;
                     margin: 0 12px;
 
-                    svg, i {
-                        font-size: 1.2em;
+                    i {
+                        font-size: 1.5em;
                         position: absolute;
-                        left: 12px;
+                        left: 10px;
                         top: 0;
                         height: 100%;
                         transition: color 0.2s;
                         opacity: 0.8;
+                        line-height: 2.05em;
                     }
 
                     &.selected {
@@ -328,23 +328,23 @@ table.standard {
                     min-height: 15px;
                     background-color: transparent;
 
-                    svg {
+                    i {
                         width: 100%;
                         height: 100%;
                         position: absolute;
                         left: 0;
                         top: 0
                     }
-                    &.account-edit svg {
+                    &.account-edit i {
                         color: green;
                         opacity: 0.5;
                     }
-                    &.account-delete svg {
+                    &.account-delete i {
                         color: red;
                         opacity: 0.5;
                     }
 
-                    &:hover svg {
+                    &:hover i {
                         opacity: 1;
                     }
                 }
@@ -417,13 +417,10 @@ table.standard {
     height: 100%;
 
     .image {
-        height: 84px;
-        width: 84px;
         margin-bottom: 20px;
 
-        svg {
-            width: 6em;
-            height: 6em;
+        i {
+            font-size: 6em;
         }
     }
 
