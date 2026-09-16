@@ -55,7 +55,7 @@ def index(request):
                 account_form.save()
         elif 'deleteAccount' in request.POST:
             try:
-                get_deleted_record = Accounts.objects.get(id=request.POST['accountId'])
+                get_deleted_record = Accounts.objects.get(id=request.POST['deleteAccount'])
                 get_deleted_record.delete()
                 messages.success(request, "Account deleted successfully.")
             except Accounts.DoesNotExist:

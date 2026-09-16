@@ -35,7 +35,7 @@
                         <div class="card">
                             <div class="title">{{account.name}}</div>
                             <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                            <button class="small-button hollow account-edit" data-id="{{account.id}}">See More</button>
+                            <button class="small-button hollow account-edit" data-id="{{account.id}}" data-amount="{{account.total|floatformat:2|intcomma }}">See More</button>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -142,56 +142,69 @@
         </form>
     </div>
     <div class="modal" id="updateAccount">
-        <form action="" method="post" class="modal-container"">
+        <div class="modal-container"">
             <div class="header">
                 <h2>Savings Accounts Details</h2>
                 <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
             </div>
             <div class="body">
-                {% csrf_token %}
-                <div class="form">
+                <form action="" method="post" id="updateForm">
+                    {% csrf_token %}
                     {{ savings }}
-                </div>
+                    <input type="hidden" name="accountId" id="accountId">
+                    <input type="hidden" name="updateAccount">
+                </form>
+                <form action="" method="post" id="deleteForm">
+                    {% csrf_token %}
+                    <h3>Hi there</h3>
+                    <p>By deleting this account you're also deleting all transactions that are connected to it. Do you wish to continue?</p>
+                    <button class="button primary resetView">Cancel</button>
+                    <input type="submit" class="button hollow" value="Confirm">
+                    <input type="hidden" name="deleteAccount" value="">
+                </form>
                 <div class="details">
                     <div class="detail">
                         <div class="label">Account Name:</div>
-                        <div id="accountName" class="info"></div>
+                        <div id="accountNameLabel" class="info"></div>
                     </div>
                     <div class="detail">
                         <div class="label">Account Id:</div>
-                        <div id="accountId" class="info"></div>
+                        <div id="accountIdLabel" class="info"></div>
+                    </div>
+                    <div class="detail">
+                        <div class="label">Current Value:</div>
+                        <div id="accountValueLabel" class="info"></div>
+                    </div>
+                    <div class="detail">
+                        <div class="label">Account Start Value</div>
+                        <span id="accountStartLabel" class="info"></span>
                     </div>
                     <div class="details deep">
                         <div class="detail">
                             <div class="label">Account Type:</div>
-                            <div id="accountTypeName" class="info"></div>
-                        </div>
-                        <div class="detail">
-                            <div class="label">Account Type ID:</div>
-                            <div id="accountTypeId" class="info"></div>
+                            <div id="accountTypeNameLabel" class="info"></div>
                         </div>
                         <div class="detail">
                             <div class="label">Accumulate:</div>
-                            <div id="accountAccumulate" class="info"></div>
+                            <div id="accountAccumulateLabel" class="info"></div>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="accountId" id="accountId">
             </div>
             <div class="footer">
                 <div class="details">
-                    <button class="button negative" id="deleteAccount">Delete</button>
                     <div>
-                        <button class="button hollow" data-close="updateAccount">Close</button>
-                        <button class="button primary" id="updateAccountButton">Update</button>
+                        <button class="button positive openUpdateView">Update Details</button>
+                        <button class="button negative" id="deleteAccount">Delete Account</button>
                     </div>
+                    <button class="button primary" data-close="updateAccount">Close</button>
                 </div>
                 <div class="editing">
-                    <input class='button primary'type="submit" name="updateAccount">
-                    <button class="button hollow" data-close="updateAccount">Cancel</button>
+                    <button class='button primary' id="confirmUpdate">Confirm</button>
+                    <button class="button hollow resetView">Cancel</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     <div class="modal" id="uploadCSV">
         <form action="" method="post" class="modal-container" enctype="multipart/form-data">
@@ -211,7 +224,7 @@
     </div>
     <form action="" method="post" id="deleteForm" >
         {% csrf_token %}
-    <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
+        <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
     </form>
 </body>
 </html>

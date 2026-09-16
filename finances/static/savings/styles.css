@@ -1,12 +1,16 @@
 #updateAccount  {
     .body {
-        .form {
+        #deleteForm {
+            display: none;
+        }
+        #updateForm {
             display: none;
         }
         .details {
             display: flex;
             flex-direction: column;
             gap: 12px;
+
             .detail {
                 .label {
                     font-weight: 500;
@@ -22,9 +26,6 @@
         }
     }
     .footer {
-        .editing {
-            display: none;
-        }
         .details {
             justify-content: space-between;
             display: flex;
@@ -36,13 +37,24 @@
                 gap: 8px;
             }
         }
+        .editing {
+            display: none;
+            gap: 8px;
+            width: 100%;
+            flex-direction: row-reverse;
+
+            div {
+                display: flex;
+                gap: 8px;
+            }
+        }
     }
-    &.show-form {
+    &.show-update-form {
         .body {
-            .form {
+            #updateForm {
                 display: block;
             }
-            .details {
+            #deleteForm, .details {
                 display: none;
             }
         }
@@ -53,6 +65,21 @@
             .details {
                 display: none;
             }
+        }
+    }
+    &.show-delete-form {
+        .body {
+            margin-bottom: 12px;
+            
+            #deleteForm {
+                display: block;
+            }
+            #updateForm, .details {
+                display: none;
+            }
+        }
+        .footer {
+            display: none;
         }
     }
 }

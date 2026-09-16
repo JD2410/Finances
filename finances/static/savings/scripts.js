@@ -6,20 +6,54 @@ window.addEventListener("load", e => {
 let savingScript = {
     'editAccount': {
         accountDetails: "",
+        displayMoney(value) {
+            let amount = parseFloat(value).toFixed(2)
+            if (amount >= 1000) {
+                let where = amount.indexOf('.') - 3
+                amount = amount.slice(0, where) + "," + amount.slice(where)
+            }
+            return amount
+        },
         init() {
             this.accountDetails = JSON.parse(document.getElementById('accounts').textContent)
             $editButtons = document.querySelectorAll('.account-edit')
             $editButtons.forEach(button => {
                 button.addEventListener('click', ele => {
                     ele.preventDefault()
-                    this.updateForm(button.dataset.id)
+                    this.updateForm(button.dataset.id, button.dataset.amount)
                 })
             })
-            console.log("hi")
-            document.getElementById("updateAccountButton").addEventListener('click', ele => {
+            const $swtichButtons = document.querySelectorAll('.openUpdateView')
+            if($swtichButtons) {
+                $swtichButtons.forEach(ele => {
+                    ele.addEventListener('click', ele => {
+                        ele.preventDefault()
+                        ele.stopPropagation()
+                        this.switchView.openUpdateForm()
+                    })
+                })
+            }
+            const $resetView = document.querySelectorAll('.resetView')
+            if($resetView) {
+                $resetView.forEach(ele => {
+                    ele.addEventListener('click', ele => {
+                        ele.preventDefault()
+                        ele.stopPropagation()
+                        this.switchView.resetView()
+                    })
+                })
+            }
+            document.getElementById("deleteAccount").addEventListener('click', ele => {
                 ele.preventDefault()
-                this.swapDetailEditView()
+                ele.stopPropagation()
+                this.switchView.swapDeleteForm()
             })
+            document.getElementById("confirmUpdate").addEventListener('click', ele => {
+                ele.preventDefault()
+                ele.stopPropagation()
+                document.getElementById('updateForm').submit()
+            })
+
         },
         getElements(accountId) {
             for (let i = 0; i<=this.accountDetails.length; i++) {
@@ -29,24 +63,46 @@ let savingScript = {
             }
             return null
         },
-        swapDetailEditView() {
-            let $modal = document.getElementById('updateAccount')
-            $modal.classList.add('show-form')
+        'switchView': {
+            resetView() {
+                let $modal = document.getElementById('updateAccount')
+                $modal.classList.remove('show-update-form')
+                $modal.classList.remove('show-delete-form')
+            },
+            openUpdateForm() {
+                this.resetView()
+                let $modal = document.getElementById('updateAccount')
+                $modal.classList.add('show-update-form')
+            },
+            swapDeleteForm() {
+                this.resetView()
+                let $modal = document.getElementById('updateAccount')
+                $modal.classList.toggle('show-delete-form')
+            },
         },
-        updateForm(accId) {
+        updateForm(accId, amount) {
             let info = this.getElements(accId)
             let $form = document.getElementById('updateAccount')
+            this.switchView.resetView()
+
+            $form.querySelector('input[name=deleteAccount]').value = info.id
 
             $form.querySelector('input[name=accountId]').value = info.id
             $form.querySelector('input[name=name]').value = info.name
             $form.querySelector('select[name=accountType]').value = info.accountType.id
 
-            $form.querySelector("#accountId").innerHTML = info.id
-            $form.querySelector("#accountName").innerHTML = info.name
-
-            $form.querySelector("#accountTypeId").innerHTML = info.accountType.id
-            $form.querySelector("#accountTypeName").innerHTML = info.accountType.type_name
-            $form.querySelector("#accountAccumulate").innerHTML = info.accountType.type_accumulate
+            $form.querySelector("#accountIdLabel").innerHTML = info.id
+            $form.querySelector("#accountNameLabel").innerHTML = info.name
+            $form.querySelector("#accountValueLabel").innerHTML = `£${amount}`
+            // $form.querySelector("#accountTypeIdLabel").innerHTML = info.accountType.id
+            $form.querySelector("#accountTypeNameLabel").innerHTML = info.accountType.type_name
+            $form.querySelector("#accountAccumulateLabel").innerHTML = info.accountType.type_accumulate
+            if (info.firstDate != null) {
+                $form.querySelector("#accountStartLabel").innerHTML = `£${this.displayMoney(info.first)} (${info.firstDate})`
+            } else {
+                $form.querySelector("#accountStartLabel").innerHTML = `Not Set`
+            }
+            
 
             $form.classList.add('show')
         }

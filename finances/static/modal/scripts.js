@@ -23,7 +23,7 @@ window.addEventListener("load", e => {
             this.classList.remove('show')
             modal.getElementsByTagName('form')[0].reset()
         })
-        modal.getElementsByTagName('form')[0].addEventListener('click', function(event) {
+        modal.querySelector('.modal-container').addEventListener('click', function(event) {
             event.stopPropagation()
         })
     })
