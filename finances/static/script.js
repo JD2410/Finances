@@ -16,7 +16,6 @@ let app = {
     'messages': {
         init() {
             let $messages = document.getElementById('messagesContainer')
-            console.log($messages.length)
             if($messages) {
                 let $alerts = $messages.querySelectorAll('.alert')
                 $alerts.forEach(element => {

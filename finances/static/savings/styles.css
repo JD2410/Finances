@@ -1,0 +1,58 @@
+#updateAccount  {
+    .body {
+        .form {
+            display: none;
+        }
+        .details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            .detail {
+                .label {
+                    font-weight: 500;
+                }
+            }
+            .details.deep {
+                background-color: rgb(240, 240, 240);
+                border-radius: 4px;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+    .footer {
+        .editing {
+            display: none;
+        }
+        .details {
+            justify-content: space-between;
+            display: flex;
+            gap: 8px;
+            width: 100%;
+
+            div {
+                display: flex;
+                gap: 8px;
+            }
+        }
+    }
+    &.show-form {
+        .body {
+            .form {
+                display: block;
+            }
+            .details {
+                display: none;
+            }
+        }
+        .footer {
+            .editing {
+                display: flex;
+            }
+            .details {
+                display: none;
+            }
+        }
+    }
+}

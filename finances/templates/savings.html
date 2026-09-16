@@ -16,6 +16,7 @@
 
     <link rel="stylesheet" href="{% static 'savings/styles.css' %}?{% now "U" %}">
     <script src="{% static 'savings/scripts.js' %}?{% now "U" %}"></script>
+    {{ accounts|json_script:"accounts" }}
 
 </head>
 <body class="full-page">
@@ -28,44 +29,16 @@
                 <button class='open-modal button primary' data-modal="savingAccount">Create Savings Account</button>
             </div>
             {% if accounts %}
-            <div class="page-cards">
-                <h2>Account</h2>
-                <div class="cards-inline">
-                    {% for acc in accounts %}
-                        <form action="" method="post" class="card savings" id="account_{{ acc.id }}">
-                            {% csrf_token %}
-                            <div class="info">
-                                <div class="name lead" data-value="{{ acc.name }}">
-                                    {{ acc.name }}
-                                    <div class="actions">
-                                        <button class="button account-edit" data-value="{{ acc.id }}"><i class="fa-solid fa-pencil"></i></button>
-                                        <button class="button account-delete" type="submit" name="deleteAccount" value="Delete"><i class="fa-solid fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="accid">ID: {{ acc.id }}</div>
-                                <div class="sub" title="Start Date">
-                                    SD:
-                                    {% if acc.firstDate != None %}
-                                        {{ acc.firstDate|date:"jS M Y" }}
-                                    {% else %}
-                                        Not Set
-                                    {% endif %}
-                                </div>
-                                {% if acc.firstDate != None %}
-                                <div class="sub" title="Start Amount">
-                                    SA: £{{ acc.first|floatformat:2|intcomma }}
-                                </div>
-                                {% endif %}
-
-                            </div>
-                            <div class="actions">
-                                
-                            </div>
-                            <input type="hidden" name="accountId" value="{{acc.id}}">
-                            <input type="hidden" name="accountType" value="{{acc.accountType.id}}">
-                        </form>
+            <div class="cards">
+                {% if account_highlights %}
+                    {% for account in account_highlights.records %}
+                        <div class="card">
+                            <div class="title">{{account.name}}</div>
+                            <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
+                            <button class="small-button hollow account-edit" data-id="{{account.id}}">See More</button>
+                        </div>
                     {% endfor %}
-                </div>
+                {% endif %}
             </div>
             <div class="page-section">
                 <div class="header"><h2>All Records</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
@@ -171,17 +144,52 @@
     <div class="modal" id="updateAccount">
         <form action="" method="post" class="modal-container"">
             <div class="header">
-                <h2>Update Savings Accounts</h2>
+                <h2>Savings Accounts Details</h2>
                 <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
             </div>
             <div class="body">
                 {% csrf_token %}
-                {{ savings }}
+                <div class="form">
+                    {{ savings }}
+                </div>
+                <div class="details">
+                    <div class="detail">
+                        <div class="label">Account Name:</div>
+                        <div id="accountName" class="info"></div>
+                    </div>
+                    <div class="detail">
+                        <div class="label">Account Id:</div>
+                        <div id="accountId" class="info"></div>
+                    </div>
+                    <div class="details deep">
+                        <div class="detail">
+                            <div class="label">Account Type:</div>
+                            <div id="accountTypeName" class="info"></div>
+                        </div>
+                        <div class="detail">
+                            <div class="label">Account Type ID:</div>
+                            <div id="accountTypeId" class="info"></div>
+                        </div>
+                        <div class="detail">
+                            <div class="label">Accumulate:</div>
+                            <div id="accountAccumulate" class="info"></div>
+                        </div>
+                    </div>
+                </div>
                 <input type="hidden" name="accountId" id="accountId">
             </div>
             <div class="footer">
-                <input class='button primary'type="submit" name="updateAccount">
-                <button class="button hollow" data-close="updateAccount">Cancel</button>
+                <div class="details">
+                    <button class="button negative" id="deleteAccount">Delete</button>
+                    <div>
+                        <button class="button hollow" data-close="updateAccount">Close</button>
+                        <button class="button primary" id="updateAccountButton">Update</button>
+                    </div>
+                </div>
+                <div class="editing">
+                    <input class='button primary'type="submit" name="updateAccount">
+                    <button class="button hollow" data-close="updateAccount">Cancel</button>
+                </div>
             </div>
         </form>
     </div>

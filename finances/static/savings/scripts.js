@@ -5,32 +5,49 @@ window.addEventListener("load", e => {
 
 let savingScript = {
     'editAccount': {
+        accountDetails: "",
         init() {
+            this.accountDetails = JSON.parse(document.getElementById('accounts').textContent)
             $editButtons = document.querySelectorAll('.account-edit')
             $editButtons.forEach(button => {
                 button.addEventListener('click', ele => {
                     ele.preventDefault()
-                    let id = button.dataset.value
-                    let value = this.getElements(id)
-                    this.updateForm(value)
+                    this.updateForm(button.dataset.id)
                 })
+            })
+            console.log("hi")
+            document.getElementById("updateAccountButton").addEventListener('click', ele => {
+                ele.preventDefault()
+                this.swapDetailEditView()
             })
         },
         getElements(accountId) {
-            const $form = document.getElementById('account_' + accountId);
-            const obj = {
-                'id': accountId,
-                'name': $form.querySelector('.name').dataset.value,
-                'accountType': $form.querySelector('input[name=accountType]').value
+            for (let i = 0; i<=this.accountDetails.length; i++) {
+                if (this.accountDetails[i].id == accountId) {
+                    return this.accountDetails[i]
+                }
             }
-            console.log(obj)
-            return obj
+            return null
         },
-        updateForm(value) {
+        swapDetailEditView() {
+            let $modal = document.getElementById('updateAccount')
+            $modal.classList.add('show-form')
+        },
+        updateForm(accId) {
+            let info = this.getElements(accId)
             let $form = document.getElementById('updateAccount')
-            $form.querySelector('input[name=accountId]').value = value.id
-            $form.querySelector('input[name=name]').value = value.name
-            $form.querySelector('select[name=accountType]').value = value.accountType
+
+            $form.querySelector('input[name=accountId]').value = info.id
+            $form.querySelector('input[name=name]').value = info.name
+            $form.querySelector('select[name=accountType]').value = info.accountType.id
+
+            $form.querySelector("#accountId").innerHTML = info.id
+            $form.querySelector("#accountName").innerHTML = info.name
+
+            $form.querySelector("#accountTypeId").innerHTML = info.accountType.id
+            $form.querySelector("#accountTypeName").innerHTML = info.accountType.type_name
+            $form.querySelector("#accountAccumulate").innerHTML = info.accountType.type_accumulate
+
             $form.classList.add('show')
         }
     },
