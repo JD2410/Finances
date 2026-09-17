@@ -156,6 +156,33 @@ def index(request):
         }
     )
 
+def account(request,accountPassed):
+    #return HttpResponse(f"location: {accountId}")
+    try:
+        get_account = Accounts.objects.get(id=accountPassed)
+    except Accounts.DoesNotExist:
+        return render(request, 'account.html', {'id': accountPassed})
+
+    get_page_number = request.GET.get('pn', 1)
+    try:
+        int(get_page_number)
+        page = int(get_page_number)
+    except ValueError:
+        page = 1
+
+    get_transactions = Transactions.objects.all().filter(accountId=accountPassed).order_by('-date')
+    paginated = Paginator(get_transactions, 10)
+    paginated_transaction = paginated.get_page(page)
+
+    return render(request, 'account.html', {
+        'account_details': get_account,
+        'records': {
+            'transactions': paginated_transaction,
+            'number_of_pages': range(paginated.num_pages),
+            'current_page': page
+        },
+    })
+
 def get_account_totals():
     accounts = Accounts.objects.all()
     account_details = []
