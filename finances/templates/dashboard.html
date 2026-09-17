@@ -22,6 +22,22 @@
         <div class="main-area">
             <div class="container widget-area">
                 <h1>Dashboard</h1>
+                <div class="cards full">
+                    <div class="card">
+                        <div class="title">Total</div>
+                        <div class="main">£{{total|floatformat:2|intcomma }}</div>
+                        <div class="sub-title">{% now 'DATE_FORMAT' %}</div>
+                    </div>
+                    {% if savings %}
+                        {% for account in savings %}
+                            <div class="card">
+                                <div class="title">{{account.name}}</div>
+                                <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
+                                <div class="sub-title">{{account.type_details.name }}</div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
                 <div class="widget full">
                     <div class="header">
                         <h2>Account Progress</h2>

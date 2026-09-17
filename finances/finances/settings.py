@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'dashboard',
     'accSavings',
-    'accountType',
-    'tags',
+    'accountType'
 ]
 
 MIDDLEWARE = [

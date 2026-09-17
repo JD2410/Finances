@@ -122,13 +122,15 @@ table.standard {
 .cards {
     display: flex;
     gap: 16px;
+    flex-wrap: wrap;
 
     .card {
         background-color: #fff;
         padding: 16px;
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
         border-radius: 8px;
-        min-width: 230px;
+        min-width: 195px;
+        flex: 1;
 
         &:first-child {
             background: linear-gradient(rgba(160, 25, 160, 0.85), rgba(126, 4, 126, 0.96)), url('/static/images/bunny-shape.svg'), linear-gradient(rgb(160, 25, 160), rgb(126, 4, 126));
@@ -140,7 +142,10 @@ table.standard {
             .title {
                 color: #fff;
             }
-
+            .sub-title {
+                color: #fff;
+                
+            }
             .small-button.hollow {
                 border-color: #fff;
                 color: #fff;
@@ -150,12 +155,19 @@ table.standard {
                     color: purple;
                 }
             }
+
+            
         }
 
         .title {
             font-size: 1em;
             text-transform: uppercase;
             color: rgb(101, 101, 101);
+        }
+        .sub-title {
+            font-size: 1em;
+            color: rgb(13, 13, 13);
+            opacity: 0.6;
         }
         .main {
             font-size: 2em;
@@ -351,10 +363,9 @@ table.standard {
                 align-items: center;
             }
         }
-    
-        &.full {
-            grid-column: 1 / span 2;
-        }
+    }
+    .full {
+        grid-column: 1 / span 2;
     }
 }
 

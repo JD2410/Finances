@@ -21,7 +21,6 @@ def index(request):
             if account.accountType == None:
                 messages.warning(request, account.name + " doesn't have an account type assigned and cannot display anything")
             else:
-
                 transaction_total = 0.00
                 transactions_start_total = None
                 daily_totals = {}
