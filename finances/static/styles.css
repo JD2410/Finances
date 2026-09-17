@@ -282,38 +282,6 @@ table.standard {
             width: 240%;
             rotate: 26.5deg;
         }
-        .accounts {
-            padding: 12px;
-            z-index: 1;
-
-            ul, .side-no-account {
-                list-style: none;
-                display: grid;
-                gap: 5px;
-                border: 1px solid #ffffff30;
-                padding: 12px 12px;
-                border-radius: 9px;
-                background: linear-gradient(157deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.12));
-                color: #ffffffcc;
-                backdrop-filter: blur(10px);
-                
-                li {
-                    display: flex;
-                    justify-content: space-between;
-
-                    &.total {
-                        border-top: 1px solid #fff;
-                        margin-top: 4px;
-                        padding-top: 8px;
-                        font-size: 1.1em;
-                    }
-                    .highlight {
-                        font-weight: 500;
-                        color: #fff;
-                    }
-                }
-            }
-        }
     }
     .main-area {
         flex: 100%;
