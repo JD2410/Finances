@@ -159,7 +159,7 @@ def index(request):
 def account(request,accountPassed):
     #return HttpResponse(f"location: {accountId}")
     try:
-        get_account = Accounts.objects.get(id=accountPassed)
+        get_account = Accounts.objects.all().get(id=accountPassed)
     except Accounts.DoesNotExist:
         return render(request, 'account.html', {'id': accountPassed})
 
@@ -171,17 +171,32 @@ def account(request,accountPassed):
         page = 1
 
     get_transactions = Transactions.objects.all().filter(accountId=accountPassed).order_by('-date')
-    paginated = Paginator(get_transactions, 10)
+    paginated = Paginator(get_transactions, 20)
     paginated_transaction = paginated.get_page(page)
 
     return render(request, 'account.html', {
         'account_details': get_account,
+        'account_total': get_account_total(get_account),
         'records': {
             'transactions': paginated_transaction,
             'number_of_pages': range(paginated.num_pages),
             'current_page': page
         },
     })
+
+def get_account_total(account):
+    total = 0.00
+    if account.accountType != None:
+        if account.accountType.accumulate:
+            get_transactions_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(accountId = account.id)
+            if len(get_transactions_total):
+                total = get_transactions_total[0]['total']
+        else:
+            get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
+            if get_transactions_total != None:
+                total = get_transactions_total['amount']
+
+    return total
 
 def get_account_totals():
     accounts = Accounts.objects.all()

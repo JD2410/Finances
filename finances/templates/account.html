@@ -16,6 +16,9 @@
 
     <link rel="stylesheet" href="{% static 'savings/styles.css' %}?{% now "U" %}">
     <script src="{% static 'savings/scripts.js' %}?{% now "U" %}"></script>
+
+    <link rel="stylesheet" href="{% static 'savings/styles_account.css' %}?{% now "U" %}">
+
     {{ accounts|json_script:"accounts" }}
 
 </head>
@@ -26,47 +29,58 @@
         <div class="main-area">
             <div class="page-header">
                 <h1>Acount Details</h1>
+                <a href="{% url 'savings' %}" class="button primary">View All Acounts</a>
             </div>
             {% if records %}
+            {{ account_details }}
             <div class="page-section">
-                <div class="header"><h2>All Records</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
-                <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
-                {% if records %}
-                    <table class="standard">
-                        <thead>
-                            <th>Action Name</th>
-                            <th>Transaction Date</th>
-                            <th>Created</th>
-                            <th class="right">Amount</th>
-                            <th class="right">Action</th>
-                        </thead>
-                        <tbody>
-                        {% for action in records.transactions %}
-                            <tr id="record_{{ action.id }}">
-                                <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
-                                <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
-                                <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
-                                <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
-                                <td class="right">
-                                    <button class="button edit update-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-pencil"></i></button>
-                                    <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
-                                </td>
-                            </tr>
+                <div class="info">
+                    <h2 class="info">{{ account_details.name }}</h2>
+                    <div><span>Created</span> {{ account_details.created_at }}</div>
+                    <div><span>ID</span> {{ account_details.id }}</div>
+                    <div><span>Type</span> {{ account_details.accountType }}</div>
+                    <div><span>Current Total</span> £{{ account_total|floatformat:2|intcomma }}</div>
+                </div>
+                <div class="transactions">
+                    <div class="header"><h2>All Transactions</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
+                    <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
+                    {% if records %}
+                        <table class="standard">
+                            <thead>
+                                <th>Action Name</th>
+                                <th>Transaction Date</th>
+                                <th>Created</th>
+                                <th class="right">Amount</th>
+                                <th class="right">Action</th>
+                            </thead>
+                            <tbody>
+                            {% for action in records.transactions %}
+                                <tr id="record_{{ action.id }}">
+                                    <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
+                                    <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
+                                    <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
+                                    <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
+                                    <td class="right">
+                                        <button class="button edit update-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                        <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="pagination">
+                        {% for i in records.number_of_pages %}
+                            {% if forloop.counter != records.current_page %}
+                                <a href="{% url 'savings' %}{{ account_details.id }}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
+                            {% else %}
+                                <a href="#" class="selected">{{ forloop.counter }}</a>
+                            {% endif %}
                         {% endfor %}
-                        </tbody>
-                    </table>
-                    <div class="pagination">
-                    {% for i in records.number_of_pages %}
-                        {% if forloop.counter != records.current_page %}
-                            <a href="{% url 'savings' %}{{ account_details.id }}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
-                        {% else %}
-                            <a href="#" class="selected">{{ forloop.counter }}</a>
-                        {% endif %}
-                    {% endfor %}
-                    </div>
-                {% else %}
-                    <p>There are no transactions in the database</p>
-                {% endif %}
+                        </div>
+                    {% else %}
+                        <p>There are no transactions in the database</p>
+                    {% endif %}
+                </div>
             </div>
             {% else %}
             <div class="page-section centre">
