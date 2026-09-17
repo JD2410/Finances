@@ -94,13 +94,15 @@ let savingScript = {
             $form.querySelector("#accountIdLabel").innerHTML = info.id
             $form.querySelector("#accountNameLabel").innerHTML = info.name
             $form.querySelector("#accountValueLabel").innerHTML = `£${amount}`
-            // $form.querySelector("#accountTypeIdLabel").innerHTML = info.accountType.id
             $form.querySelector("#accountTypeNameLabel").innerHTML = info.accountType.type_name
-            $form.querySelector("#accountAccumulateLabel").innerHTML = info.accountType.type_accumulate
+            $form.querySelector("#accountAccumulateLabel").innerHTML = info.accountType.type_accumulate ? "Yes" : "No"
+            $form.querySelector("#accountCreatedLabel").innerHTML = info.created;
             if (info.firstDate != null) {
-                $form.querySelector("#accountStartLabel").innerHTML = `£${this.displayMoney(info.first)} (${info.firstDate})`
+                $form.querySelector("#accountStartLabel").innerHTML = `£${this.displayMoney(info.first)}`
+                $form.querySelector("#accountStartDateLabel").innerHTML = info.firstDate
             } else {
                 $form.querySelector("#accountStartLabel").innerHTML = `Not Set`
+                $form.querySelector("#accountStartDateLabel").innerHTML = `Not Set`
             }
             
 

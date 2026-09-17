@@ -156,38 +156,40 @@
                 </form>
                 <form action="" method="post" id="deleteForm">
                     {% csrf_token %}
-                    <h3>Hi there</h3>
-                    <p>By deleting this account you're also deleting all transactions that are connected to it. Do you wish to continue?</p>
-                    <button class="button primary resetView">Cancel</button>
-                    <input type="submit" class="button hollow" value="Confirm">
+                    <i class="fa-solid fa-warning"></i>
+                    <div class="message">
+                        <h3>Are you sure?</h3>
+                        <p>By deleting this account you're also deleting all transactions that are connected to it. Do you wish to continue?</p>
+                    </div>
+                    <div class="action">
+                        <button class="button primary resetView">Cancel</button>
+                        <input type="submit" class="button negative" value="Delete Account">
+                    </div>
                     <input type="hidden" name="deleteAccount" value="">
                 </form>
                 <div class="details">
-                    <div class="detail">
-                        <div class="label">Account Name:</div>
+                    <div class="account-header">
                         <div id="accountNameLabel" class="info"></div>
+                        <span class="label">Created </span><span id="accountCreatedLabel"></span>
                     </div>
-                    <div class="detail">
-                        <div class="label">Account Id:</div>
+                    <div class="information">
+                        <div class="label">ID</div>
                         <div id="accountIdLabel" class="info"></div>
-                    </div>
-                    <div class="detail">
-                        <div class="label">Current Value:</div>
+
+                        <div class="label">Current Value</div>
                         <div id="accountValueLabel" class="info"></div>
-                    </div>
-                    <div class="detail">
-                        <div class="label">Account Start Value</div>
-                        <span id="accountStartLabel" class="info"></span>
-                    </div>
-                    <div class="details deep">
-                        <div class="detail">
-                            <div class="label">Account Type:</div>
-                            <div id="accountTypeNameLabel" class="info"></div>
-                        </div>
-                        <div class="detail">
-                            <div class="label">Accumulate:</div>
-                            <div id="accountAccumulateLabel" class="info"></div>
-                        </div>
+
+                        <div class="label">Start Amount</div>
+                        <div id="accountStartLabel" class="info"></div>
+
+                        <div class="label">Start Date</div>
+                        <div id="accountStartDateLabel" class="info"></div>
+
+                        <div class="label">Type</div>
+                        <div id="accountTypeNameLabel"></div> 
+                        
+                        <div class="label">Accumulate?</div>
+                        <div id="accountAccumulateLabel" class="info"></div>
                     </div>
                 </div>
             </div>

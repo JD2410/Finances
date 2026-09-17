@@ -1,27 +1,57 @@
 #updateAccount  {
     .body {
+        min-height: 230px;
+        justify-content: center;
+        align-content: center;
+
         #deleteForm {
             display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-width: 320px;
+            align-self: center;
+            gap: 12px;
+            text-align: center;
+
+            i {
+                font-size: 5em;
+                color: red;
+            }
+
+            .action {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+            }
         }
         #updateForm {
             display: none;
         }
+        .label {
+            font-weight: 500;
+        }
         .details {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 24px;
+            min-width: 480px;
+            align-self: center;
 
-            .detail {
-                .label {
-                    font-weight: 500;
+            .account-header {
+                #accountNameLabel {
+                    font-size: 1.8em;
+                    font-weight: 600;
                 }
             }
-            .details.deep {
-                background-color: rgb(240, 240, 240);
-                border-radius: 4px;
-                padding: 12px;
-                display: flex;
-                flex-direction: column;
+            .information {
+                display: grid;
+                grid-template-columns: 150px 1fr;
+                gap: 6px;
+
+                
             }
         }
     }
@@ -72,7 +102,7 @@
             margin-bottom: 12px;
             
             #deleteForm {
-                display: block;
+                display: flex;
             }
             #updateForm, .details {
                 display: none;

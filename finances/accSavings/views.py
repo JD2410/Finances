@@ -124,13 +124,14 @@ def index(request):
         accounts_list.append({
             'id': account.id,
             'name': account.name,
+            'created': account.created_at.strftime("%d %b %Y, %I:%M%p"),
             'accountType': {
                 'id': account.accountType.id,
                 'type_name': account.accountType.name,
                 'type_accumulate': account.accountType.accumulate,
             },
             'first': first,
-            'firstDate': date
+            'firstDate': date.strftime("%d %b %Y, %I:%M%p")
         })
 
     return render(
