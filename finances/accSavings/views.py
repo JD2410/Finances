@@ -3,9 +3,10 @@ import io
 import json
 
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.db import transaction
 
@@ -20,14 +21,12 @@ def index(request):
     csv_contents = False
     transaction_form = TransactionForm()
 
-
     if request.method == 'POST':
         if 'addTransaction' in request.POST:
             transaction_form = TransactionForm(request.POST)
             if transaction_form.is_valid():
                 transaction_form.save()
                 messages.success(request, "Transaction was successfully added")
-
         elif 'deleteTransaction' in request.POST:
             try:
                 get_deleted_record = Transactions.objects.get(id=request.POST['deleteTransaction'])
@@ -107,10 +106,18 @@ def index(request):
                 }
             )
 
+    get_page_number = request.GET.get('pn', 1)
+    try:
+        int(get_page_number)
+        page = int(get_page_number)
+    except ValueError:
+        page = 1
+
     transactions = Transactions.objects.all().order_by('-date')
+    paginated = Paginator(transactions, 20)
+    paginated_transaction = paginated.get_page(page)
+
     accounts_list = []
-    daily_total = Transactions.objects.values('date').annotate(total=Sum('amount')).order_by('date')
-    get_account_highlight = get_account_totals()
 
     for account in accounts:
         get_earliest = Transactions.objects.all().filter(accountId=account.id).order_by('date').first()
@@ -133,17 +140,19 @@ def index(request):
             'first': first,
             'firstDate': date.strftime("%d %b %Y, %I:%M%p")
         })
-
     return render(
         request, 'savings.html',
         {
-            'transactions': transactions,
+            'records': {
+                'transactions': paginated_transaction,
+                'number_of_pages': range(paginated.num_pages),
+                'current_page': page
+            },
             'accounts': accounts_list,
-            'form': transaction_form,
-            'daily': daily_total,
-            'savings': account_form,
-            'csv': csv_form,
-            'account_highlights': get_account_highlight
+            'transaction_form': transaction_form,
+            'savings_form': account_form,
+            'csv_form': csv_form,
+            'account_highlights': get_account_totals()
         }
     )
 

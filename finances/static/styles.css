@@ -529,3 +529,25 @@ table.standard {
         }
     }
 }
+
+.pagination {
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    padding: 20px 10px;
+
+    a {
+        color: #3b3b3d;
+        display: block;
+        padding: 4px 8px;
+        text-decoration: none;
+        &.selected {
+            background-color: purple;
+            color: #fff;
+        }
+        &:hover {
+            color: #fff;
+            background-color: purple;
+        }
+    }
+}

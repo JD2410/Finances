@@ -43,7 +43,7 @@
             <div class="page-section">
                 <div class="header"><h2>All Records</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
                     <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
-                {% if transactions %}
+                {% if records %}
                     <table class="standard">
                         <thead>
                             <th>Account</th>
@@ -54,7 +54,7 @@
                             <th class="right">Action</th>
                         </thead>
                         <tbody>
-                        {% for action in transactions %}
+                        {% for action in records.transactions %}
                             <tr id="record_{{ action.id }}">
                                 <td class="accountId" data-value="{{ action.accountId.id }}">{{ action.accountId.name }}</td>
                                 <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
@@ -69,6 +69,17 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    {% if record.number_of_pages != 1 %}
+                        <div class="pagination">
+                        {% for i in records.number_of_pages %}
+                            {% if forloop.counter != records.current_page %}
+                                <a href="{% url 'savings' %}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
+                            {% else %}
+                                <a href="#" class="selected">{{ forloop.counter }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
                 {% else %}
                     <p>There are no transactions in the database</p>
                 {% endif %}
@@ -99,7 +110,7 @@
             </div>
             <div class="body">
                 {% csrf_token %}
-                {{ form }}
+                {{ transaction_form }}
                 <input type="hidden" name="id" id="id">
             </div>
             <div class="footer">
@@ -116,7 +127,7 @@
             </div>
             <div class="body">
                 {% csrf_token %}
-                {{ form }}
+                {{ transaction_form }}
                 <input type="hidden" name="addTransaction">
             </div>
             <div class="footer">
@@ -133,7 +144,7 @@
             </div>
             <div class="body">
                 {% csrf_token %}
-                {{ savings }}
+                {{ savings_form }}
             </div>
             <div class="footer">
                 <input class="button primary" type="submit" name="addAccount">
@@ -150,7 +161,7 @@
             <div class="body">
                 <form action="" method="post" id="updateForm">
                     {% csrf_token %}
-                    {{ savings }}
+                    {{ savings_form }}
                     <input type="hidden" name="accountId" id="accountId">
                     <input type="hidden" name="updateAccount">
                 </form>
@@ -216,7 +227,7 @@
             </div>
             <div class="body">
                 {% csrf_token %}
-                {{ csv }}
+                {{ csv_form }}
             </div>
             <div class="footer">
                 <input class="button primary" type="submit">
