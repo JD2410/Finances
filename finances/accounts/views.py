@@ -2,8 +2,8 @@ import csv
 import io
 import json
 
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.db.models import Sum
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -57,6 +57,7 @@ def index(request):
                 get_deleted_record = Accounts.objects.get(id=request.POST['deleteAccount'])
                 get_deleted_record.delete()
                 messages.success(request, "Account deleted successfully.")
+                return redirect('accounts')
             except Accounts.DoesNotExist:
                 messages.warning(request, "Account was not found or was already deleted.")
         elif 'updateAccount' in request.POST:
@@ -198,12 +199,15 @@ def account(request,accountPassed):
                 get_deleted_record = Accounts.objects.get(id=request.POST['deleteAccount'])
                 get_deleted_record.delete()
                 messages.success(request, "Account deleted successfully.")
+                return redirect('accounts')
+            
             except Accounts.DoesNotExist:
                 messages.warning(request, "Account was not found or was already deleted.")
         elif 'updateAccount' in request.POST:
             try:
                 get_account_type = Type.objects.get(id=request.POST['accountType'])
                 get_account = Accounts.objects.get(id=request.POST['accountId'])
+
                 get_account.name = request.POST['name']
                 get_account.accountType = get_account_type
                 get_account.save()
@@ -260,7 +264,7 @@ def account(request,accountPassed):
     except ValueError:
         page = 1
 
-    account_form = SavingsAccountForm()
+    account_form = SavingsAccountForm(instance=get_account)
     csv_form = CsvUploader()
     transaction_form = TransactionForm()
 
