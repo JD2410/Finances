@@ -26,14 +26,14 @@
                     <div class="card">
                         <div class="title">Total Savings</div>
                         <div class="main">£{{total|floatformat:2|intcomma }}</div>
-                        <a href="{% url 'savings' %}" class="small-button hollow">See All</a>
+                        <a href="{% url 'accounts' %}" class="small-button hollow">See All</a>
                     </div>
                     {% if savings %}
                         {% for account in savings %}
                             <div class="card">
                                 <div class="title">{{account.name}}</div>
                                 <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                                <a href="{% url 'savings' %}{{account.id}}" class="small-button hollow">See More</a>
+                                <a href="{% url 'accounts' %}{{account.id}}" class="small-button hollow">See More</a>
                             </div>
                         {% endfor %}
                     {% endif %}
@@ -52,7 +52,7 @@
                             </div>
                             <h4>Sorry, can't find any transactions</h4>
                             <p>There are no transactions availble for you accounts. Click the button below to get started.</p>
-                            <a href="{% url 'savings' %}" class="button primary">Add Transactions</a>
+                            <a href="{% url 'accounts' %}" class="button primary">Add Transactions</a>
                         </div>
                     </div>
                     {% endif %}
@@ -61,7 +61,7 @@
                     <div class="header">
                         <h2>Transactions</h2>
                         {% if recent_transactions %}
-                            <a href="{% url 'savings' %}" class="button primary">All Transactions</a>
+                            <a href="{% url 'accounts' %}" class="button primary">All Transactions</a>
                         {% endif %}
                     </div>
                     {% if recent_transactions %}
@@ -79,7 +79,7 @@
                             {% for transaction in recent_transactions %}
                             <tr>
                                 <td>{{ transaction.name }}</td>
-                                <td><a href="{% url 'savings' %}{{transaction.accountId.id}}">{{ transaction.accountId.name }} </a></td>
+                                <td><a href="{% url 'accounts' %}{{transaction.accountId.id}}">{{ transaction.accountId.name }} </a></td>
                                 <td>{{ transaction.date|date:"jS M Y" }} </td>
                                 <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
                             </tr>
@@ -95,7 +95,7 @@
                             </div>
                             <h4>Sorry, can't find any transactions</h4>
                             <p>There are no transactions availble for you accounts. Click the button below to get started.</p>
-                            <a href="{% url 'savings' %}" class="button primary">Add Transactions</a>
+                            <a href="{% url 'accounts' %}" class="button primary">Add Transactions</a>
                         </div>
                     </div>
                     
@@ -115,7 +115,7 @@
                             </div>
                             <h4>Sorry, can't find any accounts or transactions</h4>
                             <p>There are no accounts or transactions availalble. Click the button below to get started.</p>
-                            <a href="{% url 'savings' %}" class="button primary">Add Account/Transactions</a>
+                            <a href="{% url 'accounts' %}" class="button primary">Add Account/Transactions</a>
                         </div>
                     </div>
                     {% endif %}

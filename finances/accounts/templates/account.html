@@ -29,7 +29,7 @@
         <div class="main-area">
             <div class="page-header">
                 <h1>Acount Details</h1>
-                <a href="{% url 'savings' %}" class="button primary">View All Acounts</a>
+                <a href="{% url 'accounts' %}" class="button primary">View All Acounts</a>
             </div>
             {% if records %}
             <div class="page-section">
@@ -98,7 +98,7 @@
                         <div class="pagination">
                         {% for i in records.number_of_pages %}
                             {% if forloop.counter != records.current_page %}
-                                <a href="{% url 'savings' %}{{ account_details.id }}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
+                                <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
                             {% else %}
                                 <a href="#" class="selected">{{ forloop.counter }}</a>
                             {% endif %}
@@ -117,7 +117,7 @@
                     </div>
                     <h4>Sorry</h4>
                     <p>No account with the id {{ id }} exists. Please click on the link below to view all accounts</p>
-                    <a href="{% url 'savings' %}" class='button primary'>View all accounts</a>
+                    <a href="{% url 'accounts' %}" class='button primary'>View all accounts</a>
 
                 </div>
             </div>

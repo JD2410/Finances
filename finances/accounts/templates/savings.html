@@ -35,7 +35,7 @@
                         <div class="card">
                             <div class="title">{{account.name}}</div>
                             <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                            <a href="{% url 'savings' %}{{account.id}}" class="small-button hollow">See More</a>
+                            <a href="{% url 'accounts' %}{{account.id}}" class="small-button hollow">See More</a>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -56,7 +56,7 @@
                         <tbody>
                         {% for action in records.transactions %}
                             <tr id="record_{{ action.id }}">
-                                <td class="accountId" data-value="{{ action.accountId.id }}"><a href="{% url 'savings' %}{{action.accountId.id}}">{{ action.accountId.name }}</a></td>
+                                <td class="accountId" data-value="{{ action.accountId.id }}"><a href="{% url 'accounts' %}{{action.accountId.id}}">{{ action.accountId.name }}</a></td>
                                 <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
                                 <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
                                 <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
@@ -73,7 +73,7 @@
                         <div class="pagination">
                         {% for i in records.number_of_pages %}
                             {% if forloop.counter != records.current_page %}
-                                <a href="{% url 'savings' %}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
+                                <a href="{% url 'accounts' %}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
                             {% else %}
                                 <a href="#" class="selected">{{ forloop.counter }}</a>
                             {% endif %}
