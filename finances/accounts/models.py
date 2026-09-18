@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-from accountType.models import Type
+from account_types.models import Type
 # Create your models here.
 
 class Accounts(models.Model):

@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 
 from .models import Transactions, Accounts
-from accountType.models import Type
+from account_types.models import Type
 from .forms import TransactionForm, SavingsAccountForm, CsvUploader, SavingsRecordFormSet
 
 def index(request):
