@@ -18,7 +18,7 @@
 </head>
 <body class="full-page">
     <div class="page-container">
-        {% include "_partials/header.html" with page='settings' %}
+        {% include "navigation.html" with page='settings' %}
         <div class="main-area">
             <div class="page-header">
                 <h1>Account Types</h1>
@@ -67,7 +67,7 @@
             </div>
         </div>
     </div>
-    {% include "_partials/errors.html" %}
+    {% include "errors.html" %}
     {% if createFrom %}
     <div class="modal" id="createType">
         <form action="" method="post" class="modal-container">

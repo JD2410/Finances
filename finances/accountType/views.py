@@ -39,7 +39,7 @@ def index(request):
 
     account_types = Type.objects.all()
 
-    return render (request, 'settings/accounttype.html', {
+    return render (request, 'accounttype.html', {
         'createFrom': form,
         'types': account_types,
     })
