@@ -19,11 +19,11 @@ window.addEventListener("load", e => {
                 modal.getElementsByTagName('form')[0].reset()
             })
         })
-        modal.addEventListener('click', function() {
+        modal.addEventListener('mousedown', function() {
             this.classList.remove('show')
             modal.getElementsByTagName('form')[0].reset()
         })
-        modal.querySelector('.modal-container').addEventListener('click', function(event) {
+        modal.querySelector('.modal-container').addEventListener('mousedown', function(event) {
             event.stopPropagation()
         })
     })

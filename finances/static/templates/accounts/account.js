@@ -1,17 +1,17 @@
 window.addEventListener("load", e => {
-    accountScript.editAccount.init()
+    accountScript.init()
 })
 
-let accountScript = {
-    'editAccount': {
-        init() {
-            $editButtons = document.querySelectorAll('.account-edit')
-            $editButtons.forEach(button => {
-                button.addEventListener('click', ele => {
-                    ele.preventDefault()
-                    document.getElementById('updateAccount').classList.add('show')
-                })
+const accountScript = {
+    init() {
+        let $addTransactionButton = document.querySelectorAll('.open-modal-add-transaction')
+        $addTransactionButton.forEach(button => {
+            button.addEventListener('click', () => {
+                const $modal = document.getElementById(button.dataset.modal)
+                $modal.querySelector('select[name=accountId]').value = button.dataset.account
+                $modal.classList.add('show')
             })
-        },
-    },
+        })
+
+    }
 }

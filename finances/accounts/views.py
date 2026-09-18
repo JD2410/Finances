@@ -146,7 +146,7 @@ def index(request):
             'firstDate': first_date
         })
     return render(
-        request, 'savings.html',
+        request, 'accounts.html',
         {
             'records': {
                 'transactions': paginated_transaction,

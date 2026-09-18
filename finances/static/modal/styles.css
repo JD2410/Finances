@@ -51,6 +51,7 @@
             background-color: #fff;
             box-shadow: 1px 1px 13px 0 rgba(59, 59, 59, 0.13);
             border-radius: 4px;
+            min-height: 400px;
 
             label {
                 font-weight: 500;
