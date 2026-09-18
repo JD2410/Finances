@@ -8,5 +8,42 @@
         h2 {
             line-height: 33px;
         }
+        .cards {
+            margin-top: 12px;
+            .main {
+                padding-bottom: 0;
+            }
+        }
+        .info-list {
+            color: #909090;
+            padding: 12px 8px;
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 4px;
+
+            .title {
+                font-weight: 600;
+                color: #3b3b3d;
+            }
+
+            h3 {
+                color: #3b3b3d;
+                grid-column: 1 / span 2;
+                margin-top: 12px;
+                color: purple;
+                font-size: 1.1em;
+
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+            .actions {
+                display: grid;
+                grid-column: 1 / span 2;
+                gap: 20px;
+                grid-template-columns: 1fr 1fr;
+                margin-top: 20px;
+            }
+        }
     }
 }

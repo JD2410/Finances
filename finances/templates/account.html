@@ -32,17 +32,44 @@
                 <a href="{% url 'savings' %}" class="button primary">View All Acounts</a>
             </div>
             {% if records %}
-            {{ account_details }}
             <div class="page-section">
                 <div class="info">
-                    <h2 class="info">{{ account_details.name }}</h2>
-                    <div><span>Created</span> {{ account_details.created_at }}</div>
-                    <div><span>ID</span> {{ account_details.id }}</div>
-                    <div><span>Type</span> {{ account_details.accountType }}</div>
-                    <div><span>Current Total</span> £{{ account_total|floatformat:2|intcomma }}</div>
+                    <h2>Information</h2>
+                    <div class="cards">
+                        <div class="card">
+                            <div class="title">{{ account_details.name }}</div>
+                            <div class="main">£{{ account_total|floatformat:2|intcomma }}</div>
+                        </div>
+                    </div>
+                    <div class="info-list">
+                        <h3>Details</h3>
+                        <div class="title">Created</div> <div>{{ account_details.created_at|date:"jS M Y" }}</div>
+                        <div class="title">ID</div> <div>{{ account_details.id }}</div>
+                        {% if start_details.date != None %}
+                        <div class="title">Start Date</div> <div>{{ start_details.date|date:"jS M Y" }}</div>
+                        <div class="title">Start Amount</div> <div>£{{ start_details.amount|floatformat:2|intcomma }}</div>
+                        {% endif %}
+                        <h3>Type</h3>
+                        {% if account_details.accountType != None %}
+                        <div class="title">Name</div> <div>{{ account_details.accountType }}</div>
+                        <div class="title">Accumulate?</div> <div>
+                            {% if account_details.accountType.accumulate %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div>Name</div> <i>Not Set</i>
+                        {% endif %}
+                        <div class="actions">
+                            <button class="button positive">Update</button>
+                            <button class="button negative">Delete</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="transactions">
-                    <div class="header"><h2>All Transactions</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
+                    <div class="header"><h2>Transactions</h2><div><button class='open-modal button' data-modal="savingAccountsRecord">Add</button>
                     <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
                     {% if records %}
                         <table class="standard">

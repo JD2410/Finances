@@ -128,6 +128,10 @@ def index(request):
             first = get_earliest.amount
             date = get_earliest.date
 
+        first_date = None
+        if date != None:
+            first_date = date.strftime("%d %b %Y, %I:%M%p")
+
         accounts_list.append({
             'id': account.id,
             'name': account.name,
@@ -138,7 +142,7 @@ def index(request):
                 'type_accumulate': account.accountType.accumulate,
             },
             'first': first,
-            'firstDate': date.strftime("%d %b %Y, %I:%M%p")
+            'firstDate': first_date
         })
     return render(
         request, 'savings.html',
@@ -157,7 +161,93 @@ def index(request):
     )
 
 def account(request,accountPassed):
-    #return HttpResponse(f"location: {accountId}")
+
+    if request.method == 'POST':
+        if 'addTransaction' in request.POST:
+            transaction_form = TransactionForm(request.POST)
+            if transaction_form.is_valid():
+                transaction_form.save()
+                messages.success(request, "Transaction was successfully added")
+        elif 'deleteTransaction' in request.POST:
+            try:
+                get_deleted_record = Transactions.objects.get(id=request.POST['deleteTransaction'])
+                get_deleted_record.delete()
+                messages.success(request, "Transaction deleted successfully.")
+            except Transactions.DoesNotExist:
+                messages.warning(request, "Transaction was not found or was already deleted.")
+        elif 'updateTransaction' in request.POST:
+            try:
+                get_update_form = Transactions.objects.get(id=request.POST['id'])
+                get_account = Accounts.objects.get(id=request.POST['accountId'])
+                get_update_form.name = request.POST['name']
+                get_update_form.amount = request.POST['amount']
+                get_update_form.date = request.POST['date']
+                get_update_form.accountId = get_account
+                get_update_form.save()
+                messages.success(request, "Transaction updated successfully.")
+            except Transactions.DoesNotExist:
+                messages.warning(request, "Transaction was not found")
+            except Accounts.DoesNotExist:
+                messages.warning(request, "Account was not found")
+        elif 'addAccount' in request.POST:
+            account_form = SavingsAccountForm(request.POST)
+            if account_form.is_valid():
+                account_form.save()
+        elif 'deleteAccount' in request.POST:
+            try:
+                get_deleted_record = Accounts.objects.get(id=request.POST['deleteAccount'])
+                get_deleted_record.delete()
+                messages.success(request, "Account deleted successfully.")
+            except Accounts.DoesNotExist:
+                messages.warning(request, "Account was not found or was already deleted.")
+        elif 'updateAccount' in request.POST:
+            try:
+                get_account_type = Type.objects.get(id=request.POST['accountType'])
+                get_account = Accounts.objects.get(id=request.POST['accountId'])
+                get_account.name = request.POST['name']
+                get_account.accountType = get_account_type
+                get_account.save()
+                messages.success(request, "Account updated")
+            except Accounts.DoesNotExist:
+                messages.warning(request, "Account was not found")
+            except Type.DoesNotExist:
+                messages.warning(request, "Account type was not found")
+        else:
+            csv_form = CsvUploader(request.POST, request.FILES)
+            accounts_format = []
+            accounts = Accounts.objects.all()
+            for account in accounts:
+                accounts_format.append({
+                    'id': account.id,
+                    'name': account.name,
+                })
+
+            csv_contents = []
+            if csv_form.is_valid():
+                csv_file = request.FILES['csv_file']
+    
+                file_data = csv_file.read().decode('utf-8')
+                io_string = io.StringIO(file_data)
+                reader = csv.DictReader(io_string)
+    
+                for row in reader:
+                    row_construct = []
+                    for key, val in row.items():
+                        keyValue = {
+                            'label': key,
+                            'value': val
+                        }
+                        row_construct.append(keyValue)
+                    csv_contents.append(row_construct)
+
+            return render(
+                request, 'uploader.html', {  
+                    'form': csv_form,
+                    'results': csv_contents,
+                    'accounts': accounts_format
+                }
+            )
+
     try:
         get_account = Accounts.objects.all().get(id=accountPassed)
     except Accounts.DoesNotExist:
@@ -170,18 +260,27 @@ def account(request,accountPassed):
     except ValueError:
         page = 1
 
+    account_form = SavingsAccountForm()
+    csv_form = CsvUploader()
+    transaction_form = TransactionForm()
+
     get_transactions = Transactions.objects.all().filter(accountId=accountPassed).order_by('-date')
+    starts = get_transactions.last()
     paginated = Paginator(get_transactions, 20)
     paginated_transaction = paginated.get_page(page)
 
     return render(request, 'account.html', {
         'account_details': get_account,
         'account_total': get_account_total(get_account),
+        'start_details': starts,
         'records': {
             'transactions': paginated_transaction,
             'number_of_pages': range(paginated.num_pages),
             'current_page': page
         },
+        'transaction_form': transaction_form,
+        'savings_form': account_form,
+        'csv_form': csv_form,
     })
 
 def get_account_total(account):
