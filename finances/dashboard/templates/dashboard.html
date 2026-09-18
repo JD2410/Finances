@@ -12,8 +12,8 @@
     {{ savings|json_script:"savings" }}
     {{ total|json_script:"total" }}
 
-    <script src="{% static 'home/scripts.js' %}?{% now "U" %}"></script>
-    <link rel="stylesheet" href="{% static 'home/styles.css' %}?{% now "U" %}">
+    <script src="{% static 'templates/dashboard/scripts.js' %}?{% now "U" %}"></script>
+    <link rel="stylesheet" href="{% static 'templates/dashboard/styles.css' %}?{% now "U" %}">
 
 </head>
 <body class="home">

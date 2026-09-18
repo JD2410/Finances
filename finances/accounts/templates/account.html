@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
 
-    <link rel="stylesheet" href="{% static 'savings/styles.css' %}?{% now "U" %}">
-    <script src="{% static 'savings/scripts.js' %}?{% now "U" %}"></script>
+    <link rel="stylesheet" href="{% static 'templates/accounts/styles.css' %}?{% now "U" %}">
+    <script src="{% static 'templates/accounts/scripts.js' %}?{% now "U" %}"></script>
 
-    <link rel="stylesheet" href="{% static 'savings/styles_account.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'templates/accounts/styles_account.css' %}?{% now "U" %}">
 
     {{ accounts|json_script:"accounts" }}
 
