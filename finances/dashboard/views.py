@@ -17,76 +17,75 @@ def index(request):
         accounts = []
 
         savings = Accounts.objects.all()
-        print(savings)
-        # if savings != None:
-        #     for account in savings:
-        #         if account.accountType == None:
-        #             messages.warning(request, account.name + " doesn't have an account type assigned and cannot display anything")
-        #         else:
-        #             transaction_total = 0.00
-        #             transactions_start_total = None
-        #             daily_totals = {}
+        if savings != None:
+            for account in savings:
+                if account.accountType == None:
+                    messages.warning(request, account.name + " doesn't have an account type assigned and cannot display anything")
+                else:
+                    transaction_total = 0.00
+                    transactions_start_total = None
+                    daily_totals = {}
 
-        #             if account.accountType.accumulate:
-        #                 get_transactions_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(accountId = account.id)
-        #                 if len(get_transactions_total):
-        #                     transaction_total = get_transactions_total[0]['total'] 
+                    if account.accountType.accumulate:
+                        get_transactions_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(accountId = account.id)
+                        if len(get_transactions_total):
+                            transaction_total = get_transactions_total[0]['total'] 
 
-        #                 get_transactions_start_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(
-        #                     date__lte=start_date,
-        #                     accountId=account.id
-        #                 )
-        #                 if get_transactions_start_total != None:
-        #                     if len(get_transactions_start_total):
-        #                         transactions_start_total = get_transactions_start_total[0]['total']
+                        get_transactions_start_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(
+                            date__lte=start_date,
+                            accountId=account.id
+                        )
+                        if get_transactions_start_total != None:
+                            if len(get_transactions_start_total):
+                                transactions_start_total = get_transactions_start_total[0]['total']
 
-        #                 get_daily_totals = Transactions.objects.values('date').annotate(total=Sum('amount')).order_by('date').filter(
-        #                     date__gte=start_date,
-        #                     date__lte=datetime.date.today(),
-        #                     accountId=account.id
-        #                 )
-        #                 if len(get_daily_totals):
-        #                     for day in get_daily_totals:
-        #                         daily_totals[day['date'].strftime("%Y-%m-%d")] = day['total']
-        #             else:
-        #                 get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
-        #                 if get_transactions_total != None:
-        #                     if len(get_transactions_total):
-        #                         transaction_total = get_transactions_total['amount']
+                        get_daily_totals = Transactions.objects.values('date').annotate(total=Sum('amount')).order_by('date').filter(
+                            date__gte=start_date,
+                            date__lte=datetime.date.today(),
+                            accountId=account.id
+                        )
+                        if len(get_daily_totals):
+                            for day in get_daily_totals:
+                                daily_totals[day['date'].strftime("%Y-%m-%d")] = day['total']
+                    else:
+                        get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
+                        if get_transactions_total != None:
+                            if len(get_transactions_total):
+                                transaction_total = get_transactions_total['amount']
 
-        #                 get_transactions_start_total = Transactions.objects.values('amount').filter(
-        #                     date__lte=start_date,
-        #                     accountId=account.id
-        #                 ).order_by('-date').first()
+                        get_transactions_start_total = Transactions.objects.values('amount').filter(
+                            date__lte=start_date,
+                            accountId=account.id
+                        ).order_by('-date').first()
 
-        #                 if get_transactions_start_total != None:
-        #                     if len(get_transactions_start_total):
-        #                         transactions_start_total = get_transactions_start_total['amount']
+                        if get_transactions_start_total != None:
+                            if len(get_transactions_start_total):
+                                transactions_start_total = get_transactions_start_total['amount']
 
-        #                 get_daily_totals = Transactions.objects.values('amount', 'date').order_by('date').filter(
-        #                     date__gte=start_date,
-        #                     date__lte=datetime.date.today(),
-        #                     accountId=account.id
-        #                 )
-        #                 if len(get_daily_totals):
-        #                     for day in get_daily_totals:
-        #                         daily_totals[day['date'].strftime("%Y-%m-%d")] = day['amount']
+                        get_daily_totals = Transactions.objects.values('amount', 'date').order_by('date').filter(
+                            date__gte=start_date,
+                            date__lte=datetime.date.today(),
+                            accountId=account.id
+                        )
+                        if len(get_daily_totals):
+                            for day in get_daily_totals:
+                                daily_totals[day['date'].strftime("%Y-%m-%d")] = day['amount']
                             
-        #             total += Decimal(transaction_total)
+                    total += Decimal(transaction_total)
 
-        #             accounts.append({
-        #                 'id': account.id,
-        #                 'name': account.name,
-        #                 'total': transaction_total,
-        #                 'type_details': {
-        #                     'name': account.accountType.name,
-        #                     'accumulate': account.accountType.accumulate,
-        #                 },
-        #                 'graph_start': transactions_start_total,
-        #                 'daily_totals': daily_totals
-        #             })
+                    accounts.append({
+                        'id': account.id,
+                        'name': account.name,
+                        'total': transaction_total,
+                        'type_details': {
+                            'name': account.accountType.name,
+                            'accumulate': account.accountType.accumulate,
+                        },
+                        'graph_start': transactions_start_total,
+                        'daily_totals': daily_totals
+                    })
 
-        # get_recent_transactions = Transactions.objects.all().filter().order_by('-date')[:10]
+        get_recent_transactions = Transactions.objects.all().filter().order_by('-date')[:10]
 
         return render(
             request, 'dashboard.html',

@@ -312,7 +312,7 @@ let cu = {
             body: JSON.stringify({ "records": records }),
         }
 
-        await fetch("/savings/import/", options)
+        await fetch("/accounts/import/", options)
             .then(response => response.json())
             .then(data => {
                 if(data.status == 'error') {
