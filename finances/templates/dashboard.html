@@ -26,14 +26,14 @@
                     <div class="card">
                         <div class="title">Total Savings</div>
                         <div class="main">£{{total|floatformat:2|intcomma }}</div>
-                        <div class="sub-title">{% now 'DATE_FORMAT' %}</div>
+                        <a href="{% url 'savings' %}" class="small-button hollow">See All</a>
                     </div>
                     {% if savings %}
                         {% for account in savings %}
                             <div class="card">
                                 <div class="title">{{account.name}}</div>
                                 <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                                <div class="sub-title">{{account.type_details.name }}</div>
+                                <a href="{% url 'savings' %}{{account.id}}" class="small-button hollow">See More</a>
                             </div>
                         {% endfor %}
                     {% endif %}
@@ -79,7 +79,7 @@
                             {% for transaction in recent_transactions %}
                             <tr>
                                 <td>{{ transaction.name }}</td>
-                                <td>{{ transaction.accountId.name }} </td>
+                                <td><a href="{% url 'savings' %}{{transaction.accountId.id}}">{{ transaction.accountId.name }} </a></td>
                                 <td>{{ transaction.date|date:"jS M Y" }} </td>
                                 <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
                             </tr>

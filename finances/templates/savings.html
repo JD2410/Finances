@@ -35,7 +35,7 @@
                         <div class="card">
                             <div class="title">{{account.name}}</div>
                             <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                            <button class="small-button hollow account-edit" data-id="{{account.id}}" data-amount="{{account.total|floatformat:2|intcomma }}">See More</button>
+                            <a href="{% url 'savings' %}{{account.id}}" class="small-button hollow">See More</a>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -56,7 +56,7 @@
                         <tbody>
                         {% for action in records.transactions %}
                             <tr id="record_{{ action.id }}">
-                                <td class="accountId" data-value="{{ action.accountId.id }}">{{ action.accountId.name }}</td>
+                                <td class="accountId" data-value="{{ action.accountId.id }}"><a href="{% url 'savings' %}{{action.accountId.id}}">{{ action.accountId.name }}</a></td>
                                 <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
                                 <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
                                 <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
@@ -151,73 +151,6 @@
                 <button class="button hollow" data-close="savingAccount">Cancel</button>
             </div>
         </form>
-    </div>
-    <div class="modal" id="updateAccount">
-        <div class="modal-container"">
-            <div class="header">
-                <h2>Savings Accounts Details</h2>
-                <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                <form action="" method="post" id="updateForm">
-                    {% csrf_token %}
-                    {{ savings_form }}
-                    <input type="hidden" name="accountId" id="accountId">
-                    <input type="hidden" name="updateAccount">
-                </form>
-                <form action="" method="post" id="deleteForm">
-                    {% csrf_token %}
-                    <i class="fa-solid fa-warning"></i>
-                    <div class="message">
-                        <h3>Are you sure?</h3>
-                        <p>By deleting this account you're also deleting all transactions that are connected to it. Do you wish to continue?</p>
-                    </div>
-                    <div class="action">
-                        <button class="button primary resetView">Cancel</button>
-                        <input type="submit" class="button negative" value="Delete Account">
-                    </div>
-                    <input type="hidden" name="deleteAccount" value="">
-                </form>
-                <div class="details">
-                    <div class="account-header">
-                        <div id="accountNameLabel" class="info"></div>
-                        <span class="label">Created </span><span id="accountCreatedLabel"></span>
-                    </div>
-                    <div class="information">
-                        <div class="label">ID</div>
-                        <div id="accountIdLabel" class="info"></div>
-
-                        <div class="label">Current Value</div>
-                        <div id="accountValueLabel" class="info"></div>
-
-                        <div class="label">Start Amount</div>
-                        <div id="accountStartLabel" class="info"></div>
-
-                        <div class="label">Start Date</div>
-                        <div id="accountStartDateLabel" class="info"></div>
-
-                        <div class="label">Type</div>
-                        <div id="accountTypeNameLabel"></div> 
-                        
-                        <div class="label">Accumulate?</div>
-                        <div id="accountAccumulateLabel" class="info"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer">
-                <div class="details">
-                    <div>
-                        <button class="button positive openUpdateView">Update Details</button>
-                        <button class="button negative" id="deleteAccount">Delete Account</button>
-                    </div>
-                    <button class="button primary" data-close="updateAccount">Close</button>
-                </div>
-                <div class="editing">
-                    <button class='button primary' id="confirmUpdate">Confirm</button>
-                    <button class="button hollow resetView">Cancel</button>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="modal" id="uploadCSV">
         <form action="" method="post" class="modal-container" enctype="multipart/form-data">

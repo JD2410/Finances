@@ -73,6 +73,7 @@ def index(request):
                 total += Decimal(transaction_total)
 
                 accounts.append({
+                    'id': account.id,
                     'name': account.name,
                     'total': transaction_total,
                     'type_details': {

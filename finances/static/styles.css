@@ -43,6 +43,14 @@ table.standard {
     tbody tr:nth-child(odd) {
         background-color: rgba(247, 247, 247, 1);
     }
+    a {
+        text-decoration: none;
+        color: purple;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
     .button {
         display: inline-block;
         padding: 4px 4px;
@@ -105,7 +113,7 @@ table.standard {
     border: 0;
     background-color: lightgray;
     cursor: pointer;
-
+    text-decoration: none;
 
     &.hollow {
         border: 1px solid purple;
@@ -144,7 +152,6 @@ table.standard {
             }
             .sub-title {
                 color: #fff;
-                
             }
             .small-button.hollow {
                 border-color: #fff;
