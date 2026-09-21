@@ -59,14 +59,17 @@
                 </div>
                 <div class="widget">
                     <div class="header">
-                        <h2>Transactions</h2>
+                        <h2>Recent Transactions</h2>
                         {% if recent_transactions %}
-                            <a href="{% url 'accounts' %}" class="button primary">All Transactions</a>
+                            <div>
+                                <input type="date" id="transactionDate" data-url="{% url 'getTransactionsDate' %}">
+                                <a href="{% url 'accounts' %}" class="button primary">All Transactions</a>
+                            </div>
                         {% endif %}
                     </div>
                     {% if recent_transactions %}
                         <div class="body">
-                        <table class="standard">
+                        <table class="standard" id="transactionTable">
                             <thead>
                                 <tr>
                                     <th>Tansaction Description</th>
@@ -74,17 +77,23 @@
                                     <th>Date</th>
                                     <th class="right">Amount</th>
                                 </tr>
+                                <tr id="transactionTemplate">
+                                    <td class="description"><a href="{% url 'accounts' %}"></a></td>
+                                    <td class="account"><a href="{% url 'accounts' %}" class="small-button hollow"></a></td>
+                                    <td class="date"></td>
+                                    <td class="right amount"></td>
+                                </tr>
                             </thead>
-                        <tbody>
-                            {% for transaction in recent_transactions %}
-                            <tr>
-                                <td><a href="{% url 'accounts' %}?q={{transaction.name}}">{{ transaction.name }}</a></td>
-                                <td><a href="{% url 'accounts' %}{{transaction.accountId.id}}" class="small-button hollow">{{ transaction.accountId.name }} </a></td>
-                                <td>{{ transaction.date|date:"jS M Y" }} </td>
-                                <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
+                            <tbody id="transactionBody">
+                                {% for transaction in recent_transactions %}
+                                <tr>
+                                    <td><a href="{% url 'accounts' %}?q={{transaction.name}}">{{ transaction.name }}</a></td>
+                                    <td><a href="{% url 'accounts' %}{{transaction.accountId.id}}" class="small-button hollow">{{ transaction.accountId.name }} </a></td>
+                                    <td>{{ transaction.date|date:"jS M Y" }} </td>
+                                    <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                         </div>
                     {% else %}

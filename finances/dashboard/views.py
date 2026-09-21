@@ -4,6 +4,10 @@ from accounts.models import Transactions, Accounts
 from django.db.models import Sum
 import datetime
 
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+import json
+
 from decimal import Decimal
 
 def index(request):
@@ -95,3 +99,30 @@ def index(request):
                 'total': total
             }
         )
+
+@require_POST
+def getTransactionsDate(request):
+    try:
+        data = json.loads(request.body)
+
+        get_transactions = Transactions.objects.all().filter(date__lte = data['date'], date__gte='1900-01-01').order_by('-date')[:10]
+        transaction = []
+
+        for action in get_transactions:
+            transaction.append({
+                'id': action.id,
+                'name': action.name,
+                'amount': action.amount,
+                'date': action.date,
+                'account_details': {
+                    'id': action.accountId.id,
+                    'name': action.accountId.name,
+                }
+            })
+        return JsonResponse({
+            'status': 'success',
+            'transactions': transaction  # Parse string into Python list/dict
+        }, status=200)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON payload"}, status=400)

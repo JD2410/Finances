@@ -27,6 +27,12 @@ let homeSc = {
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     'transactions': {
+        init() {
+            $dateInput = document.getElementById('transactionDate')
+            $dateInput.addEventListener('change', () => {
+                this.getDateTransaction($dateInput.dataset.url, $dateInput.value)
+            })
+        },
         getToken(cname) {
             let name = cname + "=";
             let decodedCookie = decodeURIComponent(document.cookie);
@@ -42,49 +48,39 @@ let homeSc = {
             }
             return "";
         },
-        async getDateTransaction(date) {
+        async getDateTransaction(url, date, accountId=false) {
             let options = {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': this.getToken("csrftoken")
                 },
-                body: JSON.stringify({ "date": date }),
+                body: JSON.stringify({
+                    "date": date,
+                    "accountId": accountId
+                }),
             }
-            let sendValue = await fetch("/getDate/", options)
+            await fetch(url, options)
                 .then(response => response.json())
                 .then(data => {
-                    $table = document.getElementById('transactionTable')
-                    $message = document.getElementById('noTransaction')
+                    if(data.status == 'error') {
+                        let message = document.createElement('div');
+                        message.classList.add('alert')
+                        message.classList.add('alert-warning')
+                        message.innerHTML = `There was a problem retrieving your records. Please try again later`
+                        document.getElementById('messagesContainer').appendChild(message)
+                    } else if(data.status == 'success') {
+                        let $tbody = document.getElementById('transactionBody')
+                        $tbody.innerHTML = "";
+                        $rowClone = document.getElementById('transactionTemplate').cloneNode(true)
+                        $rowClone.removeAttribute('id')
 
-                    if (data.records.length != 0) {
-                        $tbody = $table.tBodies[0]
-                        $tbody.textContent = ''
-
-                        data.records.forEach(element => {
-
-                            let tableRow = document.createElement('tr')
-
-                            let tableColumnName = document.createElement('td')
-                            tableColumnName.innerText = element.name
-                            tableRow.append(tableColumnName)
-
-                            let tableColumnAmount = document.createElement('td')
-                            tableColumnAmount.innerText = element.amount
-                            tableRow.append(tableColumnAmount)
-
-                            let tableColumnAccount = document.createElement('td')
-                            tableColumnAccount.innerText = element.account_name
-                            tableRow.append(tableColumnAccount)
-
-                            $tbody.append(tableRow)
+                        data.transactions.forEach((transaction, index) => {
+                            let transactionRow = $rowClone.cloneNode(true)
+                            transactionRow.querySelector('.date').innerHTML = transaction.date
+                            transactionRow.querySelector('.amount').innerHTML = `£${transaction.amount}`
+                            $tbody.appendChild(transactionRow)
                         })
-                        $table.classList.remove('hideTable')
-                        $message.classList.remove('showMessage')
-                        
-                    } else {
-                        $table.classList.add('hideTable')
-                        $message.classList.add('showMessage')
                     }
                 })
         }
@@ -306,4 +302,5 @@ let homeSc = {
 window.addEventListener("load", e => {
     homeSc.accountProgress.init()
     homeSc.accountTotals.init()
+    homeSc.transactions.init()
 })
