@@ -71,7 +71,11 @@
                 </div>
                 <div class="transactions">
                     <div class="header">
-                        <h2>Transactions</h2>
+                        {% if search_param %}
+                            <h2>Transactions named '<i>{{ search_param }}</i>'</h2>
+                        {% else %}
+                            <h2>Transactions</h2>
+                        {% endif %}
                         <form action="" method="get" class="search-form">
                         {% if search_param != None %}
                                 <input type="text" name="q" placeholder="Search" value="{{ search_param }}">
@@ -79,7 +83,7 @@
                                 <input type="text" name="q" placeholder="Search">
                             {% endif %}
                             <div class="actions">
-                                <input type="reset" value="Reset" class="small-button" >
+                                <button type="button" id="resetSearchForm" class="small-button" >Reset</button>
                                 <input type="submit" value="Search" class="small-button primary">
                             </div>
                         </form>
@@ -100,7 +104,7 @@
                             <tbody>
                             {% for action in records.transactions %}
                                 <tr id="record_{{ action.id }}">
-                                    <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
+                                    <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}{{ account_details.id }}?q={{ action.name }}">{{ action.name }}</a></td>
                                     <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
                                     <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
                                     <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
@@ -113,13 +117,21 @@
                             </tbody>
                         </table>
                         <div class="pagination">
-                        {% for i in records.number_of_pages %}
-                            {% if forloop.counter != records.current_page %}
-                                <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
-                            {% else %}
-                                <a href="#" class="selected">{{ forloop.counter }}</a>
-                            {% endif %}
-                        {% endfor %}
+                            {% for i in records.number_of_pages %}
+                                {% if search_param %}
+                                    <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}&q={{search_param}}" 
+                                        {% if forloop.counter == records.current_page %}
+                                            class="selected"
+                                        {% endif %}
+                                    >{{ forloop.counter }}</a>
+                                {% else %}
+                                    <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}" 
+                                        {% if forloop.counter == records.current_page %}
+                                            class="selected"
+                                        {% endif %}
+                                    >{{ forloop.counter }}</a>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     {% else %}
                         <div class="body centre">

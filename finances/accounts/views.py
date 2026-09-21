@@ -165,17 +165,33 @@ def index(request):
             'account_highlights': get_account_totals()
         }
     )
-def get_transactions(param):
-    if param == None:
-        construct = {
-            'transactions': Transactions.objects.all().order_by('-date'),
-            'totals': None
-        }
+def get_transactions(param, get_totals=True, passedAccountId=None):
+    if passedAccountId == None:
+        if param == None:
+            construct = {
+                'transactions': Transactions.objects.all().order_by('-date'),
+            }
+            if get_totals:
+                construct['totals'] = None
+        else:
+            construct = {
+                'transactions': Transactions.objects.filter(name__icontains=param).order_by('-date'),
+            }
+            if get_totals:
+                construct["totals"] = get_account_totals(param)
     else:
-        construct = {
-            'transactions': Transactions.objects.filter(name__icontains=param).order_by('-date'),
-            'totals': get_account_totals(param)
-        }
+        if param == None:
+            construct = {
+                'transactions': Transactions.objects.all().filter(accountId=passedAccountId).order_by('-date'),
+            }
+            if get_totals:
+                construct['totals'] = None
+        else:
+            construct = {
+                'transactions': Transactions.objects.filter(name__icontains=param, accountId=passedAccountId).order_by('-date'),
+            }
+            if get_totals:
+                construct["totals"] = get_account_totals(param)
         
     return construct
 
@@ -286,15 +302,17 @@ def account(request,accountPassed):
     csv_form = CsvUploader()
     transaction_form = TransactionForm()
 
-    get_transactions = Transactions.objects.all().filter(accountId=accountPassed).order_by('-date')
-    starts = get_transactions.last()
-    paginated = Paginator(get_transactions, 20)
+    search_param = request.GET.get('q', None)
+    transactions = get_transactions(search_param, False, accountPassed)
+    starts = transactions['transactions'].last()
+    paginated = Paginator(transactions['transactions'], 20)
     paginated_transaction = paginated.get_page(page)
 
     return render(request, 'account.html', {
         'account_details': get_account,
         'account_total': get_account_total(get_account),
         'start_details': starts,
+        'search_param': search_param,
         'records': {
             'transactions': paginated_transaction,
             'number_of_pages': range(paginated.num_pages),

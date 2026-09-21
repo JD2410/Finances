@@ -54,7 +54,7 @@
                             <input type="text" name="q" placeholder="Search">
                         {% endif %}
                         <div class="actions">
-                            <input type="reset" value="Reset" class="small-button" >
+                            <button type="button" id="resetSearchForm" class="small-button" >Reset</button>
                             <input type="submit" value="Search" class="small-button primary">
                         </div>
                     </form>
@@ -93,13 +93,21 @@
                         <div>
                             {% if record.number_of_pages != 1 %}
                                 <div class="pagination">
-                                {% for i in records.number_of_pages %}
-                                    {% if search_param %}
-                                        <a href="{% url 'accounts' %}?pn={{forloop.counter}}&q={{search_param}}">{{ forloop.counter }}</a>
-                                    {% else %}
-                                        <a href="{% url 'accounts' %}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
-                                    {% endif %}
-                                {% endfor %}
+                                     {% for i in records.number_of_pages %}
+                                {% if search_param %}
+                                    <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}&q={{search_param}}" 
+                                        {% if forloop.counter == records.current_page %}
+                                            class="selected"
+                                        {% endif %}
+                                    >{{ forloop.counter }}</a>
+                                {% else %}
+                                    <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}" 
+                                        {% if forloop.counter == records.current_page %}
+                                            class="selected"
+                                        {% endif %}
+                                    >{{ forloop.counter }}</a>
+                                {% endif %}
+                            {% endfor %}
                                 </div>
                             {% endif %}
                         </div>

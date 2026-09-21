@@ -10,9 +10,22 @@ window.addEventListener("load", e => {
     })
 
     app.messages.init()
+    app.resetSearchForm.init()
 })
 
 let app = {
+    'resetSearchForm': {
+        init() {
+            const $getReset = document.getElementById('resetSearchForm')
+            if ($getReset) {
+                $getReset.addEventListener('click', ele => {
+                    ele.preventDefault()
+                    document.querySelector('input[name=q]').value = ""
+                    document.querySelector('.search-form').submit()
+                })
+            }
+        }
+    },
     'messages': {
         init() {
             let $messages = document.getElementById('messagesContainer')
