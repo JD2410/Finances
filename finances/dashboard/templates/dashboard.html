@@ -78,8 +78,8 @@
                         <tbody>
                             {% for transaction in recent_transactions %}
                             <tr>
-                                <td>{{ transaction.name }}</td>
-                                <td><a href="{% url 'accounts' %}{{transaction.accountId.id}}">{{ transaction.accountId.name }} </a></td>
+                                <td><a href="{% url 'accounts' %}?q={{transaction.name}}">{{ transaction.name }}</a></td>
+                                <td><a href="{% url 'accounts' %}{{transaction.accountId.id}}" class="small-button hollow">{{ transaction.accountId.name }} </a></td>
                                 <td>{{ transaction.date|date:"jS M Y" }} </td>
                                 <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
                             </tr>

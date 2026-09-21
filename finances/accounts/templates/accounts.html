@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
 
-    <link rel="stylesheet" href="{% static 'templates/accounts/styles.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'templates/accounts/styles_accounts.css' %}?{% now "U" %}">
     <script src="{% static 'templates/accounts/scripts.js' %}?{% now "U" %}"></script>
     {{ accounts|json_script:"accounts" }}
 
@@ -41,25 +41,45 @@
                 {% endif %}
             </div>
             <div class="page-section">
-                <div class="header"><h2>All Records</h2><div><button class='open-modal button' data-modal="createTransaction">Add</button>
-                    <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
+                <div class="header">
+                    {% if search_param %}
+                        <h2>Trnasactions named <i>'{{ search_param }}'</i></h2>
+                    {% else %}
+                        <h2>All Transactions</h2>
+                    {% endif %}
+                    <form action="" method="get" class="search-form">
+                        {% if search_param != None %}
+                            <input type="text" name="q" placeholder="Search" value="{{ search_param }}">
+                        {% else %}
+                            <input type="text" name="q" placeholder="Search">
+                        {% endif %}
+                        <div class="actions">
+                            <input type="reset" value="Reset" class="small-button" >
+                            <input type="submit" value="Search" class="small-button primary">
+                        </div>
+                    </form>
+                    <div class="header-actions">
+                        <button class='open-modal button' data-modal="createTransaction">Add</button>
+                        <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
+                    </div>
+                </div>
                 {% if records %}
                     <table class="standard">
                         <thead>
-                            <th>Account</th>
-                            <th>Transaction Date</th>
-                            <th>Action Name</th>
+                            <th>Description</th>
+                            <th>Date</th>
                             <th>Created</th>
+                            <th>Account</th>
                             <th class="right">Amount</th>
                             <th class="right">Action</th>
                         </thead>
                         <tbody>
                         {% for action in records.transactions %}
                             <tr id="record_{{ action.id }}">
-                                <td class="accountId"><a href="{% url 'accounts' %}{{action.accountId.id}}">{{ action.accountId.name }}</a></td>
+                                <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}?q={{action.name}}">{{ action.name }}</a></td>
                                 <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
-                                <td class="name" data-value="{{ action.name }}">{{ action.name }}</td>
                                 <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
+                                <td class="accountId"><a href="{% url 'accounts' %}{{action.accountId.id}}" class="small-button hollow">{{ action.accountId.name }}</a></td>
                                 <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
                                 <td class="right">
                                     <button class="button edit update-transaction" data-value="{{ action.id }}" data-id="{{action.accountId.id}}"><i class="fa-solid fa-pencil"></i></button>
@@ -69,17 +89,32 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    {% if record.number_of_pages != 1 %}
-                        <div class="pagination">
-                        {% for i in records.number_of_pages %}
-                            {% if forloop.counter != records.current_page %}
-                                <a href="{% url 'accounts' %}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
-                            {% else %}
-                                <a href="#" class="selected">{{ forloop.counter }}</a>
+                    <div class="page_footer">
+                        <div>
+                            {% if record.number_of_pages != 1 %}
+                                <div class="pagination">
+                                {% for i in records.number_of_pages %}
+                                    {% if search_param %}
+                                        <a href="{% url 'accounts' %}?pn={{forloop.counter}}&q={{search_param}}">{{ forloop.counter }}</a>
+                                    {% else %}
+                                        <a href="{% url 'accounts' %}?pn={{forloop.counter}}">{{ forloop.counter }}</a>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
                             {% endif %}
-                        {% endfor %}
                         </div>
-                    {% endif %}
+                        <div>
+                            {% if search_param %}
+                                {% for account in search_param_totals.records %}
+                                    {% if account.total != 0.00 %}
+                                        {{account.name}}
+                                        £{{ account.total|floatformat:2|intcomma }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
                 {% else %}
                     <p>There are no transactions in the database</p>
                 {% endif %}
@@ -93,7 +128,6 @@
                     <h4>Sorry, can't find any accounts</h4>
                     <p>You have no accounts created. Get started by clicking the button below.</p>
                     <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
-
                 </div>
             </div>
             {% endif %}

@@ -70,8 +70,24 @@
                 </div>
                 </div>
                 <div class="transactions">
-                    <div class="header"><h2>Transactions</h2><div><button class='open-modal-add-transaction button' data-modal="addTransaction" data-account="{{ account_details.id }}">Add</button>
-                    <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button></div></div>
+                    <div class="header">
+                        <h2>Transactions</h2>
+                        <form action="" method="get" class="search-form">
+                        {% if search_param != None %}
+                                <input type="text" name="q" placeholder="Search" value="{{ search_param }}">
+                            {% else %}
+                                <input type="text" name="q" placeholder="Search">
+                            {% endif %}
+                            <div class="actions">
+                                <input type="reset" value="Reset" class="small-button" >
+                                <input type="submit" value="Search" class="small-button primary">
+                            </div>
+                        </form>
+                        <div>
+                            <button class='open-modal-add-transaction button' data-modal="addTransaction" data-account="{{ account_details.id }}">Add</button>
+                            <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
+                        </div>
+                    </div>
                     {% if records.transactions %}
                         <table class="standard">
                             <thead>

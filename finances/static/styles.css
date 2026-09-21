@@ -54,20 +54,27 @@ table.standard {
     .button {
         display: inline-block;
         padding: 4px 4px;
-        width: 30px;
-        height: 25px;
+
         background-color: transparent;
         
         i {
             width: 110%;
         }
-        &.edit i {
-            color: green;
-            opacity: 0.5;
+        &.edit {
+            width: 30px;
+            height: 25px;
+            i {
+                color: green;
+                opacity: 0.5;
+            }
         }
-        &.delete i {
-            color: red;
-            opacity: 0.5;
+        &.delete {
+            width: 30px;
+            height: 25px;
+            i {
+                color: red;
+                opacity: 0.5;
+            }
         }
 
         &:hover i {
@@ -115,12 +122,17 @@ table.standard {
     cursor: pointer;
     text-decoration: none;
 
+    &.primary {
+        background-color: purple;
+        color: #fff;
+    }
     &.hollow {
         border: 1px solid purple;
         color: purple;
         background-color: transparent;
 
         &:hover {
+            text-decoration: none;
             color: #fff;
             background-color: purple;
         }
@@ -324,6 +336,7 @@ table.standard {
             align-items: center;
             padding: 16px 16px 16px;
             height: 32px;
+            gap: 12px;
 
             h2 {
                 font-size: 1.3em;
@@ -447,10 +460,48 @@ table.standard {
             align-items: center;
             min-height: 33px;
             padding-bottom: 12px;
+            gap: 12px;
 
             div {
                 display: flex;
                 gap: 8px;
+            }
+            .search-form {
+                flex: 1;
+                position: relative;
+
+                .actions {
+                    position: absolute;
+                    right: 5px;
+                    top: 5px;
+                    display: flex;
+                    gap: 5px;
+                    
+                    input[type=submit] {
+                        padding: 5px 10px;
+                    }
+                    input[type=reset] {
+                        padding: 5px 10px;
+                    }
+                }
+                input[type=text] {
+                    padding: 8px 80px 8px 8px;
+                    width: 100%;
+                    box-sizing: border-box;
+                    font-size: 1em;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border-color: lightgray;
+                    border-radius: 4px;
+                    border: 1px solid rgb(214, 214, 214);
+                    min-height: 35px;
+                }
+                input[type=text]:focus {
+                    outline: none;
+                    box-shadow: 0 0 9px 5px rgba(128, 0, 128, 0.17);
+                    border-color: purple;
+                }
             }
         }
         .body {

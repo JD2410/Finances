@@ -114,8 +114,11 @@ def index(request):
     except ValueError:
         page = 1
 
-    transactions = Transactions.objects.all().order_by('-date')
-    paginated = Paginator(transactions, 20)
+
+    search_param = request.GET.get('q', None)
+    transactions = get_transactions(search_param)
+
+    paginated = Paginator(transactions['transactions'], 20)
     paginated_transaction = paginated.get_page(page)
 
     accounts_list = []
@@ -154,12 +157,27 @@ def index(request):
                 'current_page': page
             },
             'accounts': accounts_list,
+            'search_param': search_param,
+            'search_param_totals': transactions['totals'],
             'transaction_form': transaction_form,
             'savings_form': account_form,
             'csv_form': csv_form,
             'account_highlights': get_account_totals()
         }
     )
+def get_transactions(param):
+    if param == None:
+        construct = {
+            'transactions': Transactions.objects.all().order_by('-date'),
+            'totals': None
+        }
+    else:
+        construct = {
+            'transactions': Transactions.objects.filter(name__icontains=param).order_by('-date'),
+            'totals': get_account_totals(param)
+        }
+        
+    return construct
 
 def account(request,accountPassed):
 
@@ -301,7 +319,7 @@ def get_account_total(account):
 
     return total
 
-def get_account_totals():
+def get_account_totals(param = None):
     accounts = Accounts.objects.all()
     account_details = []
     final_total = 0.00
@@ -311,11 +329,17 @@ def get_account_totals():
         total = 0.00
         if account.accountType != None:
             if account.accountType.accumulate:
-                get_transactions_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(accountId = account.id)
+                if param == None:
+                    get_transactions_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(accountId = account.id)
+                else:
+                    get_transactions_total = Transactions.objects.values('accountId').annotate(total=Sum('amount')).filter(name__icontains=param, accountId = account.id)
                 if len(get_transactions_total):
                     total = get_transactions_total[0]['total']
             else:
-                get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
+                if param == None:
+                    get_transactions_total = Transactions.objects.values('amount').filter(accountId = account.id).order_by('-date').first()
+                else:
+                    get_transactions_total = Transactions.objects.values('amount').filter(name__icontains=param, accountId = account.id).order_by('-date').first()
                 if get_transactions_total != None:
                     total = get_transactions_total['amount']
         
@@ -325,6 +349,7 @@ def get_account_totals():
                 'total': total
             })
             final_total += float(total)
+    
     return {
         'records': account_details,
         'total': final_total
