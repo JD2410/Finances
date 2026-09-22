@@ -43,7 +43,7 @@
             <div class="page-section">
                 <div class="header">
                     {% if search_param %}
-                        <h2>Trnasactions named <i>'{{ search_param }}'</i></h2>
+                        <h2>Transactions named <i>'{{ search_param }}'</i></h2>
                     {% else %}
                         <h2>All Transactions</h2>
                     {% endif %}
@@ -64,6 +64,20 @@
                     </div>
                 </div>
                 {% if records %}
+                    <div>
+                        {% if search_param %}
+                            <div class="mini-cards">
+                            {% for account in search_param_totals.records %}
+                                {% if account.total != 0.00 %}
+                                    <div class="card">
+                                        <div class="title">{{account.name}}</div>
+                                        <div class="main">£{{ account.total|floatformat:2|intcomma }}</div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
                     <table class="standard">
                         <thead>
                             <th>Description</th>
@@ -111,16 +125,7 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <div>
-                            {% if search_param %}
-                                {% for account in search_param_totals.records %}
-                                    {% if account.total != 0.00 %}
-                                        {{account.name}}
-                                        £{{ account.total|floatformat:2|intcomma }}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                        
                     </div>
                     
                 {% else %}

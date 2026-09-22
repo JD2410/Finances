@@ -338,7 +338,7 @@ let homeSc = {
                                     click: function () {
                                         const date = new Date(this.x)
                                         homeSc.transactions.getDateTransaction(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,series_data[this.colorIndex].id)
-                                        console.log(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`, series_data[this.colorIndex].id)
+                                        document.getElementById('transactionWidget').scrollIntoView({block: "end", behavior: "smooth",})
                                     }
                                 }
                             }

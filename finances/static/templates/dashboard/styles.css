@@ -1,35 +1,16 @@
 #transactionTemplate {
     display: none;
 }
-
-.widget-cards {
-    display: none;
-    padding: 0px 16px 12px;
-    gap: 12px;
-
-    .card {
-        border: 1px solid rgba(128, 0, 128, 0.32);
-        padding: 8px;
-        flex: 1;
-        border-radius: 4px;
-
-        .title {
-            font-size: 0.85em;
-            text-transform: uppercase;
-            color: purple;
-            opacity: 0.8;
+#transactionWidget {
+    .mini-cards {
+        display: none;
+        padding: 0px 16px 12px;
+        
+        &.show {
+            display: flex;
         }
-        .main {
-            font-size: 1.3em;
-            font-weight: 500;
-        }
-    }
-
-    &.show {
-        display: flex;
     }
 }
-
 .grouped {
     display: flex;
     gap: 20px;

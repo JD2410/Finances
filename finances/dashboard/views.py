@@ -108,7 +108,8 @@ def getTransactionsDate(request):
     
         if data['accountId']:
             get_transactions = Transactions.objects.all().filter(date__lte = data['date'], accountId=data['accountId']).order_by('-date')[:10]
-            account_name = Accounts.objects.values('name').filter(id=data['accountId']).first()
+            get_account_name = Accounts.objects.values('name').filter(id=data['accountId']).first()
+            account_name = get_account_name['name']
         else:
             get_transactions = Transactions.objects.all().filter(date__lte = data['date']).order_by('-date')[:10]
         transaction = []
@@ -127,7 +128,7 @@ def getTransactionsDate(request):
         return JsonResponse({
             'status': 'success',
             'request_date': data['date'],
-            'request_account': account_name['name'],
+            'request_account': account_name,
             'transactions': transaction  # Parse string into Python list/dict
         }, status=200)
     

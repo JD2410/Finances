@@ -201,6 +201,32 @@ table.standard {
     }
 }
 
+.mini-cards {
+    display: flex;
+    padding: 0 0 12px;
+    gap: 12px;
+
+    .card {
+        border: 1px solid rgba(128, 0, 128, 0.32);
+        padding: 8px;
+        flex: 1;
+        border-radius: 4px;
+
+        .title {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: purple;
+            opacity: 0.8;
+        }
+        .main {
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+    }
+
+    
+}
+
 .page-container {
     display: flex;
     align-items: stretch;
@@ -459,7 +485,6 @@ table.standard {
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
-        height: 100%;
         position: relative;
         
         &.centre {
