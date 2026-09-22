@@ -39,6 +39,7 @@ let homeSc = {
                 'month': date.getMonth(),
                 'year': date.getFullYear(),
             }
+            const dayToString = finaDateFormat.day.toString()
             let daySuffix = "th"
             if (finaDateFormat.day == 1) {
                 daySuffix = 'st'
@@ -50,30 +51,17 @@ let homeSc = {
                 daySuffix = 'rd'
             }
             if (finaDateFormat.day > 10) {
-                if (finaDateFormat.day[1] == 1) {
+                if (dayToString[1] == 1) {
                     daySuffix = 'st'
-                } else if (finaDateFormat.day[1] == 2) {
+                } else if (dayToString[1] == 2) {
                     daySuffix = 'nd'
-                } else if (finaDateFormat.day[1] == 3) {
+                } else if (dayToString[1] == 3) {
                     daySuffix = 'rd'
                 }
             }
             return `${finaDateFormat.day}${daySuffix} ${this.months[finaDateFormat.month]} ${finaDateFormat.year}`
         },
-        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    },
-    'transactions': {
-        init() {
-            $dateInput = document.getElementById('transactionDate')
-            $dateInput.addEventListener('change', () => {
-                this.getDateTransaction($dateInput.value)
-                const $chart = document.getElementById("accountProgress")
-                let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
-                chart.getSelectedPoints().forEach(function (point) {
-                    point.select(false, true);
-                });
-            })
-        },
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         getToken(cname) {
             let name = cname + "=";
             let decodedCookie = decodeURIComponent(document.cookie);
@@ -88,6 +76,19 @@ let homeSc = {
                 }
             }
             return "";
+        }
+    },
+    'transactions': {
+        init() {
+            $dateInput = document.getElementById('transactionDate')
+            $dateInput.addEventListener('change', () => {
+                this.getDateTransaction($dateInput.value)
+                const $chart = document.getElementById("accountProgress")
+                let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
+                chart.getSelectedPoints().forEach(function (point) {
+                    point.select(false, true);
+                });
+            })
         },
         async getDateTransaction(date, accountId=false) {
             const url = document.getElementById('transactionWidget').dataset.url
@@ -95,7 +96,7 @@ let homeSc = {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': this.getToken("csrftoken")
+                    'X-CSRFToken': homeSc.utils.getToken("csrftoken")
                 },
                 body: JSON.stringify({
                     "date": date,
@@ -225,104 +226,47 @@ let homeSc = {
     },
     'accountProgress': {
         init() {
-            const $savings = JSON.parse(document.getElementById('savings').textContent)
+            const graphInit = this.graph.sortData(JSON.parse(document.getElementById('savings').textContent))
+            this.graph.createGraph(graphInit)
 
-            let transactionDates = new Set()
-            let runningTotal = []
-            let series_data = []
-
-            if ($savings.length) {
-                $savings.forEach(acc => {
-                    Object.entries(acc.daily_totals).forEach(ele => transactionDates.add(ele[0]))
-                    series_data.push({
-                        name: acc.name,
-                        id: acc.id,
-                        type: "line",
-                        data: [],
-                        connectNulls: true,
-                        pointInterval: 24 * 3600 * 1000,
-                        
-                    })
-                    if (acc.graph_start != null) {
-                        runningTotal.push(parseFloat(acc.graph_start))
-                    } else {
-                        runningTotal.push(acc.graph_start)
-                    }
-                })
-                transactionDates = Array.from(transactionDates).sort((d1,d2) => new Date(d1) - new Date(d2))
-
-                const numberOfDates = 80
-                let startDate = new Date()
-                startDate.setDate(startDate.getDate() - numberOfDates)
-
-                for (i=0; i <= numberOfDates; i++) {
-                    //let newDate = new Date(transactionDates[0])
-                    let newDate = new Date(startDate)
-                    newDate.setDate(newDate.getDate() + i)
-                    let dateFormatted = homeSc.utils.getTwoDigitDate(newDate)
-
-                    $savings.forEach((account, index) => {
-
-                        let valueToAdd = null
-                        if(typeof series_data[index].pointStart == 'undefined') {
-                            series_data[index].pointStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
-                        }
-
-                        if (account.type_details.accumulate) {
-                            if (typeof account.daily_totals[dateFormatted] != 'undefined') {
-                                value = parseFloat(account.daily_totals[dateFormatted])
-                                runningTotal[index] += value
-                                valueToAdd = runningTotal[index]
-                            } else {
-                                if (i == numberOfDates) {
-                                    valueToAdd = valueToAdd = {
-                                        y: runningTotal[index],
-                                        marker: {
-                                            enabled: false
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            if (typeof account.daily_totals[dateFormatted] != 'undefined') {
-                                value = parseFloat(account.daily_totals[dateFormatted])
-                                runningTotal[index] = value
-                                valueToAdd = runningTotal[index]
-                            } else {
-                                if (i == numberOfDates) {
-                                    valueToAdd = {
-                                        y: runningTotal[index],
-                                        marker: {
-                                            enabled: false
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if (valueToAdd == null && i == 0) {
-                            valueToAdd = runningTotal[index]
-                        }
-
-                        series_data[index].data.push(valueToAdd)
-
-                    })
+            let $dateInput = document.getElementById('accountProgressDate')
+            $dateInput.addEventListener('change', () => {
+                const newValues = this.graph.changeDate($dateInput.value)
+            })
+        },
+        'graph': {
+            async changeDate(date) {
+                const url = document.getElementById('accountProgressWidgt').dataset.date
+                let options = {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': homeSc.utils.getToken("csrftoken")
+                    },
+                    body: JSON.stringify({
+                        "date": date,
+                    }),
                 }
-                Highcharts.setOptions({
-                    colors: [
-                        '#32CD32', // Lime Green (Vivid Accent)
-                        '#990099', // Bright Purple
-                        '#7C997C', // Sage Green (Muted Neutral)
-                        '#B500B5', // Rich Orchid
-                        '#D100D1', // Light Magenta-Purple
-                        '#260026', // Deep Midnight Purple
-                        '#005E38',  // Emerald Green (Rich Jewel Tone)
-                        '#007C00', // Inverted True Green (Direct RGB Complement)
-                        '#420042', // Dark Plum / Eggplant
-                        '#5E005E', // Deep Purple
-                        '#7C007C', // Classic Purple - rgb(124, 0, 124)
-                    ]
-                })
+                await fetch(url, options)
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.status == 'error') {
+                            let message = document.createElement('div');
+                            message.classList.add('alert')
+                            message.classList.add('alert-warning')
+                            message.innerHTML = `There was a problem retrieving your records. Please try again later`
+                            document.getElementById('messagesContainer').appendChild(message)
+                        } else if(data.status == 'success') {
+
+                            const processed = homeSc.accountProgress.graph.sortData(data.savings, date)
+                            const $chart = document.getElementById("accountProgress")
+                            let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
+                            chart.destroy()
+                            this.createGraph(processed)
+                        }
+                    })
+            },
+            createGraph(seriesData) {
                 Highcharts.chart('accountProgress', {
                     tooltip: {
                         formatter: function () {
@@ -335,6 +279,19 @@ let homeSc = {
                             return `${this.series.name}<br><strong>£${amount}</strong><br>${date.getDate()} ${homeSc.utils.months[date.getMonth()]} ${date.getFullYear()}`;
                         }
                     },
+                    colors: [
+                        '#32CD32', // Lime Green (Vivid Accent)
+                        '#990099', // Bright Purple
+                        '#7C997C', // Sage Green (Muted Neutral)
+                        '#B500B5', // Rich Orchid
+                        '#D100D1', // Light Magenta-Purple
+                        '#260026', // Deep Midnight Purple
+                        '#005E38',  // Emerald Green (Rich Jewel Tone)
+                        '#007C00', // Inverted True Green (Direct RGB Complement)
+                        '#420042', // Dark Plum / Eggplant
+                        '#5E005E', // Deep Purple
+                        '#7C007C', // Classic Purple - rgb(124, 0, 124)
+                    ],
                     plotOptions: {
                         series: {
                             cursor: 'pointer',
@@ -352,7 +309,7 @@ let homeSc = {
                                 events: {
                                     click: function () {
                                         const date = new Date(this.x)
-                                        homeSc.transactions.getDateTransaction(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,series_data[this.colorIndex].id)
+                                        homeSc.transactions.getDateTransaction(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,seriesData[this.colorIndex].id)
                                         document.getElementById('transactionWidget').scrollIntoView({block: "end", behavior: "smooth",})
                                     }
                                 }
@@ -379,14 +336,104 @@ let homeSc = {
                     },
                     xAxis: {
                         type: 'datetime',
-                        ordinal: false,
-                        minPadding: 0.05,
-                        maxPadding: 0.05
                     },
-                    series: series_data
+                    series: seriesData
                 });
-            }
-        }
+            },
+            sortData(data, date=null) {
+                const $savings = data
+
+                let transactionDates = new Set()
+                let runningTotal = []
+                let series_data = []
+
+                if ($savings.length) {
+                    $savings.forEach(acc => {
+                        Object.entries(acc.daily_totals).forEach(ele => transactionDates.add(ele[0]))
+                        series_data.push({
+                            name: acc.name,
+                            id: acc.id,
+                            type: "line",
+                            data: [],
+                            connectNulls: true,
+                            pointInterval: 24 * 3600 * 1000,
+                        })
+                        if (acc.graph_start != null) {
+                            runningTotal.push(parseFloat(acc.graph_start))
+                        } else {
+                            runningTotal.push(acc.graph_start)
+                        }
+                    })
+                    transactionDates = Array.from(transactionDates).sort((d1,d2) => new Date(d1) - new Date(d2))
+
+                    const numberOfDates = 91
+
+                    // This is where we need to set the date
+                    let startDate;
+                    if (date != null) {
+                        startDate = new Date(date)
+                    } else {
+                        startDate = new Date()
+                    }
+
+                    startDate.setDate(startDate.getDate() - numberOfDates)
+                    for (i=0; i <= numberOfDates; i++) {
+                        let newDate = new Date(startDate)
+                        newDate.setDate(newDate.getDate() + i)
+                        let dateFormatted = homeSc.utils.getTwoDigitDate(newDate)
+
+                        $savings.forEach((account, index) => {
+
+                            let valueToAdd = null
+                            if(typeof series_data[index].pointStart == 'undefined') {
+                                series_data[index].pointStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
+                            }
+
+                            if (account.type_details.accumulate) {
+                                if (typeof account.daily_totals[dateFormatted] != 'undefined') {
+                                    value = parseFloat(account.daily_totals[dateFormatted])
+                                    runningTotal[index] += value
+                                    valueToAdd = runningTotal[index]
+                                } else {
+                                    if (i == numberOfDates) {
+                                        valueToAdd = valueToAdd = {
+                                            y: runningTotal[index],
+                                            marker: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (typeof account.daily_totals[dateFormatted] != 'undefined') {
+                                    value = parseFloat(account.daily_totals[dateFormatted])
+                                    runningTotal[index] = value
+                                    valueToAdd = runningTotal[index]
+                                } else {
+                                    if (i == numberOfDates) {
+                                        valueToAdd = {
+                                            y: runningTotal[index],
+                                            marker: {
+                                                enabled: false
+                                            }
+                                        }
+                                    }
+                                }
+                            }       
+                            if (valueToAdd == null && i == 0) {
+                                valueToAdd = runningTotal[index]
+                            }
+
+                            series_data[index].data.push(valueToAdd)
+
+                        })
+                    }
+                    
+                    return series_data
+                }
+            },
+        },
+        
     }
 }
 

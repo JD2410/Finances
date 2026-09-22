@@ -15,8 +15,13 @@ def index(request):
     get_transactions['recent_transactions'] = Transactions.objects.all().filter().order_by('-date')[:10]
     return render(request, 'dashboard.html', get_transactions)
 
-def get_progress_chart(date=datetime.date.today()):
-    start_date = (date - datetime.timedelta(3*365/12)).isoformat()
+def get_progress_chart(date=None):
+    if date:
+        received_date = datetime.date.fromisoformat(date)
+    else:
+        received_date = datetime.date.today()
+        
+    start_date = (received_date - datetime.timedelta(3*365/12)).isoformat()
     total = 0
     accounts = []
     account_list = Accounts.objects.all()
@@ -97,12 +102,13 @@ def get_progress_chart(date=datetime.date.today()):
 def get_graph(request):
     try:
         data = json.loads(request.body)
-        if data['graphDate']:
-            graph_details = get_progress_chart()
+        if data['date']:
+            graph_details = get_progress_chart(data['date'])
         else:
             graph_details = get_progress_chart()
 
-        graph_details = get_progress_chart()
+        graph_details['status'] = 'success'
+
         return JsonResponse(graph_details, status=200)
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON payload"}, status=400)

@@ -38,9 +38,10 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-                <div class="widget full">
+                <div class="widget full" id="accountProgressWidgt" data-date="{% url 'getGraphDate' %}">
                     <div class="header">
                         <h2>Account Progress</h2>
+                        <input type="date" id="accountProgressDate">
                     </div>
                     {% if savings %}
                     <div id="accountProgress" class="highcharts-light body"></div>
