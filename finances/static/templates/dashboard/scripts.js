@@ -66,7 +66,7 @@ let homeSc = {
         init() {
             $dateInput = document.getElementById('transactionDate')
             $dateInput.addEventListener('change', () => {
-                this.getDateTransaction($dateInput.dataset.url, $dateInput.value)
+                this.getDateTransaction($dateInput.value)
             })
         },
         getToken(cname) {
@@ -84,7 +84,8 @@ let homeSc = {
             }
             return "";
         },
-        async getDateTransaction(url, date, accountId=false) {
+        async getDateTransaction(date, accountId=false) {
+            const url = document.getElementById('transactionWidget').dataset.url
             let options = {
                 method: "POST",
                 headers: {
@@ -128,7 +129,7 @@ let homeSc = {
                             $tbody.appendChild(transactionRow)
                         })
 
-                        const $widget = document.getElementById('transactionWidget')
+                        const $widget = document.getElementById('transactionWidgetInsights')
                         $widget.classList.add('show')
                         const $dates = $widget.querySelectorAll('.card-date')
                         $dates.forEach(date => {
@@ -230,6 +231,7 @@ let homeSc = {
                     Object.entries(acc.daily_totals).forEach(ele => transactionDates.add(ele[0]))
                     series_data.push({
                         name: acc.name,
+                        id: acc.id,
                         type: "line",
                         data: [],
                         connectNulls: true,
@@ -326,6 +328,20 @@ let homeSc = {
                                 amount = amount.slice(0, where) + "," + amount.slice(where)
                             }
                             return `${this.series.name}<br><strong>£${amount}</strong><br>${date.getDate()} ${homeSc.utils.months[date.getMonth()]} ${date.getFullYear()}`;
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function () {
+                                        const date = new Date(this.x)
+                                        homeSc.transactions.getDateTransaction(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,series_data[this.colorIndex].id)
+                                        console.log(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`, series_data[this.colorIndex].id)
+                                    }
+                                }
+                            }
                         }
                     },
                     title: {

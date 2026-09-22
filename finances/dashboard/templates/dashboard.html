@@ -57,17 +57,17 @@
                     </div>
                     {% endif %}
                 </div>
-                <div class="widget">
+                <div class="widget" id="transactionWidget" data-url="{% url 'getTransactionsDate' %}">
                     <div class="header">
                         <h2>Transactions</h2>
                         {% if recent_transactions %}
                             <div>
-                                <input type="date" id="transactionDate" data-url="{% url 'getTransactionsDate' %}">
+                                <input type="date" id="transactionDate">
                                 <a href="{% url 'accounts' %}" class="button primary">All Transactions</a>
                             </div>
                         {% endif %}
                     </div>
-                    <div class="widget-cards" id="transactionWidget">
+                    <div class="widget-cards" id="transactionWidgetInsights">
                         <div class="card">
                             <div class="title">Transaction before</div>
                             <div class="card-date main">23th Sep 2026</div>
