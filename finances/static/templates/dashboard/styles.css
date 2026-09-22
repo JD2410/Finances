@@ -1,15 +1,32 @@
-#recentTransactions {
+#transactionTemplate {
+    display: none;
+}
 
-    table {
-        width: 100%;
+.widget-cards {
+    display: none;
+    padding: 0px 16px 12px;
+    gap: 12px;
 
-        td,th {
-            text-align: left;
+    .card {
+        border: 1px solid rgba(128, 0, 128, 0.32);
+        padding: 8px;
+        flex: 1;
+        border-radius: 4px;
+
+        .title {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: purple;
+            opacity: 0.8;
         }
-
-        td.account, th.account {
-            text-align: right;
+        .main {
+            font-size: 1.3em;
+            font-weight: 500;
         }
+    }
+
+    &.show {
+        display: flex;
     }
 }
 

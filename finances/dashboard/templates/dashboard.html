@@ -59,7 +59,7 @@
                 </div>
                 <div class="widget">
                     <div class="header">
-                        <h2>Recent Transactions</h2>
+                        <h2>Transactions</h2>
                         {% if recent_transactions %}
                             <div>
                                 <input type="date" id="transactionDate" data-url="{% url 'getTransactionsDate' %}">
@@ -67,9 +67,19 @@
                             </div>
                         {% endif %}
                     </div>
+                    <div class="widget-cards" id="transactionWidget">
+                        <div class="card">
+                            <div class="title">Transaction before</div>
+                            <div class="card-date main">23th Sep 2026</div>
+                        </div>
+                        <div class="card">
+                            <div class="title">Acounts Selected</div>
+                            <div class="main accounts">All</div>
+                        </div>
+                    </div>
                     {% if recent_transactions %}
-                        <div class="body">
-                        <table class="standard" id="transactionTable">
+                    <div class="body">
+                        <table class="standard">
                             <thead>
                                 <tr>
                                     <th>Tansaction Description</th>
@@ -78,8 +88,8 @@
                                     <th class="right">Amount</th>
                                 </tr>
                                 <tr id="transactionTemplate">
-                                    <td class="description"><a href="{% url 'accounts' %}"></a></td>
-                                    <td class="account"><a href="{% url 'accounts' %}" class="small-button hollow"></a></td>
+                                    <td><a href="{% url 'accounts' %}" class="description"></a></td>
+                                    <td><a href="{% url 'accounts' %}" class="small-button hollow account"></a></td>
                                     <td class="date"></td>
                                     <td class="right amount"></td>
                                 </tr>

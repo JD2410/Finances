@@ -104,8 +104,14 @@ def index(request):
 def getTransactionsDate(request):
     try:
         data = json.loads(request.body)
+        account_name = None
 
-        get_transactions = Transactions.objects.all().filter(date__lte = data['date'], date__gte='1900-01-01').order_by('-date')[:10]
+        if data['accountId']:
+            get_transactions = Transactions.objects.all().filter(date__lte = data['date'], accountId=data.accountId).order_by('-date')[:10]
+            account_name = Accounts.objects.values('name').filter(accountId=data.accountId)
+        else:
+            get_transactions = Transactions.objects.all().filter(date__lte = data['date']).order_by('-date')[:10]
+            
         transaction = []
 
         for action in get_transactions:
@@ -121,8 +127,12 @@ def getTransactionsDate(request):
             })
         return JsonResponse({
             'status': 'success',
+            'request_date': data['date'],
+            'request_account': account_name,
             'transactions': transaction  # Parse string into Python list/dict
         }, status=200)
-
+    
+    except Transactions.DoesNotExist:
+        return JsonResponse({"error": "Account cannot be found"}, status=400)
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON payload"}, status=400)

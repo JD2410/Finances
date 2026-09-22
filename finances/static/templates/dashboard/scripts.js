@@ -24,6 +24,42 @@ let homeSc = {
             } 
             return `${finaDateFormat.year}-${finaDateFormat.month}-${finaDateFormat.day}`
         },
+        displayCurrency(value) {
+            let amount = parseFloat(value).toFixed(2)
+            if (amount >= 1000 || amount <= -1000) {
+                let where = amount.indexOf('.') - 3
+                amount = amount.slice(0, where) + "," + amount.slice(where)
+            }
+            return amount
+        },
+        displayDate(passedDate){
+            const date = new Date(passedDate)
+            const finaDateFormat = {
+                'day': date.getDate(),
+                'month': date.getMonth(),
+                'year': date.getFullYear(),
+            }
+            let daySuffix = "th"
+            if (finaDateFormat.day == 1) {
+                daySuffix = 'st'
+            }
+            if (finaDateFormat.day == 2) {
+                daySuffix = 'nd'
+            }
+            if (finaDateFormat.day == 3){
+                daySuffix = 'rd'
+            }
+            if (finaDateFormat.day > 10) {
+                if (finaDateFormat.day[1] == 1) {
+                    daySuffix = 'st'
+                } else if (finaDateFormat.day[1] == 2) {
+                    daySuffix = 'nd'
+                } else if (finaDateFormat.day[1] == 3) {
+                    daySuffix = 'rd'
+                }
+            }
+            return `${finaDateFormat.day}${daySuffix} ${this.months[finaDateFormat.month]} ${finaDateFormat.year}`
+        },
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     'transactions': {
@@ -70,17 +106,41 @@ let homeSc = {
                         message.innerHTML = `There was a problem retrieving your records. Please try again later`
                         document.getElementById('messagesContainer').appendChild(message)
                     } else if(data.status == 'success') {
+
                         let $tbody = document.getElementById('transactionBody')
                         $tbody.innerHTML = "";
                         $rowClone = document.getElementById('transactionTemplate').cloneNode(true)
                         $rowClone.removeAttribute('id')
 
-                        data.transactions.forEach((transaction, index) => {
+                        data.transactions.forEach(transaction => {
                             let transactionRow = $rowClone.cloneNode(true)
-                            transactionRow.querySelector('.date').innerHTML = transaction.date
-                            transactionRow.querySelector('.amount').innerHTML = `£${transaction.amount}`
+
+                            let $description = transactionRow.querySelector('.description')
+                            $description.href = `${$description.href}?q=${transaction.name}`
+                            $description.innerHTML = transaction.name
+
+                            let $account = transactionRow.querySelector('.account')
+                            $account.href = `${$account.href}${transaction.account_details.id}`
+                            $account.innerHTML = transaction.account_details.name
+                            
+                            transactionRow.querySelector('.date').innerHTML = homeSc.utils.displayDate(transaction.date)
+                            transactionRow.querySelector('.amount').innerHTML = `£${homeSc.utils.displayCurrency(transaction.amount)}`
                             $tbody.appendChild(transactionRow)
                         })
+
+                        const $widget = document.getElementById('transactionWidget')
+                        $widget.classList.add('show')
+                        const $dates = $widget.querySelectorAll('.card-date')
+                        $dates.forEach(date => {
+                            date.innerHTML = homeSc.utils.displayDate(data.request_date)
+                        })
+
+                        const accountWidget = $widget.querySelector('.accounts')
+                        if (data.request_account) {
+                            accountWidget.innerHTML = data.request_account
+                        } else {
+                            accountWidget.innerHTML = 'All Accounts'
+                        }
                     }
                 })
         }
