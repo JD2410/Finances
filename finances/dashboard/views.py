@@ -96,6 +96,12 @@ def get_progress_chart(date=datetime.date.today()):
 @require_POST
 def get_graph(request):
     try:
+        data = json.loads(request.body)
+        if data['graphDate']:
+            graph_details = get_progress_chart()
+        else:
+            graph_details = get_progress_chart()
+
         graph_details = get_progress_chart()
         return JsonResponse(graph_details, status=200)
     except json.JSONDecodeError:

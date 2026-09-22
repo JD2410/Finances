@@ -67,6 +67,11 @@ let homeSc = {
             $dateInput = document.getElementById('transactionDate')
             $dateInput.addEventListener('change', () => {
                 this.getDateTransaction($dateInput.value)
+                const $chart = document.getElementById("accountProgress")
+                let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
+                chart.getSelectedPoints().forEach(function (point) {
+                    point.select(false, true);
+                });
             })
         },
         getToken(cname) {
@@ -333,6 +338,16 @@ let homeSc = {
                     plotOptions: {
                         series: {
                             cursor: 'pointer',
+                            allowPointSelect: true,
+                            marker: {
+                                states: {
+                                    select: {
+                                        fillColor: 'green',
+                                        lineColor: 'purple',
+                                        lineWidth: 4,
+                                    }
+                                }
+                            },
                             point: {
                                 events: {
                                     click: function () {
