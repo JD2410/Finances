@@ -91,9 +91,19 @@ def get_progress_chart(date=datetime.date.today()):
         'savings': accounts,
         'total': total
     }
-    
+
+
 @require_POST
-def getTransactionsDate(request):
+def get_graph(request):
+    try:
+        graph_details = get_progress_chart()
+        return JsonResponse(graph_details, status=200)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+
+
+@require_POST
+def get_transactions_date(request):
     try:
         data = json.loads(request.body)
         account_name = None
