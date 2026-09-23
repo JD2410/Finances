@@ -18,6 +18,29 @@ let cu = {
             this.rowSelection()
             this.testAllInput()
             this.columnSelection.updateSelectColumnsIndicator()
+            this.tools.init()
+        }
+    },
+    'tools': {
+        init() {
+            $accountSelector = document.getElementById('accountIdSelection')
+            $accountSelector.addEventListener('change', selector => {
+                this.swapAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
+            })
+        },
+        swapAccountId(switchTo, label='unknown') {
+            $findAccountId = document.querySelectorAll("[data-key='accountid']")
+            if($findAccountId.length > 0) {
+                $findAccountId.forEach(row => {
+                    row.dataset.value = switchTo
+                    row.classList.remove('error')
+                    row.classList.add('verified')
+                    row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
+                    row.querySelector('.edit').value = switchTo
+                })
+            } else {
+                alert('Please select a column first')
+            }
         }
     },
     inputEditingListener() {

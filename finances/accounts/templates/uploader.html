@@ -26,66 +26,80 @@
                 <h1>Uploader</h1>
                 <button class='open-modal button primary' data-modal="uploadCSV">Upload CSV</button>
             </div>
-            <div class="page-section sticky-bottom">
+            <div class="page-section">
                 <div class="header">
                     <h2>Imported Data</h2>
                     <div>
                         <div id="errorsIndicator"></div>
                         <div id="selectionIndicator"></div>
                     </div>
-                    
                 </div>
-                <div class="body">
-                    {% if results %}
-                        <table class="standard">
-                            <thead>
-                                <th></th>
-                                {% for head in results.0 %}
-                                    <th class="header-label">
-                                        <i class="og-label">CSV Column: {{ head.label }}</i>
-                                        <select name="" id="" class="column-selection">
-                                            <option value="">Select option</option>
-                                            <option value="name"
-                                                {% if head.label|upper == 'NAME' %}
-                                                    selected
-                                                {% endif %}
-                                            >Description</option>
-                                            <option value="amount"
-                                                {% if head.label|upper == 'AMOUNT' %}
-                                                    selected
-                                                {% endif %}
-                                            >Amount</option>
-                                            <option value="date"
-                                                {% if head.label|upper == 'DATE' %}
-                                                    selected
-                                                {% endif %}
-                                            >Date</option>
-                                            <option value="accountId"
-                                                {% if head.label|upper == 'ACCOUNTID' %}
-                                                    selected
-                                                {% endif %}
-                                            >AccountID</option>
-                                        </select>
-                                    </th>
-                                {% endfor %}
-                            </thead>
-                            <tbody>
-                            {% for row in results %}
-                                <tr class="row">
-                                    <td class="cell"><input type="checkbox" class="select-row" checked></td>
-                                {% for elem in row %}
-                                    <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">   <span class="display-value">{{ elem.value }}</span>
-                                        <input type="text" value="{{ elem.value }}" class="edit">
-                                    </td>
-                                {% endfor %}
-                                </tr>
+                <div class="body-container">
+                    <div class="tools">
+                        <label for="accountIdSelection">Select Account (applies to all rows)</label>
+                        <div>
+                            <select name="accounts" id="accountIdSelection">
+                                <option value="">Select an account</option>
+                            {% for account in accounts %}
+                                <option value="{{ account.id}}" data-key="{{ account.name }}">{{ account.name }}</option>
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p>Please upload a CSV to process</p>
-                    {% endif %}
+                        </select>
+                        </div>
+                        
+                    </div>
+                    <div class="body">
+                        {% if results %}
+                            <table class="standard">
+                                <thead>
+                                    <th></th>
+                                    {% for head in results.0 %}
+                                        <th class="header-label">
+                                            <i class="og-label">CSV Column: {{ head.label }}</i>
+                                            <select name="" id="" class="column-selection">
+                                                <option value="">Select option</option>
+                                                <option value="name"
+                                                    {% if head.label|upper == 'NAME' %}
+                                                        selected
+                                                    {% endif %}
+                                                >Description</option>
+                                                <option value="amount"
+                                                    {% if head.label|upper == 'AMOUNT' %}
+                                                        selected
+                                                    {% endif %}
+                                                >Amount</option>
+                                                <option value="date"
+                                                    {% if head.label|upper == 'DATE' %}
+                                                        selected
+                                                    {% endif %}
+                                                >Date</option>
+                                                <option value="accountId"
+                                                    {% if head.label|upper == 'ACCOUNTID' %}
+                                                        selected
+                                                    {% endif %}
+                                                >AccountID</option>
+                                            </select>
+                                        </th>
+                                    {% endfor %}
+                                </thead>
+                                <tbody>
+                                {% for row in results %}
+                                    <tr class="row">
+                                        <td class="cell"><input type="checkbox" class="select-row" checked></td>
+                                    {% for elem in row %}
+                                        <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">   <span class="display-value">{{ elem.value }}</span>
+                                            <input type="text" value="{{ elem.value }}" class="edit">
+                                        </td>
+                                    {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>Please upload a CSV to process</p>
+                        {% endif %}
+                    </div>
                 </div>
+                
                 <div class="stick-to-bottom">
                     <button class="button positive" id="confirmCSV">Confirm and Send</button>
                 </div>
