@@ -16,7 +16,7 @@ let cu = {
             this.showInputEditorListener()
             this.resetShowEditorListener()
             this.rowSelection()
-            this.testAllInput()
+            this.inputTest.testAllInput()
             this.columnSelection.updateSelectColumnsIndicator()
             this.tools.init()
         }
@@ -25,7 +25,7 @@ let cu = {
         init() {
             $accountSelector = document.getElementById('accountIdSelection')
             $accountSelector.addEventListener('change', selector => {
-                this.swapAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
+                this.updateAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
             })
             document.getElementById('selectAllRows').addEventListener('click', () => {
                 this.selectRows()
@@ -33,16 +33,30 @@ let cu = {
             document.getElementById('deselectAllRows').addEventListener('click', () => {
                 this.selectRows(false)
             })
+            document.getElementById('fillAllDescriptions').addEventListener('click', () => {
+                this.updateDescriptions()
+            })
+            document.getElementById('dateFormat').addEventListener('change', () => {
+                this.chekAllDates()
+            })
         },
         selectRows(state=true) {
             $checkboxes = document.querySelectorAll('.select-row')
             if ($checkboxes.length > 0) {
-                $checkboxes.forEach(box => {
-                    box.checked = state
+                $checkboxes.forEach(chekcbox => {
+                    chekcbox.checked = state
+                    let $row = chekcbox.parentNode.parentNode
+                    if (state) {
+                        $row.classList.remove('deselect')
+                    } else {
+                        $row.classList.add('deselect')
+                    }
                 })
+                cu.inputTest.loadErrorAmount()
+
             }
         },
-        swapAccountId(switchTo, label='unknown') {
+        updateAccountId(switchTo, label='unknown') {
             $overwriteAll = document.getElementById('overwriteExisting').checked
             $findAccountId = document.querySelectorAll("[data-key='accountid']")
             if (switchTo == "") {
@@ -73,6 +87,47 @@ let cu = {
                 }
             }
             
+        },
+        updateDescriptions() {
+            $getDescriptions = document.querySelectorAll("[data-key='name']")
+            $newDescription = document.getElementById('transactionDescriptionText').value
+            
+            if ($getDescriptions.length > 0) {
+                if ($newDescription.trim() != '') {
+                    $overwriteAll = document.getElementById('overwriteFilled').checked
+                        $getDescriptions.forEach(cell => {
+                            if($overwriteAll) {
+                                cell.dataset.value = $newDescription.trim()
+                                cell.classList.remove('error')
+                                cell.classList.add('verified')
+                                cell.querySelector('.display-value').innerHTML = $newDescription.trim()
+                                cell.querySelector('.edit').value = $newDescription.trim()
+                            } else {
+                                if(!cell.classList.contains('verified')) {
+                                    cell.dataset.value = $newDescription.trim()
+                                    cell.classList.remove('error')
+                                    cell.classList.add('verified')
+                                    cell.querySelector('.display-value').innerHTML = $newDescription.trim()
+                                    cell.querySelector('.edit').value = $newDescription.trim()
+                                }
+                            }
+                        })
+                } else {
+                    alert('Please enter a description you would like it swapped too')
+                }
+                
+            } else {
+                alert('Please select a description column')
+            }
+            
+        },
+        chekAllDates() {
+            $dates = document.querySelectorAll("[data-key='date']")
+            if ($dates.length > 0) {
+                $dates.forEach(cell => {
+                    cu.inputTest.cellTest(cell)
+                })
+            }
         }
     },
     inputEditingListener() {
@@ -107,8 +162,7 @@ let cu = {
         $cell.forEach(element => {
             const $inputIgnore = element.querySelector('.select-row')
             if ($inputIgnore == null) {
-                element.addEventListener('click', ele => {
-                    
+                element.addEventListener('change', ele => {
                     if (!element.parentNode.classList.contains('deselect')) {
                         ele.stopPropagation()
                         this.resetShowEditor()
@@ -184,14 +238,13 @@ let cu = {
             this.columnsSelected = count
         }
     },
-    testAllInput() {
-        let $cells = document.querySelectorAll('.cell')
-        $cells.forEach(cell => {
-            this.inputTest.cellTest(cell)
-        })
-    },
     inputTest: {
         errorsRemaining: 0,
+        date_regex: {
+            'DD-MM-YYYY': /^(?:(?:(?:0[1-9]|[12][0-9]|3[01])([-/\\.])(?:0[13578]|1[02])\1|(?:0[1-9]|[12][0-9]|30)([-/\\.])(?:0[469]|11)\2|(?:0[1-9]|1[0-9]|2[0-8])([-/\\.])02\3)(?:19|20)\d\d|29([-/\\.])02\4(?:19|20)(?:0[48]|[2468][048]|[13579][26]))$/,
+            'MM-DD-YYYY': /^(?:(?:(?:0[13578]|1[02])([-/\\.])(?:0[1-9]|[12][0-9]|3[01])\1|(?:0[469]|11)([-/\\.])(?:0[1-9]|[12][0-9]|30)\2|02([-/\\.])(?:0[1-9]|1[0-9]|2[0-8])\3)(?:19|20)\d\d|02([-/\\.])29\4(?:19|20)(?:0[48]|[2468][048]|[13579][26]))$/,
+            'YYYY-MM-DD': /^(?:(?:19|20)\d\d([-/\\.])(?:(?:0[13578]|1[02])\1(?:0[1-9]|[12][0-9]|3[01])|(?:0[469]|11)\1(?:0[1-9]|[12][0-9]|30)|02\1(?:0[1-9]|1[0-9]|2[0-8]))|(?:19|20)(?:0[48]|[2468][048]|[13579][26])([-/\\.])02\2 29)$/
+        },
         cellTest(cell) {
             cell.className = 'cell'
             if (cell.dataset.key == 'date') {
@@ -277,8 +330,20 @@ let cu = {
             return Number.isNaN(num) ? null : num;
         },
         dateChecker(checkDate) {
-            const passedDate = Date.parse(checkDate)
-            return isNaN(checkDate) && !isNaN(passedDate) ? true : false
+            const $dateDropdown = document.getElementById('dateFormat');
+            const $format = $dateDropdown[$dateDropdown.selectedIndex].value;
+            const pattern = this.date_regex[$format]
+            if (!pattern) {
+                throw new Error(`Unsupported date format: "${$format}"`);
+                return false
+            }
+            return pattern.test(checkDate)
+        },
+        testAllInput() {
+            let $cells = document.querySelectorAll('.cell')
+            $cells.forEach(cell => {
+                this.cellTest(cell)
+            })
         },
     },
     createMessage(details, type='warning') {

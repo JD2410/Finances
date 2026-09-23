@@ -49,13 +49,16 @@
                         <div><br>
                             <label for="dateFormat">Select Date Format</label>
                             <select name="dateFormat" id="dateFormat">
-                                <option value="YYYY-MM-DD" selected>DD-MM-YYYY</option>
+                                <option value="YYYY-MM-DD" selected>YYYY-MM-DD</option>
                                 <option value="DD-MM-YYYY">DD-MM-YYYY</option>
-                                <option value="MM-DD-YYYY">DD-MM-YYYY</option>
-                                <option value="YYYY/MM/DD">DD/MM/YYYY</option>
-                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                                <option value="MM/DD/YYYY">DD/MM/YYYY</option>
+                                <option value="MM-DD-YYYY">MM-DD-YYYY</option>
                             </select>
+                        </div>
+                        <div>
+                            <br>
+                            <input type="text" value="Transaction" id="transactionDescriptionText">
+                            <button id="fillAllDescriptions">Fill Empty Descriptions</button><br>
+                            <input type="checkbox" id="overwriteFilled"> <label for="overwriteFilled">Overwrite Filled</label>
                         </div>
                         <div>
                             <br>
@@ -71,7 +74,7 @@
                                     {% for head in results.0 %}
                                         <th class="header-label">
                                             <i class="og-label">CSV Column: {{ head.label }}</i>
-                                            <select name="" id="" class="column-selection">
+                                            <select class="column-selection">
                                                 <option value="">Select option</option>
                                                 <option value="name"
                                                     {% if head.label|upper == 'NAME' %}
