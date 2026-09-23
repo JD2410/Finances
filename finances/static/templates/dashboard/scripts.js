@@ -170,22 +170,8 @@ let homeSc = {
             }
         },
         loadChart(data) {
-            Highcharts.setOptions({
-                colors: [
-                    '#32CD32', // Lime Green (Vivid Accent)
-                    '#990099', // Bright Purple
-                    '#7C997C', // Sage Green (Muted Neutral)
-                    '#B500B5', // Rich Orchid
-                    '#D100D1', // Light Magenta-Purple
-                    '#260026', // Deep Midnight Purple
-                    '#005E38',  // Emerald Green (Rich Jewel Tone)
-                    '#007C00', // Inverted True Green (Direct RGB Complement)
-                    '#420042', // Dark Plum / Eggplant
-                    '#5E005E', // Deep Purple
-                    '#7C007C', // Classic Purple - rgb(124, 0, 124)
-                ]
-            })
             Highcharts.chart('piechart', {
+                colors: ['#32CD32','#990099','#7C997C','#B500B5','#D100D1','#260026','#005E38','#007C00','#420042','#5E005E','#7C007C',],
                 chart: {
                     type: 'pie'
                 },
@@ -231,7 +217,7 @@ let homeSc = {
 
             let $dateInput = document.getElementById('accountProgressDate')
             $dateInput.addEventListener('change', () => {
-                const newValues = this.graph.changeDate($dateInput.value)
+                this.graph.changeDate($dateInput.value)
             })
         },
         'graph': {
@@ -279,23 +265,10 @@ let homeSc = {
                             return `${this.series.name}<br><strong>£${amount}</strong><br>${date.getDate()} ${homeSc.utils.months[date.getMonth()]} ${date.getFullYear()}`;
                         }
                     },
-                    colors: [
-                        '#32CD32', // Lime Green (Vivid Accent)
-                        '#990099', // Bright Purple
-                        '#7C997C', // Sage Green (Muted Neutral)
-                        '#B500B5', // Rich Orchid
-                        '#D100D1', // Light Magenta-Purple
-                        '#260026', // Deep Midnight Purple
-                        '#005E38',  // Emerald Green (Rich Jewel Tone)
-                        '#007C00', // Inverted True Green (Direct RGB Complement)
-                        '#420042', // Dark Plum / Eggplant
-                        '#5E005E', // Deep Purple
-                        '#7C007C', // Classic Purple - rgb(124, 0, 124)
-                    ],
+                    colors: ['#32CD32','#990099','#7C997C','#B500B5','#D100D1','#260026','#005E38','#007C00','#420042','#5E005E','#7C007C'],
                     plotOptions: {
                         series: {
                             cursor: 'pointer',
-                            allowPointSelect: true,
                             marker: {
                                 states: {
                                     select: {
@@ -308,9 +281,16 @@ let homeSc = {
                             point: {
                                 events: {
                                     click: function () {
-                                        const date = new Date(this.x)
-                                        homeSc.transactions.getDateTransaction(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,seriesData[this.colorIndex].id)
-                                        document.getElementById('transactionWidget').scrollIntoView({block: "end", behavior: "smooth",})
+                                        if (this.point.realDataPoint) {
+                                            const date = new Date(this.x)
+                                            homeSc.transactions.getDateTransaction(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,seriesData[this.colorIndex].id)
+                                            document.getElementById('transactionWidget').scrollIntoView({block: "end", behavior: "smooth",})
+                                        }
+                                    },
+                                    select: function() {
+                                        if (!this.point.realDataPoint) {
+                                            return false
+                                        }
                                     }
                                 }
                             }
@@ -391,10 +371,13 @@ let homeSc = {
                                 if (typeof account.daily_totals[dateFormatted] != 'undefined') {
                                     value = parseFloat(account.daily_totals[dateFormatted])
                                     runningTotal[index] += value
-                                    valueToAdd = runningTotal[index]
+                                    valueToAdd = {
+                                        y: runningTotal[index],
+                                        realDataPoint: true
+                                    }
                                 } else {
                                     if (i == numberOfDates) {
-                                        valueToAdd = valueToAdd = {
+                                        valueToAdd = {
                                             y: runningTotal[index],
                                             marker: {
                                                 enabled: false
@@ -406,7 +389,10 @@ let homeSc = {
                                 if (typeof account.daily_totals[dateFormatted] != 'undefined') {
                                     value = parseFloat(account.daily_totals[dateFormatted])
                                     runningTotal[index] = value
-                                    valueToAdd = runningTotal[index]
+                                    valueToAdd = {
+                                        y: runningTotal[index],
+                                        realDataPoint: true
+                                    }
                                 } else {
                                     if (i == numberOfDates) {
                                         valueToAdd = {
@@ -419,19 +405,20 @@ let homeSc = {
                                 }
                             }       
                             if (valueToAdd == null && i == 0) {
-                                valueToAdd = runningTotal[index]
+                                valueToAdd = {
+                                    y: runningTotal[index],
+                                    marker: {
+                                        enabled: false
+                                    }
+                                }
                             }
-
                             series_data[index].data.push(valueToAdd)
-
                         })
                     }
-                    
                     return series_data
                 }
-            },
-        },
-        
+            }
+        }
     }
 }
 
