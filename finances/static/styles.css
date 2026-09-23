@@ -6,7 +6,6 @@
 body {
     background-color: rgb(247, 247, 247);
     font-size: 14px;
-    /* font-family: "Inter", sans-serif; */
     font-family: "Roboto", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -151,6 +150,7 @@ table.standard {
         border-radius: 8px;
         min-width: 195px;
         flex: 1;
+        max-width: 300px;
 
         &:first-child {
             background: linear-gradient(rgba(160, 25, 160, 0.85), rgba(126, 4, 126, 0.96)), url('/static/images/bunny-shape.svg'), linear-gradient(rgb(160, 25, 160), rgb(126, 4, 126));

@@ -367,8 +367,6 @@ let homeSc = {
                     transactionDates = Array.from(transactionDates).sort((d1,d2) => new Date(d1) - new Date(d2))
 
                     const numberOfDates = 91
-
-                    // This is where we need to set the date
                     let startDate;
                     if (date != null) {
                         startDate = new Date(date)

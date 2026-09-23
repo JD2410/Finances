@@ -139,38 +139,6 @@ let cu = {
         errorsRemaining: 0,
         cellTest(cell) {
             cell.className = 'cell'
-            // if (cell.dataset.value == '') {
-            //     cell.classList.add('error')
-            // } else {
-            //     // if (cell.dataset.key == 'date') {
-            //     //     if (this.dateChecker(cell.dataset.value)) {
-            //     //         cell.classList.add('verified')
-            //     //     } else {
-            //     //         cell.classList.add('error')
-            //     //     }
-            //     // } else if (cell.dataset.key == 'amount') {
-            //     //     if (this.numberChecker(cell.dataset.value)) {
-            //     //         cell.classList.add('verified')
-            //     //     } else {
-            //     //         cell.classList.add('error')
-            //     //     }
-            //     // } else if (cell.dataset.key == 'accountid') {                    
-            //     //     if (this.numberChecker(cell.dataset.value)) {
-            //     //         let check = this.checkAccountIds(cell.dataset.value)
-            //     //         if (check != null) {
-            //     //             cell.classList.add('verified')
-            //     //             cell.querySelector('.display-value').innerHTML = `${cell.dataset.value} (${check})`
-            //     //         } else {
-            //     //             cell.classList.add('error')
-            //     //             cell.querySelector('.display-value').innerHTML = `${cell.dataset.value} (?)`
-            //     //         }
-            //     //     } else {
-            //     //         cell.classList.add('error')
-            //     //     }
-            //     // } else if (cell.dataset.key == 'name') {
-            //     //     cell.classList.add('verified')
-            //     // }
-            // }
             if (cell.dataset.key == 'date') {
                 if(cell.dataset.value != '') {   
                     if (this.dateChecker(cell.dataset.value) && cell.dataset.value != '') {
