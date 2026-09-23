@@ -162,7 +162,8 @@ let cu = {
         $cell.forEach(element => {
             const $inputIgnore = element.querySelector('.select-row')
             if ($inputIgnore == null) {
-                element.addEventListener('change', ele => {
+                element.addEventListener('click', ele => {
+
                     if (!element.parentNode.classList.contains('deselect')) {
                         ele.stopPropagation()
                         this.resetShowEditor()
