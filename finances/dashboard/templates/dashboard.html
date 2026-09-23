@@ -90,7 +90,7 @@
                                 </tr>
                                 <tr id="transactionTemplate">
                                     <td><a href="{% url 'accounts' %}" class="description"></a></td>
-                                    <td><a href="{% url 'accounts' %}" class="small-button hollow account"></a></td>
+                                    <td class="transaction-symbol"><a href="{% url 'accounts' %}" class="small-button hollow account"></a></td>
                                     <td class="date"></td>
                                     <td class="right amount"></td>
                                 </tr>
@@ -98,10 +98,10 @@
                             <tbody id="transactionBody">
                                 {% for transaction in recent_transactions %}
                                 <tr>
-                                    <td><a href="{% url 'accounts' %}?q={{transaction.name}}">{{ transaction.name }}</a></td>
-                                    <td><a href="{% url 'accounts' %}{{transaction.accountId.id}}" class="small-button hollow">{{ transaction.accountId.name }} </a></td>
-                                    <td>{{ transaction.date|date:"jS M Y" }} </td>
-                                    <td class="right">£{{ transaction.amount|floatformat:2|intcomma }}</td>
+                                    <td><a href="{% url 'accounts' %}?q={{transaction.name}}" class="description">{{ transaction.name }}</a></td>
+                                    <td class="transaction-symbol"><a href="{% url 'accounts' %}{{transaction.accountId.id}}" class="small-button hollow account">{{ transaction.accountId.name }} </a></td>
+                                    <td class="date">{{ transaction.date|date:"jS M Y" }} </td>
+                                    <td class="right amount">£{{ transaction.amount|floatformat:2|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

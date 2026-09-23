@@ -120,6 +120,10 @@ table.standard {
     background-color: lightgray;
     cursor: pointer;
     text-decoration: none;
+    white-space: nowrap;   /* Prevents the text from wrapping to a new line */
+    overflow: hidden;      /* Hides the text that overflows the container */
+    text-overflow: ellipsis;
+    max-width: 100px;
 
     &.primary {
         background-color: purple;

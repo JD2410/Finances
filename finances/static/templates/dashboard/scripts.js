@@ -81,14 +81,16 @@ let homeSc = {
     'transactions': {
         init() {
             $dateInput = document.getElementById('transactionDate')
+            const $chart = document.getElementById("accountProgress")
+            let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
+
             $dateInput.addEventListener('change', () => {
                 this.getDateTransaction($dateInput.value)
-                const $chart = document.getElementById("accountProgress")
-                let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
                 chart.getSelectedPoints().forEach(function (point) {
                     point.select(false, true);
                 });
             })
+            this.accountSymbols.init()
         },
         async getDateTransaction(date, accountId=false) {
             const url = document.getElementById('transactionWidget').dataset.url
@@ -148,9 +150,42 @@ let homeSc = {
                         } else {
                             accountWidget.innerHTML = 'All Accounts'
                         }
+
+                        homeSc.transactions.accountSymbols.assignTable()
                     }
                 })
-        }
+        },
+        'accountSymbols': {
+            'symbols': [],
+            init() {
+                this.getSymbols()
+                this.assignTable()
+            },
+            getSymbols() {
+                const $chart = document.getElementById("accountProgress")
+                let chart = Highcharts.charts[Highcharts.attr($chart, 'data-highcharts-chart')]
+                for (let count=0; count<chart.series.length; count++) {
+                    this.symbols.push({
+                        'name': chart.series[count].name,
+                        'symbol': chart.series[count].symbol,
+                        'color': chart.series[count].color,
+                    })
+                }
+            },
+            assignTable() {
+                $tr = document.getElementById('transactionBody').querySelectorAll('tr')
+                $tr.forEach(element => {
+                    const $account = element.querySelector('.account')
+                    const $accountText = $account.innerHTML
+                    let obj = this.symbols.find(o => o.name === $accountText.trim());
+
+                    let symbol = document.createElement('span')
+                    symbol.style.backgroundColor = obj.color
+                    symbol.classList.add(obj.symbol)
+                    $account.parentNode.prepend(symbol)
+                })
+            }
+        },
     },
     'accountTotals': {
         init() {
@@ -269,6 +304,7 @@ let homeSc = {
                     plotOptions: {
                         series: {
                             cursor: 'pointer',
+                            allowPointSelect: true,
                             marker: {
                                 states: {
                                     select: {

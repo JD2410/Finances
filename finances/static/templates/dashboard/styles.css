@@ -10,6 +10,57 @@
             display: flex;
         }
     }
+    .transaction-symbol {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        span {
+
+            width: 20px;
+            height: 2px;
+            position: relative;
+
+            &:before {
+                background: inherit;
+                display: block;
+                content: "";
+                height: 8px;
+                width: 8px;
+                position: absolute;
+                top: -3px;
+                left: calc(50% - 4px);
+            }
+
+
+            &.circle::before {
+                border-radius: 50%;
+            }
+            &.diamond::before {
+                rotate: 45deg;
+                width: 7px;
+                height: 7px;
+                top: -2px;
+                left: calc(50% - 3px);
+
+            }
+            &.triangle::before {
+                width: 9px;
+                height: 9px;
+                clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+                top: -4px;
+                left: calc(50% - 5px);
+            }
+            &.triangle-down::before {
+                width: 9px;
+                height: 9px;
+                clip-path: polygon(100% 100%, 50% 0%, 0% 100%);
+                rotate: 180deg;
+                left: calc(50% - 6px);
+                top: -4px;
+            }
+        }
+        
+    }
 }
 .grouped {
     display: flex;
