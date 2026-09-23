@@ -27,20 +27,52 @@ let cu = {
             $accountSelector.addEventListener('change', selector => {
                 this.swapAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
             })
+            document.getElementById('selectAllRows').addEventListener('click', () => {
+                this.selectRows()
+            })
+            document.getElementById('deselectAllRows').addEventListener('click', () => {
+                this.selectRows(false)
+            })
+        },
+        selectRows(state=true) {
+            $checkboxes = document.querySelectorAll('.select-row')
+            if ($checkboxes.length > 0) {
+                $checkboxes.forEach(box => {
+                    box.checked = state
+                })
+            }
         },
         swapAccountId(switchTo, label='unknown') {
+            $overwriteAll = document.getElementById('overwriteExisting').checked
             $findAccountId = document.querySelectorAll("[data-key='accountid']")
-            if($findAccountId.length > 0) {
-                $findAccountId.forEach(row => {
-                    row.dataset.value = switchTo
-                    row.classList.remove('error')
-                    row.classList.add('verified')
-                    row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
-                    row.querySelector('.edit').value = switchTo
-                })
+            if (switchTo == "") {
+                alert('Please select an account')
             } else {
-                alert('Please select a column first')
+                if($findAccountId.length > 0) {
+
+                    $findAccountId.forEach(row => {
+                        if (!$overwriteAll) {
+                            if (!row.classList.contains('verified')) {
+                                row.dataset.value = switchTo
+                                row.classList.remove('error')
+                                row.classList.add('verified')
+                                row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
+                                row.querySelector('.edit').value = switchTo
+                            }
+                        } else {
+                            row.dataset.value = switchTo
+                            row.classList.remove('error')
+                            row.classList.add('verified')
+                            row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
+                            row.querySelector('.edit').value = switchTo
+                        }
+                        
+                    })
+                } else {
+                    alert('Please select a column first')
+                }
             }
+            
         }
     },
     inputEditingListener() {
