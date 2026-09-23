@@ -52,7 +52,10 @@ table thead {
     }
 }
 table.standard {
-    
+    .row.deselect .cell.verified::before,
+    .row.deselect .cell.error::before {
+        display: none;
+    }
     td.cell {
         position: relative;
         cursor: pointer;
@@ -121,7 +124,7 @@ table.standard {
         }
         .body {
             overflow: auto;
-            height: 77vh;
+            height: calc(100vh - 220px);
         }
     }
 }

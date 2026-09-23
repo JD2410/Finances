@@ -80,7 +80,7 @@ let cu = {
                             row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
                             row.querySelector('.edit').value = switchTo
                         }
-                        
+                        cu.inputTest.cellTest(row)
                     })
                 } else {
                     alert('Please select a column first')
@@ -128,6 +128,33 @@ let cu = {
                     cu.inputTest.cellTest(cell)
                 })
             }
+        },
+        changeDateFormat(dateString) {
+            const $dateDropdown = document.getElementById('dateFormat');
+            const $format = $dateDropdown[$dateDropdown.selectedIndex].value;
+            let breakdown = {
+                day: "",
+                month: "",
+                year: ""
+            }
+            
+            if ($format == 'YYYY-MM-DD') {
+                const setDate = new Date(dateString)
+                breakdown.day = setDate.getDate()
+                breakdown.month = setDate.getMonth()+1
+                breakdown.year = setDate.getFullYear()
+            }
+            if ($format == 'DD-MM-YYYY') {
+                breakdown.day = dateString.slice(0,2),
+                breakdown.month = dateString.slice(3,5),
+                breakdown.year = dateString.slice(6,10)
+            }
+            if ($format == 'MM-DD-YYYY') {
+                breakdown.day = dateString.slice(3,5),
+                breakdown.month = dateString.slice(0,2),
+                breakdown.year = dateString.slice(6,10)
+            }
+            return `${breakdown.year}-${breakdown.month}-${breakdown.day}`
         }
     },
     inputEditingListener() {
@@ -379,14 +406,11 @@ let cu = {
 
 
         $names.forEach((transaction, index) => {
-            if ($select[index].value) {
-                const setDate = new Date($date[index].dataset.value)
-                let dateFormatSetup = `${setDate.getFullYear()}-${setDate.getMonth()+1}-${setDate.getDate()}`
-
+            if ($select[index].checked) {
                 records.push({
                     name: transaction.dataset.value,
                     amount: parseFloat(($amount[index].dataset.value).replace(/(\d+),(\d+)[\s\S]*/g, "$1$2")),
-                    date: dateFormatSetup,
+                    date: cu.tools.changeDateFormat($date[index].dataset.value),
                     accountId: parseInt($accountId[index].dataset.value),
                 })
             }
@@ -400,7 +424,7 @@ let cu = {
             },
             body: JSON.stringify({ "records": records }),
         }
-
+        console.log(records)
         await fetch("/accounts/import/", options)
             .then(response => response.json())
             .then(data => {
