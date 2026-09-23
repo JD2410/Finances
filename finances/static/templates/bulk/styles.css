@@ -131,6 +131,41 @@ table.standard {
             background-position: center;
             background-repeat: no-repeat;
             height: 100%;
+
+            h4 {
+                margin-bottom: 8px;
+            }
+
+            .tool:not(:first-child) {
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid rgba(128, 0, 128, 0.28);
+            }
+            input[type=text] {
+                padding: 8px;
+                box-sizing: border-box;
+                font-size: 1em;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                border-color: lightgray;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                border: 1px solid rgb(214, 214, 214);
+                min-height: 35px;
+            }
+
+            select {
+                padding: 8px;
+                box-sizing: border-box;
+                font-size: 1em;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                border-color: lightgray;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
         }
         .imported-data {
             padding: 12px 12px 12px 0;

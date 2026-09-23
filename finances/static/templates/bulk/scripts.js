@@ -27,11 +27,8 @@ let cu = {
             $accountSelector.addEventListener('change', selector => {
                 this.updateAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
             })
-            document.getElementById('selectAllRows').addEventListener('click', () => {
+            document.getElementById('toggleRowSelection').addEventListener('click', () => {
                 this.selectRows()
-            })
-            document.getElementById('deselectAllRows').addEventListener('click', () => {
-                this.selectRows(false)
             })
             document.getElementById('fillAllDescriptions').addEventListener('click', () => {
                 this.updateDescriptions()
@@ -40,20 +37,25 @@ let cu = {
                 this.chekAllDates()
             })
         },
-        selectRows(state=true) {
+        selectionButtonState: false,
+        selectRows() {
             $checkboxes = document.querySelectorAll('.select-row')
+            $button = document.getElementById('toggleRowSelection')
+
             if ($checkboxes.length > 0) {
                 $checkboxes.forEach(chekcbox => {
-                    chekcbox.checked = state
+                    chekcbox.checked = this.selectionButtonState
                     let $row = chekcbox.parentNode.parentNode
-                    if (state) {
+                    if (this.selectionButtonState) {
                         $row.classList.remove('deselect')
+                        $button.innerHTML = 'De-Select All Rows'
                     } else {
                         $row.classList.add('deselect')
+                        $button.innerHTML = 'Select All Rows'
                     }
                 })
+                this.selectionButtonState = !this.selectionButtonState
                 cu.inputTest.loadErrorAmount()
-
             }
         },
         updateAccountId(switchTo, label='unknown') {

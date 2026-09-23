@@ -34,37 +34,38 @@
                             <h2>Import Tools</h2>
                         </div>
                         <div class="tools">
-                            <label for="accountIdSelection">Change Account Id</label>
-                            <div>
+                            <div class="tool">
+                                <h4>Account Id Assignment</h4>
                                 <select name="accounts" id="accountIdSelection">
                                     <option value="">Select an account</option>
                                     {% for account in accounts %}
                                     <option value="{{ account.id}}" data-key="{{ account.name }}">{{ account.name }}</option>
                                     {% endfor %}
-                                </select><br><br>
-                                <input type="checkbox" id="overwriteExisting"> <label for="overwriteExisting">Overwrite verified</label>
+                                </select>
+                                <div>
+                                    <input type="checkbox" id="overwriteExisting"><label for="overwriteExisting"> Overwrite verified</label>
+                                </div>
                             </div>
-                            <div><br>
-                                <label for="dateFormat">Select Date Format</label>
+                            <div class="tool">
+                                <h4>Date Format</h4>
                                 <select name="dateFormat" id="dateFormat">
                                     <option value="YYYY-MM-DD" selected>YYYY-MM-DD</option>
                                     <option value="DD-MM-YYYY">DD-MM-YYYY</option>
                                     <option value="MM-DD-YYYY">MM-DD-YYYY</option>
                                 </select>
                             </div>
-                            <div>
-                                <br>
+                            <div class="tool">
+                                <h4>Fill Description</h4>
                                 <input type="text" value="Transaction" id="transactionDescriptionText">
-                                <button id="fillAllDescriptions">Fill Empty Descriptions</button><br>
-                                <input type="checkbox" id="overwriteFilled"> <label for="overwriteFilled">Overwrite Filled</label>
+                                <div>
+                                    <input type="checkbox" id="overwriteFilled"> <label for="overwriteFilled">Overwrite Filled</label>
+                                </div>
+                                <button id="fillAllDescriptions" class="button primary">Fill Empty Descriptions</button>
                             </div>
-                            <div>
-                                <br>
-                                <button id="selectAllRows">Select All</button>
-                                <button id="deselectAllRows">De-select All</button>
+                            <div class="tool">
+                                <button class="button primary" id="toggleRowSelection">De-Select All Rows</button>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="imported-data">
                         <div class="header">
@@ -125,10 +126,8 @@
                                 <p>Please upload a CSV to process</p>
                             {% endif %}
                         </div>
-                    </div>
-                    
+                    </div>                
                 </div>
-                
                 <div class="stick-to-bottom">
                     <button class="button positive" id="confirmCSV">Confirm and Send</button>
                 </div>
