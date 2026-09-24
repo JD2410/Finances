@@ -21,11 +21,10 @@ let cu = {
             this.tools.init()
         }
     },
-
     'tools': {
         init() {
             $accountSelector = document.getElementById('accountIdSelection')
-            $accountSelector.addEventListener('change', selector => {
+            $accountSelector.addEventListener('change', () => {
                 this.updateAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
             })
             document.getElementById('toggleRowSelection').addEventListener('click', () => {
@@ -39,6 +38,9 @@ let cu = {
             })
             document.getElementById('checkExisting').addEventListener('click', () => {
                 this.checkExisting.init()
+            })
+            document.getElementById('amountTypeSwitch').addEventListener('click', () => {
+                this.amountTypeSwitch()
             })
         },
         selectionButtonState: false,
@@ -243,6 +245,42 @@ let cu = {
                     })
             }
             
+        },
+        amountTypeSwitch() {
+            const $columSelector = document.querySelectorAll('.column-selection')
+            const $button = document.getElementById('amountTypeSwitch')
+            const setup = $columSelector[2].querySelector('.amount').getAttribute('disabled')
+            $button.dataset.single = setup ? 'true' : 'false'
+            $columSelector.forEach((col, index) => {
+                if (!setup) {
+                    if (col[col.selectedIndex].value == 'amount') {
+                        cu.columnSelection.resetDuplicateColumnSelection('amount')
+                        cu.columnSelection.updateColumnValue('unknown', index)
+                        
+                    }
+                    $button.innerHTML = 'Single Amount Column'
+                    col.querySelector('.amount').setAttribute('disabled', true)
+                    col.querySelector('.credit').removeAttribute('disabled')
+                    col.querySelector('.debit').removeAttribute('disabled')
+                    cu.columnSelection.columnsNeeded = 5
+                    cu.columnSelection.updateSelectColumnsIndicator()
+
+                } else {
+                    if (col[col.selectedIndex].value == 'credit' || col[col.selectedIndex].value == 'debit') {
+                        cu.columnSelection.resetDuplicateColumnSelection(col[col.selectedIndex].value)
+                        cu.columnSelection.updateColumnValue('unknown', index)
+                        
+                    }
+                    $button.innerHTML = 'Seperate Debit and Credit'
+                    col.querySelector('.amount').removeAttribute('disabled')
+                    col.querySelector('.credit').setAttribute('disabled', true)
+                    col.querySelector('.debit').setAttribute('disabled', true)
+                    cu.columnSelection.columnsNeeded = 4
+                        cu.columnSelection.updateSelectColumnsIndicator()
+
+                }
+                
+            })
         }
     },
     inputEditingListener() {
@@ -303,32 +341,40 @@ let cu = {
     },
     'columnSelection': {
         columnsSelected: 0,
+        columnsNeeded: 4,
         columnSelectorsListener() {
             let $dropdowns = document.querySelectorAll('.column-selection')
             $dropdowns.forEach((elem, index) => {
                 elem.addEventListener('change', function() {
                     const value = this.value
                     cu.columnSelection.resetDuplicateColumnSelection(value, index)
-                    cu.columnSelection.updateRow(value.toLowerCase(), index)
+                    cu.columnSelection.updateColumnValue(value.toLowerCase(), index)
                     cu.columnSelection.updateSelectColumnsIndicator()
                 })
             })
         },
-        resetDuplicateColumnSelection(which, notIndex) {
+        resetDuplicateColumnSelection(which, notIndex='false') {
             let $columnSelectors = document.querySelectorAll('.column-selection');
             let whichIndex = null;
 
             $columnSelectors.forEach((element, index) => {
-                if(element.value == which && index != notIndex) {
-                    element.value = ''
-                    whichIndex = index
+                if(notIndex == 'false') {
+                    if(element.value == which) {
+                        element.value = ''
+                        whichIndex = index
+                    }
+                } else {
+                    if(element.value == which && index != notIndex) {
+                        element.value = ''
+                        whichIndex = index
+                    }
                 }
             })
             if (whichIndex != null) {
-                this.updateRow("", whichIndex)
+                this.updateColumnValue("", whichIndex)
             }
         },
-        updateRow(what, which) {
+        updateColumnValue(what, which) {
             let $getColumns = document.querySelectorAll('.row')
             $getColumns.forEach((ele) => {
                 let cell = ele.querySelectorAll('.cell')
@@ -345,8 +391,8 @@ let cu = {
                 }
             })
             $indicator = document.getElementById('selectionIndicator')
-            $indicator.innerHTML = count
-            if (count < 4) {
+            $indicator.innerHTML = `${count} / ${this.columnsNeeded}`
+            if (count < this.columnsNeeded) {
                 $indicator.classList.add('problem')
             } else {
                 $indicator.classList.remove('problem')
@@ -373,6 +419,59 @@ let cu = {
                 } else {
                     cell.classList.add('error')
                 }
+            } 
+            if (cell.dataset.key == 'debit' || cell.dataset.key == 'credit') {
+                const $parent = cell.parentNode
+                const $credit = $parent.querySelector("[data-key='credit']")
+                const $debit = $parent.querySelector("[data-key='debit']")
+
+                if ($credit && $debit) {
+                    $credit.classList.remove('pending')
+                    $debit.classList.remove('pending')
+                    $credit.classList.remove('error')
+                    $debit.classList.remove('error')
+                    $credit.classList.remove('verified')
+                    $debit.classList.remove('verified')
+
+                    const creditValue = $credit.dataset.value
+                    const debitValue = $debit.dataset.value
+
+                    if (creditValue == "" && debitValue == "") {
+                        $credit.classList.add('error')
+                        $debit.classList.add('error')
+                    }
+                    if (creditValue != "" && debitValue != "") {
+                        $credit.classList.add('error')
+                        $debit.classList.add('error')
+                    }
+                    if (creditValue == "" && debitValue != "") {
+                        if (this.numberChecker(debitValue)) {
+                            $credit.classList.add('verified')
+                            $debit.classList.add('verified')
+                        } else {
+                            $credit.classList.add('error')
+                            $debit.classList.add('error')
+                        }
+                    }
+                    if (creditValue != "" && debitValue == "") {
+                        if (this.numberChecker(creditValue)) {
+                            $credit.classList.add('verified')
+                            $debit.classList.add('verified')
+                        } else {
+                            $credit.classList.add('error')
+                            $debit.classList.add('error')
+                        }
+                    }
+
+                } else {
+                    if ($credit) {
+                        $credit.classList.add('pending')
+                    }
+                    if ($debit) {
+                        $debit.classList.add('pending')
+                    }
+                }
+
             } 
             if (cell.dataset.key == 'amount') {
                 if(cell.dataset.value != '') {   
@@ -473,37 +572,65 @@ let cu = {
         document.getElementById('messagesContainer').appendChild(message)
     },
     checkUserInput() {
-        if(this.columnSelection.columnsSelected == 4) {
+        if(this.columnSelection.columnsSelected == cu.columnSelection.columnsNeeded) {
             if (this.inputTest.errorsRemaining > 0) {
                 this.createMessage("There are still errors remaining.")
             } else {
                 this.sendTransacrions()
             }
         } else {
-            this.createMessage("You need to select 4 columns: <ul><li>Amount</li><li>Description</li><li>AccountId</li><li>Date</li></ul>")
+            if (cu.columnSelection.columnsNeeded == 4) {
+                this.createMessage("You need to select 4 columns: <ul><li>Amount</li><li>Description</li><li>AccountId</li><li>Date</li></ul>")
+            } else {
+                this.createMessage("You need to select 5 columns: <ul><li>Credit</li><li>Debit</li><li>Description</li><li>AccountId</li><li>Date</li></ul>")
+            }
         }
     },
     async sendTransacrions() {
         let records = [];
+        const $amountType = document.getElementById('amountTypeSwitch').dataset.single
+        console.log($amountType)
 
         const $select = document.querySelectorAll('.select-row')
         const $names = document.querySelectorAll("[data-key='name']");
         const $amount = document.querySelectorAll("[data-key='amount']");
+        const $credit = document.querySelectorAll("[data-key='credit']");
+        const $debit = document.querySelectorAll("[data-key='debit']");
         const $date = document.querySelectorAll("[data-key='date']");
         const $accountId = document.querySelectorAll("[data-key='accountid']");
 
 
         $names.forEach((transaction, index) => {
             if ($select[index].checked) {
-                records.push({
-                    name: transaction.dataset.value,
-                    amount: parseFloat(($amount[index].dataset.value).replace(/(\d+),(\d+)[\s\S]*/g, "$1$2")),
-                    date: cu.tools.changeDateFormat($date[index].dataset.value),
-                    accountId: parseInt($accountId[index].dataset.value),
-                })
+                if (!$amountType) {
+                    records.push({
+                        name: transaction.dataset.value,
+                        amount: parseFloat(($amount[index].dataset.value).replace(/(\d+),(\d+)[\s\S]*/g, "$1$2")),
+                        date: cu.tools.changeDateFormat($date[index].dataset.value),
+                        accountId: parseInt($accountId[index].dataset.value),
+                    })
+                } else {
+                    const debit = $debit[index].dataset.value
+                    const credit = $credit[index].dataset.value
+                    let amount = null
+                    if (debit != "") {
+                        amount = parseFloat(debit.replace(/(\d+),(\d+)[\s\S]*/g, "$1$2"))
+                    } else {
+                        amount = parseFloat(credit.replace(/(\d+),(\d+)[\s\S]*/g, "$1$2"))
+                        if (amount > 0) {
+                            amount = parseFloat('-' + amount)
+                        }
+                    }
+                    records.push({
+                        name: transaction.dataset.value,
+                        amount: amount,
+                        date: cu.tools.changeDateFormat($date[index].dataset.value),
+                        accountId: parseInt($accountId[index].dataset.value),
+                    })
+                }
             }
         })
-        
+        console.log(records)
         let options = {
             method: "POST",
             headers: {

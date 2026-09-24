@@ -21,9 +21,6 @@
     &::before {
         content: 'Selected Columns: ';
     }
-    &::after {
-        content: '/4';
-    }
 }
 
 table thead {
@@ -46,7 +43,7 @@ table thead {
         background-color: unset;
 
         cursor: auto;
-        &.verified, &.error {
+        &.verified, &.error, &.pending {
             background-color: unset;
 
             &::before {
@@ -75,7 +72,7 @@ table thead {
             }
         }
         
-        &.verified, &.error {
+        &.verified, &.error, &.pending {
             background-color: rgba(255, 127, 0, 0.27);
         }
     }
@@ -107,6 +104,15 @@ table.standard {
                 font-family: 'Font Awesome Kit';
                 font: var(--fa-font-solid);
                 content: '\f057';
+            }
+        }
+        &.pending {
+            background-color: rgba(255, 127, 0, 0.27);
+            &:before {
+                color: orange;
+                font-family: 'Font Awesome Kit';
+                font: var(--fa-font-solid);
+                content: '\f071';
             }
         }
 

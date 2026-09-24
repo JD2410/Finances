@@ -35,6 +35,10 @@
                         </div>
                         <div class="tools">
                             <div class="tool">
+                                <h4>Amount</h4>
+                                <button class="button primary" id="amountTypeSwitch" data-single="true">Seperate Debit and Credit</button>
+                            </div>
+                            <div class="tool">
                                 <h4>Account Id Assignment</h4>
                                 <select name="accounts" id="accountIdSelection">
                                     <option value="">Select an account</option>
@@ -93,11 +97,6 @@
                                                             selected
                                                         {% endif %}
                                                     >Description</option>
-                                                    <option value="amount"
-                                                        {% if head.label|upper == 'AMOUNT' %}
-                                                            selected
-                                                        {% endif %}
-                                                    >Amount</option>
                                                     <option value="date"
                                                         {% if head.label|upper == 'DATE' %}
                                                             selected
@@ -108,6 +107,13 @@
                                                             selected
                                                         {% endif %}
                                                     >AccountID</option>
+                                                    <option value="amount"
+                                                        {% if head.label|upper == 'AMOUNT' %}
+                                                            selected
+                                                        {% endif %}
+                                                    class="amount">Amount</option>
+                                                    <option value="debit" class="debit" disabled>Debit</option>
+                                                    <option value="credit" class="credit" disabled>Credit</option>
                                                 </select>
                                             </th>
                                         {% endfor %}
