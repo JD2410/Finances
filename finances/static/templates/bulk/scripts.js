@@ -151,33 +151,75 @@ let cu = {
                 breakdown.year = setDate.getFullYear()
             }
             if ($format == 'DD-MM-YYYY') {
-                breakdown.day = dateString.slice(0,2),
-                breakdown.month = dateString.slice(3,5),
+                breakdown.day = parseInt(dateString.slice(0,2)),
+                breakdown.month = parseInt(dateString.slice(3,5)),
                 breakdown.year = dateString.slice(6,10)
             }
             if ($format == 'MM-DD-YYYY') {
-                breakdown.day = dateString.slice(3,5),
-                breakdown.month = dateString.slice(0,2),
+                breakdown.day = parseInt(dateString.slice(3,5)),
+                breakdown.month = parseInt(dateString.slice(0,2)),
                 breakdown.year = dateString.slice(6,10)
             }
+            
+            breakdown.day = (breakdown.day <= 9) ? '0' + breakdown.day : breakdown.day;
+            breakdown.month = (breakdown.month <= 9) ? '0' + breakdown.month : breakdown.month;
+
             return `${breakdown.year}-${breakdown.month}-${breakdown.day}`
         },
         'checkExisting': {
+            'existingTransactions': {},
             init() {
-                $url = document.getElementById('checkExisting').dataset.url
-                this.getAccountTransactions($url, Array.from(this.getSelectedAccountId()))
+                const $url = document.getElementById('checkExisting').dataset.url
+                const accountsToGet = this.getSelectedAccountId()
+                if (accountsToGet) {
+                    this.getAccountTransactions($url, Array.from(this.getSelectedAccountId()))
+                } else {
+                    this.checkIfExisting()
+                }
             },
             getSelectedAccountId() {
                 $getAccountIdSelection = document.querySelectorAll("[data-key='accountid']")
+                let accounts = new Set()
                 if ($getAccountIdSelection.length > 0) {
-                    let accounts = new Set()
                     $getAccountIdSelection.forEach(row => {
-                        accounts.add(row.dataset.value)
+                        if (!this.existingTransactions[row.dataset.value]) {
+                            accounts.add(row.dataset.value)
+                        }
                     })
+                } 
+                if (accounts.size > 0) {
                     return accounts
                 } else {
                     return null
                 }
+            },
+            checkIfExisting() {
+                document.querySelectorAll('tr.row.duplicate').forEach(ele => {
+                    ele.classList.remove('duplicate')
+                })
+                $getSelected = document.querySelectorAll('tr.row')
+                $getSelected.forEach((row, index) => {
+                    if(!row.classList.contains('deselect')) {
+                        const values = {
+                            'name': row.querySelector("[data-key='name']").dataset.value,
+                            'date': cu.tools.changeDateFormat(row.querySelector("[data-key='date']").dataset.value),
+                            'amount': row.querySelector("[data-key='amount']").dataset.value,
+                            'accountid': row.querySelector("[data-key='accountid']").dataset.value
+                        }
+                        if (this.existingTransactions[values.accountid]) {
+                            if (this.existingTransactions[values.accountid]['transactions'][values.date]) {
+                                const getTransactions = this.existingTransactions[values.accountid]['transactions'][values.date]
+                                for (let tr = 0; tr < getTransactions.length; tr++) {
+                                    if (getTransactions[tr].name.trim() == values.name.trim() && parseFloat(getTransactions[tr].amount).toFixed(2).toString() == parseFloat(values.amount.replaceAll(",", "")).toFixed(2).toString()) {
+                                        row.classList.toggle('duplicate')
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+                
             },
             async getAccountTransactions(url, accounts) {
                 let options = {
@@ -191,8 +233,14 @@ let cu = {
                 await fetch(url, options)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data)
-                    })   
+                        data.transactions.forEach(records => {
+                            this.existingTransactions[records.accountId] = {
+                                'transaction_amount': records.transaction_amount,
+                                'transactions': records.transactions
+                            }
+                        })
+                        this.checkIfExisting()
+                    })
             }
             
         }

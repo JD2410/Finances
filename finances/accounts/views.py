@@ -376,30 +376,35 @@ def get_bulk_transactions(request):
     try:
         data = json.loads(request.body)
         accounts = data.get("accounts", [])
-        transactions = {}
+        transactions = []
 
         for account in accounts:
-            transactions[account] = {
-                'transaction_amount': 0
+            account_transactions = {
+                'accountId': int(account),
+                'transaction_amount': 0,
+                'transactions': {}
             }
             get_transactions = Transactions.objects.values('id', 'name', 'amount', 'date', 'created_at').filter(accountId=int(account))
 
             if len(get_transactions) > 0:
 
-                transactions[account]['amount'] = len(get_transactions)
+                account_transactions['transaction_amount'] = len(get_transactions)
 
                 for transaction in get_transactions:
                     date_string = transaction['date'].strftime('%Y-%m-%d')
-                    if not date_string in transactions[account]:
-                        transactions[account][date_string] = [{
+                    if not date_string in account_transactions['transactions']:
+                        account_transactions['transactions'][date_string] = [{
                             'name': transaction['name'],
+                            'amount': transaction['amount'],
                             'created': transaction['created_at'].strftime('%Y-%m-%d')
                         }]
                     else:
-                        transactions[account][date_string].append({
+                        account_transactions['transactions'][date_string].append({
                             'name': transaction['name'],
+                            'amount': transaction['amount'],
                             'created': transaction['created_at'].strftime('%Y-%m-%d')
                         })
+            transactions.append(account_transactions)
 
         return JsonResponse({
             "status": "success",

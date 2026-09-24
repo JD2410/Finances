@@ -38,24 +38,50 @@ table thead {
         opacity: 0.6;
     }
 }
-.row.deselect {
+
+.row.deselect, .row.deselect.duplicate {
     opacity: 0.5;
 
-    .cell {
+    td.cell {
+        background-color: unset;
+
         cursor: auto;
         &.verified, &.error {
             background-color: unset;
+
+            &::before {
+                display: none;
+            }
         }
         .display-value {
             text-decoration: line-through;
         }
     }
 }
-table.standard {
-    .row.deselect .cell.verified::before,
-    .row.deselect .cell.error::before {
-        display: none;
+.row.duplicate {
+    td.cell {
+        background-color: rgba(255, 127, 0, 0.27);
+        &:first-child {
+            display: flex;
+            align-items: center;
+            width: 30px;
+            gap: 4px;
+            
+            &:after {
+                font-family: 'Font Awesome Kit';
+                color: orange;
+                font: var(--fa-font-solid);
+                content: '\f071';
+            }
+        }
+        
+        &.verified, &.error {
+            background-color: rgba(255, 127, 0, 0.27);
+        }
     }
+}
+table.standard {
+    
     td.cell {
         position: relative;
         cursor: pointer;
