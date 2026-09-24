@@ -21,6 +21,7 @@ let cu = {
             this.tools.init()
         }
     },
+
     'tools': {
         init() {
             $accountSelector = document.getElementById('accountIdSelection')
@@ -35,6 +36,9 @@ let cu = {
             })
             document.getElementById('dateFormat').addEventListener('change', () => {
                 this.chekAllDates()
+            })
+            document.getElementById('checkExisting').addEventListener('click', () => {
+                this.checkExisting.init()
             })
         },
         selectionButtonState: false,
@@ -157,6 +161,40 @@ let cu = {
                 breakdown.year = dateString.slice(6,10)
             }
             return `${breakdown.year}-${breakdown.month}-${breakdown.day}`
+        },
+        'checkExisting': {
+            init() {
+                $url = document.getElementById('checkExisting').dataset.url
+                this.getAccountTransactions($url, Array.from(this.getSelectedAccountId()))
+            },
+            getSelectedAccountId() {
+                $getAccountIdSelection = document.querySelectorAll("[data-key='accountid']")
+                if ($getAccountIdSelection.length > 0) {
+                    let accounts = new Set()
+                    $getAccountIdSelection.forEach(row => {
+                        accounts.add(row.dataset.value)
+                    })
+                    return accounts
+                } else {
+                    return null
+                }
+            },
+            async getAccountTransactions(url, accounts) {
+                let options = {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': cu.getToken("csrftoken")
+                    },
+                    body: JSON.stringify({ "accounts": accounts }),
+                }
+                await fetch(url, options)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                    })   
+            }
+            
         }
     },
     inputEditingListener() {
@@ -288,7 +326,7 @@ let cu = {
                     cell.classList.add('error')
                 }
             } 
-            if (cell.dataset.key == 'amount' && cell.dataset.value != '') {
+            if (cell.dataset.key == 'amount') {
                 if(cell.dataset.value != '') {   
                     if (this.numberChecker(cell.dataset.value)) {
                         cell.classList.add('verified')
@@ -426,7 +464,6 @@ let cu = {
             },
             body: JSON.stringify({ "records": records }),
         }
-        console.log(records)
         await fetch("/accounts/import/", options)
             .then(response => response.json())
             .then(data => {

@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+import datetime
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -194,7 +195,6 @@ def get_transactions(param, get_totals=True, passedAccountId=None):
                 construct["totals"] = get_account_totals(param)
         
     return construct
-
 def account(request,accountPassed):
 
     if request.method == 'POST':
@@ -322,7 +322,6 @@ def account(request,accountPassed):
         'savings_form': account_form,
         'csv_form': csv_form,
     })
-
 def get_account_total(account):
     total = 0.00
     if account.accountType != None:
@@ -336,7 +335,6 @@ def get_account_total(account):
                 total = get_transactions_total['amount']
 
     return total
-
 def get_account_totals(param = None):
     accounts = Accounts.objects.all()
     account_details = []
@@ -372,6 +370,44 @@ def get_account_totals(param = None):
         'records': account_details,
         'total': final_total
     }
+
+@require_POST
+def get_bulk_transactions(request):
+    try:
+        data = json.loads(request.body)
+        accounts = data.get("accounts", [])
+        transactions = {}
+
+        for account in accounts:
+            transactions[account] = {
+                'transaction_amount': 0
+            }
+            get_transactions = Transactions.objects.values('id', 'name', 'amount', 'date', 'created_at').filter(accountId=int(account))
+
+            if len(get_transactions) > 0:
+
+                transactions[account]['amount'] = len(get_transactions)
+
+                for transaction in get_transactions:
+                    date_string = transaction['date'].strftime('%Y-%m-%d')
+                    if not date_string in transactions[account]:
+                        transactions[account][date_string] = [{
+                            'name': transaction['name'],
+                            'created': transaction['created_at'].strftime('%Y-%m-%d')
+                        }]
+                    else:
+                        transactions[account][date_string].append({
+                            'name': transaction['name'],
+                            'created': transaction['created_at'].strftime('%Y-%m-%d')
+                        })
+
+        return JsonResponse({
+            "status": "success",
+            'transactions': transactions,
+        }, status=200)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON payload"}, status=400)
 
 @require_POST
 def processRecords(request):
