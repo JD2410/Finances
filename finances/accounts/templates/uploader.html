@@ -69,9 +69,6 @@
                             <div class="tool">
                                 <button class="button primary" id="toggleRowSelection">De-Select All Rows</button>
                             </div>
-                            <div class="tool">
-                                <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
-                            </div>
                         </div>
                     </div>
                     <div class="imported-data">
@@ -137,8 +134,10 @@
                         </div>
                     </div>                
                 </div>
-                <div class="stick-to-bottom">
+                <div class="stick-to-bottom" style="display: flex; gap: 12px">
                     <button class="button positive" id="confirmCSV">Confirm and Send</button>
+                    <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
+                    <button type="button" class="button hollow" id="deselectExisting">Deselect Existing Transactions</button>
                 </div>
             </div>
             

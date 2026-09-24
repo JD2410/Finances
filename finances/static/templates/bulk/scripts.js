@@ -42,16 +42,29 @@ let cu = {
             document.getElementById('amountTypeSwitch').addEventListener('click', () => {
                 this.amountTypeSwitch()
             })
+            document.getElementById('deselectExisting').addEventListener('click', () => {
+                this.deselectExisting()
+            })
+        },
+        deselectExisting() {
+            $getDuplicates = document.querySelectorAll('.duplicate')
+            $getDuplicates.forEach(duplicate => {
+                duplicate.querySelector('.select-row').checked = false
+                duplicate.classList.add('deselect')
+            })
+            this.selectionButtonState = !this.selectionButtonState
+            cu.inputTest.loadErrorAmount()
         },
         selectionButtonState: false,
+
         selectRows() {
             $checkboxes = document.querySelectorAll('.select-row')
             $button = document.getElementById('toggleRowSelection')
 
             if ($checkboxes.length > 0) {
-                $checkboxes.forEach(chekcbox => {
-                    chekcbox.checked = this.selectionButtonState
-                    let $row = chekcbox.parentNode.parentNode
+                $checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.selectionButtonState
+                    let $row = checkbox.parentNode.parentNode
                     if (this.selectionButtonState) {
                         $row.classList.remove('deselect')
                         $button.innerHTML = 'De-Select All Rows'
@@ -200,19 +213,36 @@ let cu = {
                     ele.classList.remove('duplicate')
                 })
                 $getSelected = document.querySelectorAll('tr.row')
+                const $amountType = document.getElementById('amountTypeSwitch').dataset.single
                 $getSelected.forEach((row, index) => {
                     if(!row.classList.contains('deselect')) {
+                        let amount = null
+
+                        if ($amountType) {
+                            const debit = row.querySelector("[data-key='debit']").dataset.value
+                            const credit = row.querySelector("[data-key='credit']").dataset.value
+                            if (debit != "") {
+                                amount = debit
+                            } else {
+                                amount = parseFloat(credit.replace(/(\d+),(\d+)[\s\S]*/g, "$1$2"))
+                                if (amount > 0) {
+                                    amount = '-' + credit
+                                }
+                            }
+                        } else {
+                            amount = row.querySelector("[data-key='amount']").dataset.value
+                        }
                         const values = {
                             'name': row.querySelector("[data-key='name']").dataset.value,
                             'date': cu.tools.changeDateFormat(row.querySelector("[data-key='date']").dataset.value),
-                            'amount': row.querySelector("[data-key='amount']").dataset.value,
+                            'amount': amount,
                             'accountid': row.querySelector("[data-key='accountid']").dataset.value
                         }
                         if (this.existingTransactions[values.accountid]) {
                             if (this.existingTransactions[values.accountid]['transactions'][values.date]) {
                                 const getTransactions = this.existingTransactions[values.accountid]['transactions'][values.date]
                                 for (let tr = 0; tr < getTransactions.length; tr++) {
-                                    if (getTransactions[tr].name.trim() == values.name.trim() && parseFloat(getTransactions[tr].amount).toFixed(2).toString() == parseFloat(values.amount.replaceAll(",", "")).toFixed(2).toString()) {
+                                    if (getTransactions[tr].name == values.name && parseFloat(getTransactions[tr].amount).toFixed(2).toString() == parseFloat(values.amount.replaceAll(",", "")).toFixed(2).toString()) {
                                         row.classList.toggle('duplicate')
                                         break;
                                     }
@@ -244,7 +274,6 @@ let cu = {
                         this.checkIfExisting()
                     })
             }
-            
         },
         amountTypeSwitch() {
             const $columSelector = document.querySelectorAll('.column-selection')
@@ -331,9 +360,9 @@ let cu = {
     },
     rowSelection() {
         let $rowSelection = document.querySelectorAll('.select-row')
-        $rowSelection.forEach(chekcbox => {
-            chekcbox.addEventListener('click', () => {
-                let $row = chekcbox.parentNode.parentNode
+        $rowSelection.forEach(checkbox => {
+            checkbox.addEventListener('click', () => {
+                let $row = checkbox.parentNode.parentNode
                 $row.classList.toggle('deselect')
                 this.inputTest.loadErrorAmount()
             })
