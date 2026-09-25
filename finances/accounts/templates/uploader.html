@@ -35,8 +35,7 @@
                         </div>
                         <div class="tools">
                             <div class="tool">
-                                <h4>Amount</h4>
-                                <button class="button primary" id="amountTypeSwitch" data-single="true">Seperate Debit and Credit</button>
+                                <div class="toggle right" data-single="true" id="amountTypeSwitch" ><span>Debit & Credit</span><span>Amount</span></div>
                             </div>
                             <div class="tool">
                                 <h4>Account Id Assignment</h4>
@@ -67,7 +66,12 @@
                                 <button id="fillAllDescriptions" class="button primary">Fill Empty Descriptions</button>
                             </div>
                             <div class="tool">
-                                <button class="button primary" id="toggleRowSelection">De-Select All Rows</button>
+                                <button class="button positive" id="confirmCSV">Confirm and Send</button>
+                    <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
+                                <div id="deselectMessage">
+                                    <p>We've found <span id="duplicateNumber"></span> of repeated transactions</p>
+                                    <button type="button" class="duplicate-button button" id="deselectExisting">Deselect Existing Transactions</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -83,7 +87,7 @@
                             {% if results %}
                                 <table class="standard">
                                     <thead>
-                                        <th></th>
+                                        <th><input type="checkbox" id="toggleRowSelection" checked></th>
                                         {% for head in results.0 %}
                                             <th class="header-label">
                                                 <i class="og-label">CSV Column: {{ head.label }}</i>
@@ -134,21 +138,25 @@
                         </div>
                     </div>                
                 </div>
-                <div class="stick-to-bottom" style="display: flex; gap: 12px">
-                    <button class="button positive" id="confirmCSV">Confirm and Send</button>
-                    <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
-                    <button type="button" class="button hollow" id="deselectExisting">Deselect Existing Transactions</button>
-                </div>
             </div>
             
         </div>
     </div>
     
     <div class="modal" id="uploadCSV">
-        <form action="" method="post" class="form" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit">
+        <form action="" method="post" class="modal-container form" enctype="multipart/form-data">
+            <div class="header">
+                <h2>CSV Upload</h2>
+                <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="body">
+                {% csrf_token %}
+                {{ form }}
+            </div>
+            <div class="footer">
+                <input class="button primary" type="submit">
+                <button class="button hollow" data-close="uploadCSV">Cancel</button>
+            </div>
         </form>
     </div>
 

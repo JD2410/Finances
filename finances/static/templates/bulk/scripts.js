@@ -11,10 +11,12 @@ let cu = {
                 cu.checkUserInput()
             })
 
-            this.columnSelection.columnSelectorsListener()
-            this.inputEditingListener()
+            this.columnSelection.columnSelectorListener()
+            this.inlineEditorListener()
             this.showInputEditorListener()
             this.resetShowEditorListener()
+
+
             this.rowSelection()
             this.inputTest.testAllInput()
             this.columnSelection.updateSelectColumnsIndicator()
@@ -56,7 +58,6 @@ let cu = {
             cu.inputTest.loadErrorAmount()
         },
         selectionButtonState: false,
-
         selectRows() {
             $checkboxes = document.querySelectorAll('.select-row')
             $button = document.getElementById('toggleRowSelection')
@@ -187,7 +188,7 @@ let cu = {
                 const $url = document.getElementById('checkExisting').dataset.url
                 const accountsToGet = this.getSelectedAccountId()
                 if (accountsToGet) {
-                    this.getAccountTransactions($url, Array.from(this.getSelectedAccountId()))
+                    this.getExistingAccountTransactions($url, Array.from(this.getSelectedAccountId()))
                 } else {
                     this.checkIfExisting()
                 }
@@ -212,9 +213,9 @@ let cu = {
                 document.querySelectorAll('tr.row.duplicate').forEach(ele => {
                     ele.classList.remove('duplicate')
                 })
-                $getSelected = document.querySelectorAll('tr.row')
+                let $getSelected = document.querySelectorAll('tr.row')
                 const $amountType = document.getElementById('amountTypeSwitch').dataset.single
-                $getSelected.forEach((row, index) => {
+                $getSelected.forEach(row => {
                     if(!row.classList.contains('deselect')) {
                         let amount = null
 
@@ -232,6 +233,7 @@ let cu = {
                         } else {
                             amount = row.querySelector("[data-key='amount']").dataset.value
                         }
+                        
                         const values = {
                             'name': row.querySelector("[data-key='name']").dataset.value,
                             'date': cu.tools.changeDateFormat(row.querySelector("[data-key='date']").dataset.value),
@@ -253,7 +255,7 @@ let cu = {
                 })
                 
             },
-            async getAccountTransactions(url, accounts) {
+            async getExistingAccountTransactions(url, accounts) {
                 let options = {
                     method: "POST",
                     headers: {
@@ -277,56 +279,51 @@ let cu = {
         },
         amountTypeSwitch() {
             const $columSelector = document.querySelectorAll('.column-selection')
-            const $button = document.getElementById('amountTypeSwitch')
-            const setup = $columSelector[2].querySelector('.amount').getAttribute('disabled')
-            $button.dataset.single = setup ? 'true' : 'false'
+            const $toggle = document.getElementById('amountTypeSwitch')
+            const setup = $columSelector[0].querySelector('.amount').getAttribute('disabled')
+            $toggle.dataset.single = setup ? true : false
+
+            if (!setup) {
+                cu.columnSelection.columnsNeeded = 5
+                $toggle.classList.remove('right')
+            } else {
+                cu.columnSelection.columnsNeeded = 4
+                $toggle.classList.add('right')
+            }
+            cu.columnSelection.updateSelectColumnsIndicator()
+
             $columSelector.forEach((col, index) => {
                 if (!setup) {
                     if (col[col.selectedIndex].value == 'amount') {
                         cu.columnSelection.resetDuplicateColumnSelection('amount')
                         cu.columnSelection.updateColumnValue('unknown', index)
-                        
                     }
-                    $button.innerHTML = 'Single Amount Column'
                     col.querySelector('.amount').setAttribute('disabled', true)
                     col.querySelector('.credit').removeAttribute('disabled')
                     col.querySelector('.debit').removeAttribute('disabled')
-                    cu.columnSelection.columnsNeeded = 5
-                    cu.columnSelection.updateSelectColumnsIndicator()
-
                 } else {
                     if (col[col.selectedIndex].value == 'credit' || col[col.selectedIndex].value == 'debit') {
                         cu.columnSelection.resetDuplicateColumnSelection(col[col.selectedIndex].value)
                         cu.columnSelection.updateColumnValue('unknown', index)
-                        
                     }
-                    $button.innerHTML = 'Seperate Debit and Credit'
                     col.querySelector('.amount').removeAttribute('disabled')
                     col.querySelector('.credit').setAttribute('disabled', true)
                     col.querySelector('.debit').setAttribute('disabled', true)
-                    cu.columnSelection.columnsNeeded = 4
-                        cu.columnSelection.updateSelectColumnsIndicator()
-
                 }
-                
             })
         }
     },
-    inputEditingListener() {
+    inlineEditorListener() {
         let $inputs = document.querySelectorAll('.edit')
         $inputs.forEach(input => {
             input.addEventListener('blur', () => {
                 let $cell = input.parentNode
-                this.updateDataAttrWithInput($cell)
+                $cell.dataset.value = $input.value
+                $cell.querySelector('.display-value').innerHTML = input.value
+                $cell.classList.remove('show-editor')
+                this.inputTest.cellTest(cell)
             })
         })
-    },
-    updateDataAttrWithInput(cell) {
-        const $input = cell.querySelector('.edit')
-        cell.dataset.value = $input.value
-        cell.querySelector('.display-value').innerHTML = $input.value
-        this.inputTest.cellTest(cell)
-        cell.classList.remove('show-editor')
     },
     resetShowEditorListener() {
         document.querySelector('.full-page').addEventListener('click', () => {
@@ -371,8 +368,8 @@ let cu = {
     'columnSelection': {
         columnsSelected: 0,
         columnsNeeded: 4,
-        columnSelectorsListener() {
-            let $dropdowns = document.querySelectorAll('.column-selection')
+        columnSelectorListener() {
+            const $dropdowns = document.querySelectorAll('.column-selection')
             $dropdowns.forEach((elem, index) => {
                 elem.addEventListener('change', function() {
                     const value = this.value
