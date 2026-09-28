@@ -1,0 +1,82 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/7954240b12.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{% static 'styles-v2.css' %}?{% now "U" %}">
+
+</head>
+<body>
+<div class="page">
+    {% include "navigation.html" with page='accounts' %}
+    <div class="page--content">
+        <div class="content--header">
+            <h1>Savings</h1>
+            <button class='button primary'>Create Savings Account</button>
+        </div>
+        <div class="content--main">
+            <div class="main--header">
+                <h2>All Transactions</h2>
+                <div class="header-actions">
+                    <button class='open-modal button' data-modal="createTransaction">Add</button>
+                    <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
+                </div>
+            </div>
+            <div class="main--content">
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p><p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p><p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p><p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p><p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p><p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p><p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Content Goes Here</p>
+                <p>Last One</p>
+            </div>
+            <div class="main--footer">
+                Something
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
