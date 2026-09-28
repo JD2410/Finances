@@ -52,13 +52,13 @@ body {
 
     &.animation-on {
         .page--sidebar {
-            transition: flex 0.6s;
+            transition: flex 0.4s;
 
             .sidebar--logo {
-                transition: padding 0.4s, min-height 0.4s;
+                transition: padding 0.2s, min-height 0.2s;
             }
             .sidebar--a {
-                transition: padding 0.4s, marginTop 0.4s, marginBottom 0.4s, border 0.1s, background 0.1s, color 0.1s, opacity 0.1s, min-height 0.4s;
+                transition: padding 0.2s, marginTop 0.2s, marginBottom 0.2s, border 0.1s, background 0.1s, color 0.1s, opacity 0.1s, min-height 0.2s;
             }
         }
     }
@@ -82,9 +82,10 @@ body {
             display: flex;
             flex-direction: row;
             min-height: 0;
+            gap: 20px;
 
             .main--container {
-                flex: 1;
+                flex: 100%;
                 display: flex;
                 flex-direction: column;
             }
@@ -189,7 +190,7 @@ body {
     }
 }
 #page.sidebar--closed .page--sidebar {
-    flex: 50px;
+    flex: 0 0 50px;
 
     span {
         display: none;
@@ -211,6 +212,32 @@ body {
     .close-sidebar i {
         rotate: 270deg;
         margin-left: -3px;
+    }
+}
+@media screen and (max-width: 780px) {
+    #page .page--sidebar {
+        flex: 0 0 50px;
+
+        span {
+            display: none;
+        }
+        .sidebar--logo{
+            padding: 0 8px 0 13px;
+            min-height: 43px;
+        }
+        .sidebar--a  {
+            margin-left: 5px;
+            padding: 0 18px;
+            margin-bottom: 5px;
+            min-height: 37px;
+            i {
+                top: -3px;
+                left: 5px;
+            }
+        }
+        .close-sidebar i {
+            display: none;
+        }
     }
 }
 .page--content {
