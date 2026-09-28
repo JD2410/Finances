@@ -4,7 +4,7 @@
         <a href="{% url 'home' %}" class="sidebar--logo">
             <img src="{% static 'images/bunny-shape.svg' %}" > <span>RUNNING FINANCE</span>
         </a>
-        <div class="sidebar--sections">
+        <div id="sidebarSections" class="sidebar--sections">
             <a href="{% url 'home' %}" 
             {% if page == 'home' %} class="sidebar--a selected" {% else %} class="sidebar--a" {% endif %}><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
             <a href="{% url 'accounts' %}"
@@ -14,7 +14,7 @@
             {% if page == 'settings' %} class="selected" {% else %} class="sidebar--a" {% endif %}
             ><i class="fa-solid fa-gear"></i><span>Settings</span></a>
         </div>
-        
+        <div id="sidebarMenu"><i class="fa-solid fa-bars"></i></div>
         <img src="{% static 'images/bunny.svg' %}" class="texture">
     </nav>
     <a href="#" class="close-sidebar sidebar--a"><i class="fa-solid fa-angles-down"></i><span>Close</span></a>

@@ -17,6 +17,10 @@ window.addEventListener("load", e => {
 let app = {
     'sidebar': {
         init() {
+            this.screenToggleSidebar()
+            this.mobileToggleMenu()
+        },
+        screenToggleSidebar() {
             $closeSidebarButtons = document.querySelectorAll('.close-sidebar')
             $pageContainer = document.getElementById('page')
             $closeSidebarButtons.forEach(button => {
@@ -26,6 +30,12 @@ let app = {
                 })
             })
             $pageContainer.classList.add('animation-on')
+        },
+        mobileToggleMenu() {
+            $toggleButton = document.getElementById('sidebarMenu')
+            $toggleButton.addEventListener('click', () => {
+                document.getElementById('sidebarSections').classList.toggle('show')
+            })
         }
     },
     'resetSearchForm': {
