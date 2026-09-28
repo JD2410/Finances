@@ -1,20 +1,21 @@
 {% load static %}
 <div class="page--sidebar">
     <nav>
-        <a href="{% url 'home' %}" class="logo">
+        <a href="{% url 'home' %}" class="sidebar--logo">
             <img src="{% static 'images/bunny-shape.svg' %}" > <span>RUNNING FINANCE</span>
         </a>
-        <div class="sections">
+        <div class="sidebar--sections">
             <a href="{% url 'home' %}" 
-            {% if page == 'home' %} class="selected" {% endif %}><i class="fa-solid fa-house"></i>Dashboard</a>
+            {% if page == 'home' %} class="sidebar--a selected" {% else %} class="sidebar--a" {% endif %}><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
             <a href="{% url 'accounts' %}"
-            {% if page == 'accounts' or page == 'bulk' %} class="selected" {% endif %}
-            ><i class="fa-solid fa-vault"></i>Accounts</a>
+            {% if page == 'accounts' or page == 'bulk' %} class="selected" {% else %} class="sidebar--a" {% endif %}
+            ><i class="fa-solid fa-vault"></i><span>Accounts</span></a>
             <a href="{% url 'account_type' %}"
-            {% if page == 'settings' %} class="selected" {% endif %}
-            ><i class="fa-solid fa-gear"></i>Settings</a>
+            {% if page == 'settings' %} class="selected" {% else %} class="sidebar--a" {% endif %}
+            ><i class="fa-solid fa-gear"></i><span>Settings</span></a>
         </div>
         
         <img src="{% static 'images/bunny.svg' %}" class="texture">
     </nav>
+    <a href="#" class="close-sidebar sidebar--a"><i class="fa-solid fa-angles-down"></i><span>Close</span></a>
 </div>

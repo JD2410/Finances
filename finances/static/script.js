@@ -11,9 +11,23 @@ window.addEventListener("load", e => {
 
     app.messages.init()
     app.resetSearchForm.init()
+    app.sidebar.init()
 })
 
 let app = {
+    'sidebar': {
+        init() {
+            $closeSidebarButtons = document.querySelectorAll('.close-sidebar')
+            $pageContainer = document.getElementById('page')
+            $closeSidebarButtons.forEach(button => {
+                button.addEventListener('click', element => {
+                    element.preventDefault()
+                    $pageContainer.classList.toggle('sidebar--closed')
+                })
+            })
+            $pageContainer.classList.add('animation-on')
+        }
+    },
     'resetSearchForm': {
         init() {
             const $getReset = document.getElementById('resetSearchForm')

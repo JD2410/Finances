@@ -9,11 +9,12 @@
     <script src="https://kit.fontawesome.com/7954240b12.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="{% static 'styles-v2.css' %}?{% now "U" %}">
+    <script src="{% static 'script.js' %}?{% now "U" %}"></script>
 
 </head>
 <body>
-<div class="page sidebar--closed">
-    {% include "navigation.html" with page='accounts' %}
+<div id="page">
+    {% include "navigation.html" with page='home' %}
     <div class="page--content">
         <div class="content--header">
             <h1>Savings</h1>
