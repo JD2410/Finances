@@ -12,36 +12,6 @@ body {
     color: #505053;
     height: 100vh;
 }
-.button {
-    padding: 8px 12px;
-    border-radius: 4px;
-    display: block;
-    border: 0;
-    font-size: 1em;
-    background-color: lightgray;
-    color: #3b3b3d;
-    cursor: pointer;
-    
-    text-decoration: none;
-
-    &.primary {
-        background-color: purple;
-        color: #fff;
-    }
-    &.positive {
-        background-color: rgb(14, 169, 3);
-        color: #fff;
-    }
-    &.negative {
-        background-color: red;
-        color: #fff;
-    }
-    &.hollow {
-        border: 1px solid purple;
-        color: purple;
-        background-color: transparent;
-    }
-}
 @media screen and (min-width: 600px) {
     /* Main Page Structure */
     body #page {
@@ -79,11 +49,6 @@ body {
             gap: 20px;
             overflow: hidden;
 
-            .main--container {
-                flex: 100%;
-                display: flex;
-                flex-direction: column;
-            }
             .container--content {
                 overflow: auto;
                 min-height: 0;
@@ -98,6 +63,7 @@ body {
         .main--container:first-child {
             flex: 0 0 250px;
             transition: flex 0.4s;
+            padding: 0;
             overflow: hidden;
             display: flex;
 
@@ -241,7 +207,7 @@ body {
 
     .page--content {
         display: flex;
-        gap: 20px;
+        gap: 18px;
         flex-direction: column;
         flex: 100%;
         padding: 18px;
@@ -363,6 +329,14 @@ body {
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
         position: relative;
 
+        .main--container {
+            flex: 100%;
+            flex-direction: column;
+            display: flex;
+            gap: 12px;
+            padding: 8px;
+        }
+
         .container--header {
             display: flex;
             justify-content: space-between;
@@ -389,6 +363,275 @@ body {
                     min-height: 35px;
                 }
             }
+            .search-form {
+                flex: 1;
+                position: relative;
+
+                .actions {
+                    position: absolute;
+                    right: 5px;
+                    top: 5px;
+                    display: flex;
+                    gap: 5px;
+                    
+                    input[type=submit] {
+                        padding: 5px 10px;
+                    }
+                    input[type=reset] {
+                        padding: 5px 10px;
+                    }
+                }
+                input[type=text] {
+                    padding: 8px 80px 8px 8px;
+                    width: 100%;
+                    box-sizing: border-box;
+                    font-size: 1em;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border-color: lightgray;
+                    border-radius: 4px;
+                    border: 1px solid rgb(214, 214, 214);
+                    min-height: 35px;
+                }
+                input[type=text]:focus {
+                    outline: none;
+                    box-shadow: 0 0 9px 5px rgba(128, 0, 128, 0.17);
+                    border-color: purple;
+                }
+            }
+        }
+    }
+}
+
+/* Standard pages elements */
+.cards {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .card {
+        background-color: #fff;
+        padding: 16px;
+        box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
+        border-radius: 8px;
+        min-width: 195px;
+        flex: 1;
+        max-width: 300px;
+
+        &:first-child {
+            background: linear-gradient(rgba(160, 25, 160, 0.85), rgba(126, 4, 126, 0.96)), url('/static/images/bunny-shape.svg'), linear-gradient(rgb(160, 25, 160), rgb(126, 4, 126));
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: center right;
+            color: #fff;
+
+            .title {
+                color: #fff;
+            }
+            .sub-title {
+                color: #fff;
+            }
+            .small-button.hollow {
+                border-color: #fff;
+                color: #fff;
+
+                &:hover {
+                    background-color: #fff;
+                    color: purple;
+                }
+            }
+        }
+        .title {
+            font-size: 1em;
+            text-transform: uppercase;
+            color: rgb(101, 101, 101);
+        }
+        .sub-title {
+            font-size: 1em;
+            color: rgb(13, 13, 13);
+            opacity: 0.6;
+        }
+        .main {
+            font-size: 2em;
+            font-weight: 600;
+            padding: 4px 0;
+        }
+        & > div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}
+.mini-cards {
+    display: flex;
+    gap: 12px;
+    .card {
+        border: 1px solid rgba(128, 0, 128, 0.32);
+        padding: 8px;
+        flex: 1;
+        border-radius: 4px;
+
+        .title {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: purple;
+            opacity: 0.8;
+        }
+        .main {
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+    } 
+}
+.button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: block;
+    border: 0;
+    font-size: 1em;
+    background-color: lightgray;
+    color: #3b3b3d;
+    cursor: pointer;
+    
+    text-decoration: none;
+
+    &.primary {
+        background-color: purple;
+        color: #fff;
+    }
+    &.positive {
+        background-color: rgb(14, 169, 3);
+        color: #fff;
+    }
+    &.negative {
+        background-color: red;
+        color: #fff;
+    }
+    &.hollow {
+        border: 1px solid purple;
+        color: purple;
+        background-color: transparent;
+    }
+}
+.small-button {
+    font-size: 0.9em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 0;
+    background-color: lightgray;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+
+    &.primary {
+        background-color: purple;
+        color: #fff;
+    }
+    &.hollow {
+        border: 1px solid purple;
+        color: purple;
+        background-color: transparent;
+
+        &:hover {
+            text-decoration: none;
+            color: #fff;
+            background-color: purple;
+        }
+    }
+}
+table.standard {
+    width: 100%;
+    border-spacing: 0;
+
+    tr {
+        table-layout: fixed;
+    }
+    td, th {
+        text-align: left;
+        padding: 6px 0;
+        height: 25px;
+
+        &.right {
+            text-align: right;
+        }
+    }
+    td:first-child, th:first-child {
+        padding-left: 8px;
+    }
+    td:last-child, th:last-child {
+        padding-right: 8px;
+    }
+    thead th {
+        font-weight: 400;
+        background-color: purple;
+        color: #fff
+    }
+    tbody tr:nth-child(odd) {
+        background-color: rgba(247, 247, 247, 1);
+    }
+    a {
+        text-decoration: none;
+        color: purple;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .button {
+        display: inline-block;
+        padding: 4px 4px;
+
+        background-color: transparent;
+        
+        i {
+            width: 110%;
+        }
+        &.edit {
+            width: 30px;
+            height: 25px;
+            i {
+                color: green;
+                opacity: 0.5;
+            }
+        }
+        &.delete {
+            width: 30px;
+            height: 25px;
+            i {
+                color: red;
+                opacity: 0.5;
+            }
+        }
+
+        &:hover i {
+            opacity: 1;
+        }
+    }
+}
+.pagination {
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    padding: 10px;
+
+    a {
+        color: #3b3b3d;
+        display: block;
+        padding: 4px 8px;
+        text-decoration: none;
+        
+        &.selected {
+            background-color: purple;
+            color: #fff;
+        }
+        &:hover {
+            color: #fff;
+            background-color: purple;
         }
     }
 }

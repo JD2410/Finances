@@ -8,7 +8,7 @@
     <title>Document</title>
     <script src="https://kit.fontawesome.com/7954240b12.js" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'styles-v2.css' %}?{% now "U" %}">
     <script src="{% static 'script.js' %}?{% now "U" %}"></script>
     
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
@@ -19,29 +19,29 @@
     {{ accounts|json_script:"accounts" }}
 
 </head>
-<body class="full-page">
-    {% include "errors.html" %}
-    <div class="page-container">
-        {% include "navigation.html" with page='accounts' %}
-        <div class="main-area">
-            <div class="page-header">
-                <h1>Savings</h1>
-                <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
-            </div>
-            {% if accounts %}
-            <div class="cards">
-                {% if account_highlights %}
-                    {% for account in account_highlights.records %}
-                        <div class="card">
-                            <div class="title">{{account.name}}</div>
-                            <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                            <a href="{% url 'accounts' %}{{account.id}}" class="small-button hollow">See More</a>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <div class="page-section">
-                <div class="header">
+<body>
+<div id="page">
+    {% include "navigation.html" with page='accounts' %}
+    <div class="page--content">
+        <div class="content--header">
+            <h1>Savings</h1>
+            <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
+        </div>
+        {% if accounts %}
+        <div class="cards">
+            {% if account_highlights %}
+                {% for account in account_highlights.records %}
+                    <div class="card">
+                        <div class="title">{{account.name}}</div>
+                        <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
+                        <a href="{% url 'accounts' %}{{account.id}}" class="small-button hollow">See More</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="content--main">
+            <div class="main--container">
+                <div class="container--header">
                     {% if search_param %}
                         <h2>Transactions named <i>'{{ search_param }}'</i></h2>
                     {% else %}
@@ -63,21 +63,20 @@
                         <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
                     </div>
                 </div>
-                {% if records %}
-                    <div>
-                        {% if search_param %}
-                            <div class="mini-cards">
-                            {% for account in search_param_totals.records %}
-                                {% if account.total != 0.00 %}
-                                    <div class="card">
-                                        <div class="title">{{account.name}}</div>
-                                        <div class="main">£{{ account.total|floatformat:2|intcomma }}</div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
+                {% if search_param %}
+                <div class="mini-cards">
+                {% for account in search_param_totals.records %}
+                    {% if account.total != 0.00 %}
+                        <div class="card">
+                            <div class="title">{{account.name}}</div>
+                            <div class="main">£{{ account.total|floatformat:2|intcomma }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                {% endif %}
+                <div class="container--content">
+                    {% if records %}
                     <table class="standard">
                         <thead>
                             <th>Description</th>
@@ -103,120 +102,121 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    <div class="page_footer">
-                        <div>
-                            {% if record.number_of_pages != 1 %}
-                                <div class="pagination">
-                                     {% for i in records.number_of_pages %}
-                                {% if search_param %}
-                                    <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}&q={{search_param}}" 
-                                        {% if forloop.counter == records.current_page %}
-                                            class="selected"
-                                        {% endif %}
-                                    >{{ forloop.counter }}</a>
-                                {% else %}
-                                    <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}" 
-                                        {% if forloop.counter == records.current_page %}
-                                            class="selected"
-                                        {% endif %}
-                                    >{{ forloop.counter }}</a>
-                                {% endif %}
-                            {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                    </div>
-                    
-                {% else %}
-                    <p>There are no transactions in the database</p>
-                {% endif %}
-            </div>
-            {% else %}
-            <div class="page-section centre">
-                <div class="no-data">
-                    <div class="image">
-                        <i class="fa-solid fa-binoculars"></i>
-                    </div>
-                    <h4>Sorry, can't find any accounts</h4>
-                    <p>You have no accounts created. Get started by clicking the button below.</p>
-                    <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
+                    {% else %}
+                        <p>There are no transactions in the database</p>
+                    {% endif %}
                 </div>
-            </div>
-            {% endif %}
+                {% if records %}
+                <div class="page_footer">
+                    {% if record.number_of_pages != 1 %}
+                        <div class="pagination">
+                        {% for i in records.number_of_pages %}
+                            {% if search_param %}
+                                <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}&q={{search_param}}" 
+                                    {% if forloop.counter == records.current_page %}
+                                        class="selected"
+                                    {% endif %}
+                                >{{ forloop.counter }}</a>
+                            {% else %}
+                                <a href="{% url 'accounts' %}{{ account_details.id }}?pn={{forloop.counter}}" 
+                                    {% if forloop.counter == records.current_page %}
+                                        class="selected"
+                                    {% endif %}
+                                >{{ forloop.counter }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
+            </div>
         </div>
+        {% else %}
+        <div class="page-section centre">
+            <div class="no-data">
+                <div class="image">
+                    <i class="fa-solid fa-binoculars"></i>
+                </div>
+                <h4>Sorry, can't find any accounts</h4>
+                <p>You have no accounts created. Get started by clicking the button below.</p>
+                <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    <div class="modal" id="createAccount">
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Create Savings Accounts</h2>
-                <div class="close" data-close="createAccount"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ savings_form }}
-            </div>
-            <div class="footer">
-                <input class="button primary" type="submit" name="addAccount">
-                <button class="button hollow" data-close="createAccount">Cancel</button>
-            </div>
-        </form>
-    </div>
-    
-    <div class="modal" id="updateTransaction" >
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Update Transaction</h2>
-                <div class="close" data-close="updateTransaction"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ transaction_form }}
-                <input type="hidden" name="id" id="id">
-            </div>
-            <div class="footer">
-                <input class='button primary' type="submit" name="updateTransaction">
-                <button class="button hollow" data-close="updateTransaction">Cancel</button>
-            </div>
-        </form>
-    </div>
-    <div class="modal" id="createTransaction">
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Add Transaction</h2>
-                <div class="close" data-close="createTransaction"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ transaction_form }}
-                <input type="hidden" name="addTransaction">
-            </div>
-            <div class="footer">
-                <input class="button primary" type="submit">
-                <button class="button hollow" data-close="createTransaction">Cancel</button>
-            </div>
-        </form>
-    </div>
-    <div class="modal" id="uploadCSV">
-        <form action="" method="post" class="modal-container" enctype="multipart/form-data">
-            <div class="header">
-                <h2>CSV Upload</h2>
-                <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ csv_form }}
-            </div>
-            <div class="footer">
-                <input class="button primary" type="submit">
-                <button class="button hollow" data-close="uploadCSV">Cancel</button>
-            </div>
-        </form>
-    </div>
-    <form action="" method="post" id="deleteForm" >
-        {% csrf_token %}
-        <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
+</div>
+
+<div class="modal" id="createAccount">
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Create Savings Accounts</h2>
+            <div class="close" data-close="createAccount"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ savings_form }}
+        </div>
+        <div class="footer">
+            <input class="button primary" type="submit" name="addAccount">
+            <button class="button hollow" data-close="createAccount">Cancel</button>
+        </div>
     </form>
+</div>
+<div class="modal" id="updateTransaction" >
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Update Transaction</h2>
+            <div class="close" data-close="updateTransaction"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ transaction_form }}
+            <input type="hidden" name="id" id="id">
+        </div>
+        <div class="footer">
+            <input class='button primary' type="submit" name="updateTransaction">
+            <button class="button hollow" data-close="updateTransaction">Cancel</button>
+        </div>
+    </form>
+</div>
+<div class="modal" id="createTransaction">
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Add Transaction</h2>
+            <div class="close" data-close="createTransaction"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ transaction_form }}
+            <input type="hidden" name="addTransaction">
+        </div>
+        <div class="footer">
+            <input class="button primary" type="submit">
+            <button class="button hollow" data-close="createTransaction">Cancel</button>
+        </div>
+    </form>
+</div>
+<div class="modal" id="uploadCSV">
+    <form action="" method="post" class="modal-container" enctype="multipart/form-data">
+        <div class="header">
+            <h2>CSV Upload</h2>
+            <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ csv_form }}
+        </div>
+        <div class="footer">
+            <input class="button primary" type="submit">
+            <button class="button hollow" data-close="uploadCSV">Cancel</button>
+        </div>
+    </form>
+</div>
+<form action="" method="post" id="deleteForm" >
+    {% csrf_token %}
+    <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
+</form>
+{% include "errors.html" %}
 </body>
 </html>

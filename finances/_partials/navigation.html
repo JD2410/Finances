@@ -8,10 +8,10 @@
             <a href="{% url 'home' %}" 
             {% if page == 'home' %} class="sidebar--a selected" {% else %} class="sidebar--a" {% endif %}><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
             <a href="{% url 'accounts' %}"
-            {% if page == 'accounts' or page == 'bulk' %} class="selected" {% else %} class="sidebar--a" {% endif %}
+            {% if page == 'accounts' or page == 'bulk' %} class="sidebar--a selected" {% else %} class="sidebar--a" {% endif %}
             ><i class="fa-solid fa-vault"></i><span>Accounts</span></a>
             <a href="{% url 'account_type' %}"
-            {% if page == 'settings' %} class="selected" {% else %} class="sidebar--a" {% endif %}
+            {% if page == 'settings' %} class="sidebar--a selected" {% else %} class="sidebar--a" {% endif %}
             ><i class="fa-solid fa-gear"></i><span>Settings</span></a>
         </div>
         <div id="sidebarMenu"><i class="fa-solid fa-bars"></i></div>

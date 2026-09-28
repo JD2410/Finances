@@ -516,7 +516,6 @@ table.standard {
             .search-form {
                 flex: 1;
                 position: relative;
-
                 .actions {
                     position: absolute;
                     right: 5px;
