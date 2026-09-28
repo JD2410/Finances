@@ -19,6 +19,7 @@ let app = {
         init() {
             this.screenToggleSidebar()
             this.mobileToggleMenu()
+            this.contentMainSidebarControls()
         },
         screenToggleSidebar() {
             $closeSidebarButtons = document.querySelectorAll('.close-sidebar')
@@ -36,6 +37,21 @@ let app = {
             $toggleButton.addEventListener('click', () => {
                 document.getElementById('sidebarSections').classList.toggle('show')
             })
+        },
+        contentMainSidebarControls() {
+            const $collapsible = document.querySelector('.content--main').classList.contains('collapsibe')
+
+            if ($collapsible) {
+                $buttons = document.querySelectorAll('.toggle-container-sidebar')
+                if($buttons.length > 0) {
+                    $containerToggle = document.querySelector('.collapsibe')
+                    $buttons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            $containerToggle.classList.toggle('hide')
+                        })
+                    })
+                }
+            }
         }
     },
     'resetSearchForm': {
