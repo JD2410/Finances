@@ -94,20 +94,20 @@ body {
     /* Core Styling */
     body #page .page--content .content--main.collapsibe {
         gap: 0;
+
         .main--container:first-child {
             flex: 0 0 250px;
             transition: flex 0.4s;
             overflow: hidden;
+            display: flex;
 
             .container--header, .container--content {
                 width: 250px;
             }
         }
-        
         &.hide {
             .main--container:first-child {
-                flex: 0 0 0px;
-                
+                flex: 0 0 0px;       
             }
         }
     }
@@ -210,6 +210,27 @@ body {
             }
             .close-sidebar i {
                 display: none;
+            }
+        }
+    }
+}
+/* Enforces the onpage collapsible container to be an overlay when screen is between mobile and desktop */
+@media screen and (min-width: 600px) and (max-width: 1000px) {
+    body #page .page--content .content--main.collapsibe {
+        
+        .main--container:first-child {
+            display: none;
+            position: absolute;
+            height: calc(100% - 20px);
+            background-color: rgba(255, 255, 255, 0.48);
+            backdrop-filter: blur(10px);
+            top: 10px;
+            left: 10px;
+            border-radius: 7px;
+        }
+        &.hide {
+            .main--container:first-child {
+                display: flex
             }
         }
     }
