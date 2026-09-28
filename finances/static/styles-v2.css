@@ -569,7 +569,9 @@ table.standard {
     thead th {
         font-weight: 400;
         background-color: purple;
-        color: #fff
+        color: #fff;
+        position: sticky;
+        top: 0;
     }
     tbody tr:nth-child(odd) {
         background-color: rgba(247, 247, 247, 1);
@@ -617,7 +619,7 @@ table.standard {
     display: flex;
     justify-self: center;
     justify-content: center;
-    padding: 10px;
+    padding: 0 10px 8px 10px;
 
     a {
         color: #3b3b3d;
