@@ -183,13 +183,13 @@ body {
     body #page .page--content .content--main.collapsible {
         
         .main--container:first-child {
-            display: none;
+            display: flex;
             position: absolute;
-            height: calc(100% - 70px);
+            height: calc(100% - 34px);
             background-color: rgba(255, 255, 255, 0.48);
             backdrop-filter: blur(10px);
-            top: 18px;
-            left: 18px;
+            top: 0;
+            left: 0;
             border-radius: 7px;
             z-index: 1000;
             box-shadow: 0 0 20px 0 rgba(159, 10, 193, 0.15);
@@ -197,7 +197,7 @@ body {
         }
         &.hide {
             .main--container:first-child {
-                display: flex
+                display: none
             }
         }
     }
