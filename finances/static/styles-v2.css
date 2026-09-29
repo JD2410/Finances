@@ -344,6 +344,7 @@ body {
             justify-content: space-between;
             align-items: center;
             gap: 12px;
+            min-height: 35px;
 
             h2 {
                 font-size: 1.3em;
