@@ -1,5 +1,6 @@
 window.addEventListener("load", e => {
     cu.init()
+    tools.init()
 })
 
 let cu = {
@@ -16,302 +17,9 @@ let cu = {
             this.showInputEditorListener()
             this.resetShowEditorListener()
 
-
             this.rowSelection()
             this.inputTest.testAllInput()
             this.columnSelection.updateSelectColumnsIndicator()
-            this.tools.init()
-        }
-    },
-    'tools': {
-        init() {
-            console.log('init')
-            $accountSelector = document.getElementById('accountIdSelection')
-            $accountSelector.addEventListener('change', () => {
-                this.updateAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
-            })
-            document.getElementById('toggleRowSelection').addEventListener('click', () => {
-                this.selectRows()
-            })
-            document.getElementById('fillAllDescriptions').addEventListener('click', () => {
-                this.updateDescriptions()
-            })
-            document.getElementById('dateFormat').addEventListener('change', () => {
-                this.chekAllDates()
-            })
-            document.getElementById('checkExisting').addEventListener('click', () => {
-                this.checkExisting.init()
-            })
-            document.getElementById('amountTypeSwitch').addEventListener('click', () => {
-                this.amountTypeSwitch()
-            })
-            document.getElementById('deselectExisting').addEventListener('click', () => {
-                this.deselectExisting()
-            })
-        },
-        deselectExisting() {
-            $getDuplicates = document.querySelectorAll('.duplicate')
-            $getDuplicates.forEach(duplicate => {
-                duplicate.querySelector('.select-row').checked = false
-                duplicate.classList.add('deselect')
-            })
-            this.selectionButtonState = !this.selectionButtonState
-            cu.inputTest.loadErrorAmount()
-        },
-        selectionButtonState: false,
-        selectRows() {
-            $checkboxes = document.querySelectorAll('.select-row')
-            $button = document.getElementById('toggleRowSelection')
-
-            if ($checkboxes.length > 0) {
-                $checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.selectionButtonState
-                    let $row = checkbox.parentNode.parentNode
-                    if (this.selectionButtonState) {
-                        $row.classList.remove('deselect')
-                        $button.innerHTML = 'De-Select All Rows'
-                    } else {
-                        $row.classList.add('deselect')
-                        $button.innerHTML = 'Select All Rows'
-                    }
-                })
-                this.selectionButtonState = !this.selectionButtonState
-                cu.inputTest.loadErrorAmount()
-            }
-        },
-        updateAccountId(switchTo, label='unknown') {
-            $overwriteAll = document.getElementById('overwriteExisting').checked
-            $findAccountId = document.querySelectorAll("[data-key='accountid']")
-            if (switchTo == "") {
-                alert('Please select an account')
-            } else {
-                if($findAccountId.length > 0) {
-
-                    $findAccountId.forEach(row => {
-                        if (!$overwriteAll) {
-                            if (!row.classList.contains('verified')) {
-                                row.dataset.value = switchTo
-                                row.classList.remove('error')
-                                row.classList.add('verified')
-                                row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
-                                row.querySelector('.edit').value = switchTo
-                            }
-                        } else {
-                            row.dataset.value = switchTo
-                            row.classList.remove('error')
-                            row.classList.add('verified')
-                            row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
-                            row.querySelector('.edit').value = switchTo
-                        }
-                        cu.inputTest.cellTest(row)
-                    })
-                } else {
-                    alert('Please select a column first')
-                }
-            }
-            
-        },
-        updateDescriptions() {
-            $getDescriptions = document.querySelectorAll("[data-key='name']")
-            $newDescription = document.getElementById('transactionDescriptionText').value
-            
-            if ($getDescriptions.length > 0) {
-                if ($newDescription.trim() != '') {
-                    $overwriteAll = document.getElementById('overwriteFilled').checked
-                        $getDescriptions.forEach(cell => {
-                            if($overwriteAll) {
-                                cell.dataset.value = $newDescription.trim()
-                                cell.classList.remove('error')
-                                cell.classList.add('verified')
-                                cell.querySelector('.display-value').innerHTML = $newDescription.trim()
-                                cell.querySelector('.edit').value = $newDescription.trim()
-                            } else {
-                                if(!cell.classList.contains('verified')) {
-                                    cell.dataset.value = $newDescription.trim()
-                                    cell.classList.remove('error')
-                                    cell.classList.add('verified')
-                                    cell.querySelector('.display-value').innerHTML = $newDescription.trim()
-                                    cell.querySelector('.edit').value = $newDescription.trim()
-                                }
-                            }
-                        })
-                } else {
-                    alert('Please enter a description you would like it swapped too')
-                }
-                
-            } else {
-                alert('Please select a description column')
-            }
-            
-        },
-        chekAllDates() {
-            $dates = document.querySelectorAll("[data-key='date']")
-            if ($dates.length > 0) {
-                $dates.forEach(cell => {
-                    cu.inputTest.cellTest(cell)
-                })
-            }
-        },
-        changeDateFormat(dateString) {
-            const $dateDropdown = document.getElementById('dateFormat');
-            const $format = $dateDropdown[$dateDropdown.selectedIndex].value;
-            let breakdown = {
-                day: "",
-                month: "",
-                year: ""
-            }
-            
-            if ($format == 'YYYY-MM-DD') {
-                const setDate = new Date(dateString)
-                breakdown.day = setDate.getDate()
-                breakdown.month = setDate.getMonth()+1
-                breakdown.year = setDate.getFullYear()
-            }
-            if ($format == 'DD-MM-YYYY') {
-                breakdown.day = parseInt(dateString.slice(0,2)),
-                breakdown.month = parseInt(dateString.slice(3,5)),
-                breakdown.year = dateString.slice(6,10)
-            }
-            if ($format == 'MM-DD-YYYY') {
-                breakdown.day = parseInt(dateString.slice(3,5)),
-                breakdown.month = parseInt(dateString.slice(0,2)),
-                breakdown.year = dateString.slice(6,10)
-            }
-            
-            breakdown.day = (breakdown.day <= 9) ? '0' + breakdown.day : breakdown.day;
-            breakdown.month = (breakdown.month <= 9) ? '0' + breakdown.month : breakdown.month;
-
-            return `${breakdown.year}-${breakdown.month}-${breakdown.day}`
-        },
-        'checkExisting': {
-            'existingTransactions': {},
-            init() {
-                const $url = document.getElementById('checkExisting').dataset.url
-                const accountsToGet = this.getSelectedAccountId()
-                if (accountsToGet) {
-                    this.getExistingAccountTransactions($url, Array.from(this.getSelectedAccountId()))
-                } else {
-                    this.checkIfExisting()
-                }
-            },
-            getSelectedAccountId() {
-                $getAccountIdSelection = document.querySelectorAll("[data-key='accountid']")
-                let accounts = new Set()
-                if ($getAccountIdSelection.length > 0) {
-                    $getAccountIdSelection.forEach(row => {
-                        if (!this.existingTransactions[row.dataset.value]) {
-                            accounts.add(row.dataset.value)
-                        }
-                    })
-                } 
-                if (accounts.size > 0) {
-                    return accounts
-                } else {
-                    return null
-                }
-            },
-            checkIfExisting() {
-                document.querySelectorAll('tr.row.duplicate').forEach(ele => {
-                    ele.classList.remove('duplicate')
-                })
-                let $getSelected = document.querySelectorAll('tr.row')
-                const $amountType = document.getElementById('amountTypeSwitch').dataset.single
-                $getSelected.forEach(row => {
-                    if(!row.classList.contains('deselect')) {
-                        let amount = null
-
-                        if ($amountType) {
-                            const debit = row.querySelector("[data-key='debit']").dataset.value
-                            const credit = row.querySelector("[data-key='credit']").dataset.value
-                            if (debit != "") {
-                                amount = debit
-                            } else {
-                                amount = parseFloat(credit.replace(/(\d+),(\d+)[\s\S]*/g, "$1$2"))
-                                if (amount > 0) {
-                                    amount = '-' + credit
-                                }
-                            }
-                        } else {
-                            amount = row.querySelector("[data-key='amount']").dataset.value
-                        }
-                        
-                        const values = {
-                            'name': row.querySelector("[data-key='name']").dataset.value,
-                            'date': cu.tools.changeDateFormat(row.querySelector("[data-key='date']").dataset.value),
-                            'amount': amount,
-                            'accountid': row.querySelector("[data-key='accountid']").dataset.value
-                        }
-                        if (this.existingTransactions[values.accountid]) {
-                            if (this.existingTransactions[values.accountid]['transactions'][values.date]) {
-                                const getTransactions = this.existingTransactions[values.accountid]['transactions'][values.date]
-                                for (let tr = 0; tr < getTransactions.length; tr++) {
-                                    if (getTransactions[tr].name == values.name && parseFloat(getTransactions[tr].amount).toFixed(2).toString() == parseFloat(values.amount.replaceAll(",", "")).toFixed(2).toString()) {
-                                        row.classList.toggle('duplicate')
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                })
-                
-            },
-            async getExistingAccountTransactions(url, accounts) {
-                let options = {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': cu.getToken("csrftoken")
-                    },
-                    body: JSON.stringify({ "accounts": accounts }),
-                }
-                await fetch(url, options)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.transactions.forEach(records => {
-                            this.existingTransactions[records.accountId] = {
-                                'transaction_amount': records.transaction_amount,
-                                'transactions': records.transactions
-                            }
-                        })
-                        this.checkIfExisting()
-                    })
-            }
-        },
-        amountTypeSwitch() {
-            const $columSelector = document.querySelectorAll('.column-selection')
-            const $toggle = document.getElementById('amountTypeSwitch')
-            const setup = $columSelector[0].querySelector('.amount').getAttribute('disabled')
-            $toggle.dataset.single = setup ? true : false
-
-            if (!setup) {
-                cu.columnSelection.columnsNeeded = 5
-                $toggle.classList.remove('right')
-            } else {
-                cu.columnSelection.columnsNeeded = 4
-                $toggle.classList.add('right')
-            }
-            cu.columnSelection.updateSelectColumnsIndicator()
-
-            $columSelector.forEach((col, index) => {
-                if (!setup) {
-                    if (col[col.selectedIndex].value == 'amount') {
-                        cu.columnSelection.resetDuplicateColumnSelection('amount')
-                        cu.columnSelection.updateColumnValue('unknown', index)
-                    }
-                    col.querySelector('.amount').setAttribute('disabled', true)
-                    col.querySelector('.credit').removeAttribute('disabled')
-                    col.querySelector('.debit').removeAttribute('disabled')
-                } else {
-                    if (col[col.selectedIndex].value == 'credit' || col[col.selectedIndex].value == 'debit') {
-                        cu.columnSelection.resetDuplicateColumnSelection(col[col.selectedIndex].value)
-                        cu.columnSelection.updateColumnValue('unknown', index)
-                    }
-                    col.querySelector('.amount').removeAttribute('disabled')
-                    col.querySelector('.credit').setAttribute('disabled', true)
-                    col.querySelector('.debit').setAttribute('disabled', true)
-                }
-            })
         }
     },
     inlineEditorListener() {
@@ -603,7 +311,7 @@ let cu = {
             if (this.inputTest.errorsRemaining > 0) {
                 this.createMessage("There are still errors remaining.")
             } else {
-                this.sendTransacrions()
+                checkExisting.start(true)
             }
         } else {
             if (cu.columnSelection.columnsNeeded == 4) {
@@ -613,10 +321,9 @@ let cu = {
             }
         }
     },
-    async sendTransacrions() {
+    async sendTransactions() {
         let records = [];
         const $amountType = document.getElementById('amountTypeSwitch').dataset.single
-        console.log($amountType)
 
         const $select = document.querySelectorAll('.select-row')
         const $names = document.querySelectorAll("[data-key='name']");
@@ -629,11 +336,11 @@ let cu = {
 
         $names.forEach((transaction, index) => {
             if ($select[index].checked) {
-                if (!$amountType) {
+                if ($amountType) {
                     records.push({
                         name: transaction.dataset.value,
                         amount: parseFloat(($amount[index].dataset.value).replace(/(\d+),(\d+)[\s\S]*/g, "$1$2")),
-                        date: cu.tools.changeDateFormat($date[index].dataset.value),
+                        date: tools.changeDateFormat($date[index].dataset.value),
                         accountId: parseInt($accountId[index].dataset.value),
                     })
                 } else {
@@ -651,18 +358,18 @@ let cu = {
                     records.push({
                         name: transaction.dataset.value,
                         amount: amount,
-                        date: cu.tools.changeDateFormat($date[index].dataset.value),
+                        date: tools.changeDateFormat($date[index].dataset.value),
                         accountId: parseInt($accountId[index].dataset.value),
                     })
                 }
             }
         })
-        console.log(records)
+
         let options = {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': this.getToken("csrftoken")
+                'X-CSRFToken': app.getToken("csrftoken")
             },
             body: JSON.stringify({ "records": records }),
         }
@@ -691,19 +398,340 @@ let cu = {
                 }
             })   
     },
-    getToken(cname) {
-        let name = cname + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for(let i = 0; i <ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-            }
+}
+const checkExisting = {
+    'existingTransactions': {},
+    'requestForSubmission': false,
+    'duplicate': {
+        'count': 0,
+        'active': false
+    },
+    start(isPreSubmission = false) {
+        this.requestForSubmission = isPreSubmission
+        const accountsToGet = this.getSelectedAccountId()
+        if (accountsToGet) {
+            this.getExistingTransactions(Array.from(this.getSelectedAccountId()))
+        } else {
+            this.checkIfExisting()
         }
-        return "";
+    },
+    getSelectedAccountId() {
+        $getAccountIdSelection = document.querySelectorAll("[data-key='accountid']")
+        let accounts = new Set()
+        if ($getAccountIdSelection.length > 0) {
+            $getAccountIdSelection.forEach(row => {
+                if (!this.existingTransactions[row.dataset.value]) {
+                    accounts.add(row.dataset.value)
+                }
+            })
+        } 
+        if (accounts.size > 0) {
+            return accounts
+        } else {
+            return null
+        }
+    },
+    checkIfExisting() {
+        document.querySelectorAll('tr.row.duplicate').forEach(ele => {
+            ele.classList.remove('duplicate')
+        })
+        let $getSelected = document.querySelectorAll('tr.row')
+        const $amountType = document.getElementById('amountTypeSwitch').dataset.single
+        $getSelected.forEach(row => {
+            if(!row.classList.contains('deselect')) {
+                let amount = null
+
+                if (!$amountType) {
+                    const debit = row.querySelector("[data-key='debit']").dataset.value
+                    const credit = row.querySelector("[data-key='credit']").dataset.value
+                    if (debit != "") {
+                        amount = debit
+                    } else {
+                        amount = parseFloat(credit.replace(/(\d+),(\d+)[\s\S]*/g, "$1$2"))
+                        if (amount > 0) {
+                            amount = '-' + credit
+                        }
+                    }
+                } else {
+                    amount = row.querySelector("[data-key='amount']").dataset.value
+                }
+                
+                const values = {
+                    'name': row.querySelector("[data-key='name']").dataset.value,
+                    'date': tools.changeDateFormat(row.querySelector("[data-key='date']").dataset.value),
+                    'amount': amount,
+                    'accountid': row.querySelector("[data-key='accountid']").dataset.value
+                }
+                if (this.existingTransactions[values.accountid]) {
+                    if (this.existingTransactions[values.accountid]['transactions'][values.date]) {
+                        const getTransactions = this.existingTransactions[values.accountid]['transactions'][values.date]
+                        for (let tr = 0; tr < getTransactions.length; tr++) {
+                            if (getTransactions[tr].name == values.name && parseFloat(getTransactions[tr].amount).toFixed(2).toString() == parseFloat(values.amount.replaceAll(",", "")).toFixed(2).toString()) {
+                                row.classList.toggle('duplicate')
+                                checkExisting.duplicate.count++
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        if (this.duplicate.count == 0) {
+            this.duplicate.active = true
+        }
+        if(this.requestForSubmission && this.duplicate.active) {
+            cu.sendTransactions()
+        }
+        if (this.duplicate.count > 0) {
+            document.getElementById('duplicateWarning').classList.add('show')
+            document.getElementById('duplicateNumber').innerHTML = `${this.duplicate.count} / ${document.querySelectorAll('tr.row').length}`
+        }
+        this.duplicate.active = true
+    },
+    async getExistingTransactions(accounts) {
+        const $url = document.getElementById('checkExisting').dataset.url
+        let options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': app.getToken("csrftoken")
+            },
+            body: JSON.stringify({ "accounts": accounts }),
+        }
+        await fetch($url, options)
+            .then(response => response.json())
+            .then(data => {
+                data.transactions.forEach(records => {
+                    this.existingTransactions[records.accountId] = {
+                        'transaction_amount': records.transaction_amount,
+                        'transactions': records.transactions
+                    }
+                })
+                this.checkIfExisting()
+            })
+    }
+}
+const tools = {
+    selectionButtonState: false,
+    init() {
+        document.getElementById('checkExisting').addEventListener('click', () => {
+            checkExisting.start()
+        })
+        this.updateAccountId.init()
+        this.updateDescription.init()
+        this.dateFormatSelection.init()
+        this.rowCheckboxSelection.init()
+        this.amountToggle.init();
+    },
+    'amountToggle': {
+        init() {
+            document.getElementById('amountTypeSwitch').addEventListener('click', () => {
+                this.switchType()
+            })
+        },
+        switchType() {
+            const $columSelector = document.querySelectorAll('.column-selection')
+            const $toggle = document.getElementById('amountTypeSwitch')
+            const setup = $columSelector[0].querySelector('.amount').getAttribute('disabled')
+            $toggle.dataset.single = setup ? true : false
+
+            if (!setup) {
+                cu.columnSelection.columnsNeeded = 5
+                $toggle.classList.remove('right')
+            } else {
+                cu.columnSelection.columnsNeeded = 4
+                $toggle.classList.add('right')
+            }
+            cu.columnSelection.updateSelectColumnsIndicator()
+
+            $columSelector.forEach((col, index) => {
+                if (!setup) {
+                    if (col[col.selectedIndex].value == 'amount') {
+                        cu.columnSelection.resetDuplicateColumnSelection('amount')
+                        cu.columnSelection.updateColumnValue('unknown', index)
+                    }
+                    col.querySelector('.amount').setAttribute('disabled', true)
+                    col.querySelector('.credit').removeAttribute('disabled')
+                    col.querySelector('.debit').removeAttribute('disabled')
+                } else {
+                    if (col[col.selectedIndex].value == 'credit' || col[col.selectedIndex].value == 'debit') {
+                        cu.columnSelection.resetDuplicateColumnSelection(col[col.selectedIndex].value)
+                        cu.columnSelection.updateColumnValue('unknown', index)
+                    }
+                    col.querySelector('.amount').removeAttribute('disabled')
+                    col.querySelector('.credit').setAttribute('disabled', true)
+                    col.querySelector('.debit').setAttribute('disabled', true)
+                }
+            })
+        }
+    },
+    'updateAccountId': {
+        init() {
+            $accountSelector = document.getElementById('accountIdSelection')
+            $accountSelector.addEventListener('change', () => {
+                this.updateAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
+            })
+        },
+        updateAccountId(switchTo, label='unknown') {
+            $overwriteAll = document.getElementById('overwriteExisting').checked
+            $findAccountId = document.querySelectorAll("[data-key='accountid']")
+            if (switchTo == "") {
+                alert('Please select an account')
+            } else {
+                if($findAccountId.length > 0) {
+
+                    $findAccountId.forEach(row => {
+                        if (!$overwriteAll) {
+                            if (!row.classList.contains('verified')) {
+                                row.dataset.value = switchTo
+                                row.classList.remove('error')
+                                row.classList.add('verified')
+                                row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
+                                row.querySelector('.edit').value = switchTo
+                            }
+                        } else {
+                            row.dataset.value = switchTo
+                            row.classList.remove('error')
+                            row.classList.add('verified')
+                            row.querySelector('.display-value').innerHTML = `${switchTo} (${label})` 
+                            row.querySelector('.edit').value = switchTo
+                        }
+                        cu.inputTest.cellTest(row)
+                    })
+                } else {
+                    alert('Please select a column first')
+                }
+            }
+            
+        }, 
+    },
+    'dateFormatSelection': {
+        init() {
+            document.getElementById('dateFormat').addEventListener('change', () => {
+                this.testAllDates()
+            })
+        },
+        testAllDates() {
+            $dates = document.querySelectorAll("[data-key='date']")
+            if ($dates.length > 0) {
+                $dates.forEach(cell => {
+                    cu.inputTest.cellTest(cell)
+                })
+            }
+        },
+    },
+    'rowCheckboxSelection': {
+        init() {
+            document.getElementById('toggleRowSelection').addEventListener('click', () => {
+                this.toggleSelection()
+            })
+            document.getElementById('deselectExisting').addEventListener('click', () => {
+                this.toggleExisting()
+            })
+        },
+        toggleSelection() {
+            $checkboxes = document.querySelectorAll('.select-row')
+            $button = document.getElementById('toggleRowSelection')
+
+            if ($checkboxes.length > 0) {
+                $checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.selectionButtonState
+                    let $row = checkbox.parentNode.parentNode
+                    if (this.selectionButtonState) {
+                        $row.classList.remove('deselect')
+                        $button.innerHTML = 'De-Select All Rows'
+                    } else {
+                        $row.classList.add('deselect')
+                        $button.innerHTML = 'Select All Rows'
+                    }
+                })
+                this.selectionButtonState = !this.selectionButtonState
+                cu.inputTest.loadErrorAmount()
+            }
+        },
+        toggleExisting() {
+            $toggleTo = document.getElementById('deselectExisting').checked
+            $getDuplicates = document.querySelectorAll('.duplicate')
+            $getDuplicates.forEach(duplicate => {
+                duplicate.querySelector('.select-row').checked = !$toggleTo
+                if ($toggleTo) {
+                    duplicate.classList.add('deselect')
+                } else {
+                    duplicate.classList.remove('deselect')
+                }
+            })
+            cu.inputTest.loadErrorAmount()
+        },
+    },
+    'updateDescription': {
+        init() {
+            document.getElementById('fillAllDescriptions').addEventListener('click', () => {
+                this.updateDescriptions()
+            })
+        },
+        updateDescriptions() {
+            $getDescriptions = document.querySelectorAll("[data-key='name']")
+            $newDescription = document.getElementById('transactionDescriptionText').value
+            
+            if ($getDescriptions.length > 0) {
+                if ($newDescription.trim() != '') {
+                    $overwriteAll = document.getElementById('overwriteFilled').checked
+                        $getDescriptions.forEach(cell => {
+                            if($overwriteAll) {
+                                cell.dataset.value = $newDescription.trim()
+                                cell.classList.remove('error')
+                                cell.classList.add('verified')
+                                cell.querySelector('.display-value').innerHTML = $newDescription.trim()
+                                cell.querySelector('.edit').value = $newDescription.trim()
+                            } else {
+                                if(!cell.classList.contains('verified')) {
+                                    cell.dataset.value = $newDescription.trim()
+                                    cell.classList.remove('error')
+                                    cell.classList.add('verified')
+                                    cell.querySelector('.display-value').innerHTML = $newDescription.trim()
+                                    cell.querySelector('.edit').value = $newDescription.trim()
+                                }
+                            }
+                        })
+                } else {
+                    alert('Please enter a description you would like it swapped too')
+                }
+                
+            } else {
+                alert('Please select a description column')
+            }
+            
+        },
+    },
+    changeDateFormat(dateString) {
+        const $dateDropdown = document.getElementById('dateFormat');
+        const $format = $dateDropdown[$dateDropdown.selectedIndex].value;
+        let breakdown = {
+            day: "",
+            month: "",
+            year: ""
+        }
+        
+        if ($format == 'YYYY-MM-DD') {
+            const setDate = new Date(dateString)
+            breakdown.day = setDate.getDate()
+            breakdown.month = setDate.getMonth()+1
+            breakdown.year = setDate.getFullYear()
+        }
+        if ($format == 'DD-MM-YYYY') {
+            breakdown.day = parseInt(dateString.slice(0,2)),
+            breakdown.month = parseInt(dateString.slice(3,5)),
+            breakdown.year = dateString.slice(6,10)
+        }
+        if ($format == 'MM-DD-YYYY') {
+            breakdown.day = parseInt(dateString.slice(3,5)),
+            breakdown.month = parseInt(dateString.slice(0,2)),
+            breakdown.year = dateString.slice(6,10)
+        }
+        
+        breakdown.day = (breakdown.day <= 9) ? '0' + breakdown.day : breakdown.day;
+        breakdown.month = (breakdown.month <= 9) ? '0' + breakdown.month : breakdown.month;
+
+        return `${breakdown.year}-${breakdown.month}-${breakdown.day}`
     },
 }

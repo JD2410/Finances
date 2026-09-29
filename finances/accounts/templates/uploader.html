@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
     <script src="{% static 'script.js' %}?{% now "U" %}"></script>
 
-
     <link rel="stylesheet" href="{% static 'templates/bulk/styles.css' %}?{% now "U" %}">
     <script src="{% static 'templates/bulk/scripts.js' %}?{% now "U" %}"></script>
 
@@ -131,12 +130,17 @@
                     {% endif %}
                 </div>
                 <div class="container--footer">
-                    <button class="button positive" id="confirmCSV">Confirm and Send</button>
-            <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
-                        <div id="deselectMessage">
-                            <p>We've found <span id="duplicateNumber"></span> of repeated transactions</p>
-                            <button type="button" class="duplicate-button button" id="deselectExisting">Deselect Existing Transactions</button>
+                    <div class="actions">
+                        <button type="button" class="button hollow" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
+                        <button class="button positive" id="confirmCSV">Confirm and Send</button>
+                    </div>
+                    <div id="duplicateWarning">
+                        <i class="fa-solid fa-warning"></i>
+                        <div>
+                            <p><span id="duplicateNumber"></span> already exist.</p>
+                            <input type="checkbox" id="deselectExisting"><label for="deselectExisting"> Deselect Existing Transactions</label>
                         </div>
+                    </div>
                 </div>
             </div>                
         </div>

@@ -25,7 +25,14 @@
 .container--footer {
     display: flex;
     flex-direction: row-reverse;
+    justify-content: space-between;
     gap: 8px;
+
+    .actions {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+    }
 }
 table thead  .header-label .og-label {
     font-size: 0.8em;
@@ -33,14 +40,17 @@ table thead  .header-label .og-label {
     display: block;
     opacity: 0.6;
 }
+table thead th:first-child {
+    width: 33px;
+}
 
 .row.deselect, .row.deselect.duplicate {
     opacity: 0.5;
 
     td.cell {
         background-color: unset;
-
         cursor: auto;
+
         &.verified, &.error, &.pending {
             background-color: unset;
 
@@ -53,13 +63,15 @@ table thead  .header-label .og-label {
         }
     }
 }
+
 .row.duplicate {
     td.cell {
         background-color: rgba(255, 127, 0, 0.27);
+
         &:first-child {
             display: flex;
+            flex-direction: row;
             align-items: center;
-            width: 30px;
             gap: 4px;
             
             &:after {
@@ -81,10 +93,6 @@ table.standard {
         position: relative;
         cursor: pointer;
         padding: 5px;
-
-        &:first-child {
-            width: 20px;
-        }
 
         &.verified {
             background-color: rgba(0,128,0,0.15);
@@ -234,7 +242,7 @@ table.standard {
 }
 #deselectMessage {
     display: none;
-    color: orange;
+    color: #3b3b3d;
     border-radius: 4px;
     display: flex;
     flex-direction: row;
@@ -243,7 +251,6 @@ table.standard {
     .duplicate-button {
         background-color: orange;
         color: #fff;
-        padding: 4px;
     }
 }
 
@@ -261,5 +268,20 @@ table.standard {
     body .content--main.collapsible .toggle-main,
     body .content--main.collapsible.hide .toggle-main {
         display: block;
+    }
+}
+#duplicateWarning {
+    display: none;
+    flex-direction: row;
+    gap: 8px;
+
+    i {
+        color: orange;
+        font-size: 2em;
+        line-height: 33px;
+    }
+
+    &.show {
+        display: flex;
     }
 }
