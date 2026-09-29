@@ -25,6 +25,7 @@ let cu = {
     },
     'tools': {
         init() {
+            console.log('init')
             $accountSelector = document.getElementById('accountIdSelection')
             $accountSelector.addEventListener('change', () => {
                 this.updateAccountId($accountSelector.value, $accountSelector.options[$accountSelector.selectedIndex].text)
@@ -326,7 +327,7 @@ let cu = {
         })
     },
     resetShowEditorListener() {
-        document.querySelector('.full-page').addEventListener('click', () => {
+        document.getElementsByTagName('body')[0].addEventListener('click', () => {
             this.resetShowEditor()
         })
     },

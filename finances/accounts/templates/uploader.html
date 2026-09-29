@@ -7,7 +7,9 @@
     <title>Document</title>
     <script src="https://kit.fontawesome.com/7954240b12.js" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'styles-v2.css' %}?{% now "U" %}">
+    <script src="{% static 'script.js' %}?{% now "U" %}"></script>
+
 
     <link rel="stylesheet" href="{% static 'templates/bulk/styles.css' %}?{% now "U" %}">
     <script src="{% static 'templates/bulk/scripts.js' %}?{% now "U" %}"></script>
@@ -17,148 +19,147 @@
 
     {{ accounts|json_script:"accounts" }}
 </head>
-<body class="full-page">
-    <div id="messagesContainer"></div>
-    <div class="page-container">
-        {% include 'navigation.html' with page="bulk" %}
-        <div class="main-area">
-            <div class="page-header">
-                <h1>Uploader</h1>
-                <button class='open-modal button primary' data-modal="uploadCSV">Upload CSV</button>
-            </div>
-            <div class="page-section">
-                
-                <div class="body-container">
-                    <div class="tools-container">
-                        <div class="header">
-                            <h2>Import Tools</h2>
-                        </div>
-                        <div class="tools">
-                            <div class="tool">
-                                <div class="toggle right" data-single="true" id="amountTypeSwitch" ><span>Debit & Credit</span><span>Amount</span></div>
-                            </div>
-                            <div class="tool">
-                                <h4>Account Id Assignment</h4>
-                                <select name="accounts" id="accountIdSelection">
-                                    <option value="">Select an account</option>
-                                    {% for account in accounts %}
-                                    <option value="{{ account.id}}" data-key="{{ account.name }}">{{ account.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                <div>
-                                    <input type="checkbox" id="overwriteExisting"><label for="overwriteExisting"> Overwrite verified</label>
-                                </div>
-                            </div>
-                            <div class="tool">
-                                <h4>Date Format</h4>
-                                <select name="dateFormat" id="dateFormat">
-                                    <option value="YYYY-MM-DD" selected>YYYY-MM-DD</option>
-                                    <option value="DD-MM-YYYY">DD-MM-YYYY</option>
-                                    <option value="MM-DD-YYYY">MM-DD-YYYY</option>
-                                </select>
-                            </div>
-                            <div class="tool">
-                                <h4>Fill Description</h4>
-                                <input type="text" value="Transaction" id="transactionDescriptionText">
-                                <div>
-                                    <input type="checkbox" id="overwriteFilled"> <label for="overwriteFilled">Overwrite Filled</label>
-                                </div>
-                                <button id="fillAllDescriptions" class="button primary">Fill Empty Descriptions</button>
-                            </div>
-                            <div class="tool">
-                                <button class="button positive" id="confirmCSV">Confirm and Send</button>
-                    <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
-                                <div id="deselectMessage">
-                                    <p>We've found <span id="duplicateNumber"></span> of repeated transactions</p>
-                                    <button type="button" class="duplicate-button button" id="deselectExisting">Deselect Existing Transactions</button>
-                                </div>
-                            </div>
+<body>
+<div id="page">
+    {% include 'navigation.html' with page="bulk" %}
+    <div class="page--content">
+        <div class="content--header">
+            <h1>Uploader</h1>
+            <button class='open-modal button primary' data-modal="uploadCSV">Upload CSV</button>
+        </div>
+        <div class="content--main collapsible">
+            <div class="main--container tools">
+                <div class="container--header">
+                    <h2>Import Tools</h2><button class="toggle-container-sidebar small-button hollow"><i class="fa-solid fa-angles-left"></i></button>
+                </div>
+                <div class="container--content ">
+                    <div class="tool">
+                        <div class="toggle right" data-single="true" id="amountTypeSwitch" ><span>Debit & Credit</span><span>Amount</span></div>
+                    </div>
+                    <div class="tool">
+                        <h4>Account Id Assignment</h4>
+                        <select name="accounts" id="accountIdSelection">
+                            <option value="">Select an account</option>
+                            {% for account in accounts %}
+                            <option value="{{ account.id}}" data-key="{{ account.name }}">{{ account.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div>
+                            <input type="checkbox" id="overwriteExisting"><label for="overwriteExisting"> Overwrite verified</label>
                         </div>
                     </div>
-                    <div class="imported-data">
-                        <div class="header">
-                            <h2>Imported Data</h2>
-                            <div>
-                                <div id="errorsIndicator"></div>
-                                <div id="selectionIndicator"></div>
-                            </div>
+                    <div class="tool">
+                        <h4>Date Format</h4>
+                        <select name="dateFormat" id="dateFormat">
+                            <option value="YYYY-MM-DD" selected>YYYY-MM-DD</option>
+                            <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                            <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                        </select>
+                    </div>
+                    <div class="tool">
+                        <h4>Fill Description</h4>
+                        <input type="text" value="Transaction" id="transactionDescriptionText">
+                        <div>
+                            <input type="checkbox" id="overwriteFilled"> <label for="overwriteFilled">Overwrite Filled</label>
                         </div>
-                        <div class="body">
-                            {% if results %}
-                                <table class="standard">
-                                    <thead>
-                                        <th><input type="checkbox" id="toggleRowSelection" checked></th>
-                                        {% for head in results.0 %}
-                                            <th class="header-label">
-                                                <i class="og-label">CSV Column: {{ head.label }}</i>
-                                                <select class="column-selection">
-                                                    <option value="">Select option</option>
-                                                    <option value="name"
-                                                        {% if head.label|upper == 'NAME' %}
-                                                            selected
-                                                        {% endif %}
-                                                    >Description</option>
-                                                    <option value="date"
-                                                        {% if head.label|upper == 'DATE' %}
-                                                            selected
-                                                        {% endif %}
-                                                    >Date</option>
-                                                    <option value="accountId"
-                                                        {% if head.label|upper == 'ACCOUNTID' %}
-                                                            selected
-                                                        {% endif %}
-                                                    >AccountID</option>
-                                                    <option value="amount"
-                                                        {% if head.label|upper == 'AMOUNT' %}
-                                                            selected
-                                                        {% endif %}
-                                                    class="amount">Amount</option>
-                                                    <option value="debit" class="debit" disabled>Debit</option>
-                                                    <option value="credit" class="credit" disabled>Credit</option>
-                                                </select>
-                                            </th>
-                                        {% endfor %}
-                                    </thead>
-                                    <tbody>
-                                    {% for row in results %}
-                                        <tr class="row">
-                                            <td class="cell"><input type="checkbox" class="select-row" checked></td>
-                                        {% for elem in row %}
-                                            <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">   <span class="display-value">{{ elem.value }}</span>
-                                                <input type="text" value="{{ elem.value }}" class="edit">
-                                            </td>
-                                        {% endfor %}
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% else %}
-                                <p>Please upload a CSV to process</p>
-                            {% endif %}
-                        </div>
-                    </div>                
+                        <button id="fillAllDescriptions" class="button primary">Fill Empty Descriptions</button>
+                    </div>
                 </div>
             </div>
-            
+            <div class="main--container">
+                <div class="container--header">
+                    <div>
+                        <button class="toggle-container-sidebar toggle-main small-button hollow"><i class="fa-solid fa-angles-right"></i></button>
+                        <h2>Imported Data</h2>
+                    </div>
+                    <div>
+                        <div id="errorsIndicator"></div>
+                        <div id="selectionIndicator"></div>
+                    </div>
+                </div>
+                <div class="container--content">
+                    {% if results %}
+                        <table class="standard">
+                            <thead>
+                                <th><input type="checkbox" id="toggleRowSelection" checked></th>
+                                {% for head in results.0 %}
+                                    <th class="header-label">
+                                        <i class="og-label">CSV Column: {{ head.label }}</i>
+                                        <select class="column-selection">
+                                            <option value="">Select option</option>
+                                            <option value="name"
+                                                {% if head.label|upper == 'NAME' %}
+                                                    selected
+                                                {% endif %}
+                                            >Description</option>
+                                            <option value="date"
+                                                {% if head.label|upper == 'DATE' %}
+                                                    selected
+                                                {% endif %}
+                                            >Date</option>
+                                            <option value="accountId"
+                                                {% if head.label|upper == 'ACCOUNTID' %}
+                                                    selected
+                                                {% endif %}
+                                            >AccountID</option>
+                                            <option value="amount"
+                                                {% if head.label|upper == 'AMOUNT' %}
+                                                    selected
+                                                {% endif %}
+                                            class="amount">Amount</option>
+                                            <option value="debit" class="debit" disabled>Debit</option>
+                                            <option value="credit" class="credit" disabled>Credit</option>
+                                        </select>
+                                    </th>
+                                {% endfor %}
+                            </thead>
+                            <tbody>
+                            {% for row in results %}
+                                <tr class="row">
+                                    <td class="cell"><input type="checkbox" class="select-row" checked></td>
+                                {% for elem in row %}
+                                    <td class="cell" data-value="{{ elem.value }}" data-key="{{ elem.label|lower }}">   <span class="display-value">{{ elem.value }}</span>
+                                        <input type="text" value="{{ elem.value }}" class="edit">
+                                    </td>
+                                {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>Please upload a CSV to process</p>
+                    {% endif %}
+                </div>
+                <div class="container--footer">
+                    <button class="button positive" id="confirmCSV">Confirm and Send</button>
+            <button type="button" class="button primary" id="checkExisting" data-url="{% url 'getBulkTransactions' %}">Check Existing</button>
+                        <div id="deselectMessage">
+                            <p>We've found <span id="duplicateNumber"></span> of repeated transactions</p>
+                            <button type="button" class="duplicate-button button" id="deselectExisting">Deselect Existing Transactions</button>
+                        </div>
+                </div>
+            </div>                
         </div>
     </div>
-    
-    <div class="modal" id="uploadCSV">
-        <form action="" method="post" class="modal-container form" enctype="multipart/form-data">
-            <div class="header">
-                <h2>CSV Upload</h2>
-                <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ form }}
-            </div>
-            <div class="footer">
-                <input class="button primary" type="submit">
-                <button class="button hollow" data-close="uploadCSV">Cancel</button>
-            </div>
-        </form>
-    </div>
+</div>
 
+<div class="modal" id="uploadCSV">
+    <form action="" method="post" class="modal-container form" enctype="multipart/form-data">
+        <div class="header">
+            <h2>CSV Upload</h2>
+            <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ form }}
+        </div>
+        <div class="footer">
+            <input class="button primary" type="submit">
+            <button class="button hollow" data-close="uploadCSV">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div id="messagesContainer"></div>
 </body>
 </html>
