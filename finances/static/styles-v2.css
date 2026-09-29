@@ -63,7 +63,7 @@ body {
         .main--container:first-child {
             flex: 0 0 250px;
             transition: flex 0.4s, padding 0.4s;
-            padding: 15px 18px 0px 18px;
+            padding: 9px 18px 0px 18px;
             overflow: hidden;
             display: flex;
 

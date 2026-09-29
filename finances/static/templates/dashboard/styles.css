@@ -62,6 +62,78 @@
         
     }
 }
+body #page .page--content {
+    padding: 0;
+    gap: 0;
+
+    .content--header {
+        padding: 12px 0 0 18px;
+    }
+    .content--home {
+        gap: 20px;
+        display: flex;
+        height: 100vh;
+        overflow: auto;
+        flex-direction: column;
+        padding: 13px 18px 18px 18px;
+    }
+}
+
+.widget-area {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    width: 100%;
+    gap: 20px;
+
+    .widget {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 16px 16px;
+            height: 32px;
+            gap: 12px;
+
+            h2 {
+                font-size: 1.3em;
+            }
+
+            & > div {
+                display: flex;
+                gap: 12px;
+
+                input[type=date] {
+                    padding: 0px 8px;
+                    box-sizing: border-box;
+                    font-size: 1em;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    border-color: lightgray;
+                    border-radius: 4px;
+                    border: 1px solid rgb(214, 214, 214);
+                    min-height: 35px;
+                }
+            }
+        }
+        .body {
+            padding: 0px 16px 12px 16px;
+            min-height: 400px;
+            &.centre {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+    .full {
+        grid-column: 1 / span 2;
+    }
+}
 .grouped {
     display: flex;
     gap: 20px;
