@@ -10,9 +10,6 @@ from decimal import Decimal
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 
-def temp(request):
-    return render(request, 'temp.html')
-
 def index(request):
     get_transactions = get_progress_chart()
     get_transactions['recent_transactions'] = Transactions.objects.all().filter().order_by('-date')[:10]
