@@ -8,7 +8,7 @@
     <title>Document</title>
     <script src="https://kit.fontawesome.com/7954240b12.js" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="{% static 'styles.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="{% static 'styles-v2.css' %}?{% now "U" %}">
     <script src="{% static 'script.js' %}?{% now "U" %}"></script>
     
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
@@ -21,20 +21,23 @@
     <link rel="stylesheet" href="{% static 'templates/accounts/styles_account.css' %}?{% now "U" %}">
 
 </head>
-<body class="full-page">
-    {% include "errors.html" %}
-    <div class="page-container">
-        {% include "navigation.html" with page='accounts' %}
-        <div class="main-area">
-            <div class="page-header">
-                <h1>Acount Details</h1>
-                <a href="{% url 'accounts' %}" class="button primary">View All Acounts</a>
-            </div>
-            {% if records %}
-            <div class="page-section">
-                <div class="info">
-                    <div class="account-details">
+<body>
+{% include "errors.html" %}
+<div id="page">
+    {% include "navigation.html" with page='accounts' %}
+    <div class="page--content">
+        <div class="content--header">
+            <h1>Acount Details</h1>
+            <a href="{% url 'accounts' %}" class="button primary">View All Acounts</a>
+        </div>
+        {% if records %}
+            <div class="content--main collapsible">
+                <div class="main--container account-details">
+                    <div class="container--header">
                         <h2>Information</h2>
+                        <button class="toggle-container-sidebar small-button hollow"><i class="fa-solid fa-angles-left"></i></button>
+                    </div>
+                    <div class="container--content">
                         <div class="cards">
                             <div class="card">
                                 <div class="title">{{ account_details.name }}</div>
@@ -66,11 +69,12 @@
                                 <button class="button positive open-modal" data-modal="updateAccount">Update</button>
                                 <button class="button negative open-modal" data-modal="deleteAccount">Delete</button>
                             </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-                <div class="transactions">
-                    <div class="header">
+                <div class="main--container">
+                    <div class="container--header">
+                        <button class="toggle-container-sidebar toggle-main small-button hollow"><i class="fa-solid fa-angles-right"></i></button>
                         {% if search_param %}
                             <h2>Transactions named '<i>{{ search_param }}</i>'</h2>
                         {% else %}
@@ -92,30 +96,45 @@
                             <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
                         </div>
                     </div>
+                    <div class="container--content">
+                        {% if records.transactions %}
+                            <table class="standard">
+                                <thead>
+                                    <th>Action Name</th>
+                                    <th>Transaction Date</th>
+                                    <th>Created</th>
+                                    <th class="right">Amount</th>
+                                    <th class="right">Action</th>
+                                </thead>
+                                <tbody>
+                                {% for action in records.transactions %}
+                                    <tr id="record_{{ action.id }}">
+                                        <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}{{ account_details.id }}?q={{ action.name }}">{{ action.name }}</a></td>
+                                        <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
+                                        <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
+                                        <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
+                                        <td class="right">
+                                            <button class="button edit update-transaction" data-value="{{ action.id }}" data-id="{{ account_details.id }}"><i class="fa-solid fa-pencil"></i></button>
+                                            <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="body centre">
+                                <div class="no-data">
+                                    <div class="image">
+                                        <i class="fa-solid fa-binoculars"></i>
+                                    </div>
+                                    <h4>Sorry, can't seem to find any transactions</h4>
+                                    <p>To Get started by clicking the button below:</p>
+                                    <button class='open-modal-add-transaction button primary' data-modal="addTransaction" data-account="{{ account_details.id }}">Create Transaction</button>
+                                </div>
+                            </div>
+                        {% endif %} 
+                    </div>
                     {% if records.transactions %}
-                        <table class="standard">
-                            <thead>
-                                <th>Action Name</th>
-                                <th>Transaction Date</th>
-                                <th>Created</th>
-                                <th class="right">Amount</th>
-                                <th class="right">Action</th>
-                            </thead>
-                            <tbody>
-                            {% for action in records.transactions %}
-                                <tr id="record_{{ action.id }}">
-                                    <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}{{ account_details.id }}?q={{ action.name }}">{{ action.name }}</a></td>
-                                    <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
-                                    <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
-                                    <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
-                                    <td class="right">
-                                        <button class="button edit update-transaction" data-value="{{ action.id }}" data-id="{{ account_details.id }}"><i class="fa-solid fa-pencil"></i></button>
-                                        <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
                         <div class="pagination">
                             {% for i in records.number_of_pages %}
                                 {% if search_param %}
@@ -133,22 +152,11 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
-                    {% else %}
-                        <div class="body centre">
-                            <div class="no-data">
-                                <div class="image">
-                                    <i class="fa-solid fa-binoculars"></i>
-                                </div>
-                                <h4>Sorry, can't seem to find any transactions</h4>
-                                <p>To Get started by clicking the button below:</p>
-                                <button class='open-modal-add-transaction button primary' data-modal="addTransaction" data-account="{{ account_details.id }}">Create Transaction</button>
-                            </div>
-                        </div>
                     {% endif %}
                 </div>
             </div>
-            {% else %}
-            <div class="page-section centre">
+        {% else %}
+            <div class="content--main">
                 <div class="no-data">
                     <div class="image">
                         <i class="fa-solid fa-binoculars"></i>
@@ -158,104 +166,100 @@
                     <a href="{% url 'accounts' %}" class='button primary'>View all accounts</a>
                 </div>
             </div>
-            {% endif %}
+        {% endif %}
+    </div>
+</div>
 
+<div class="modal" id="updateTransaction" >
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Update Transaction</h2>
+            <div class="close" data-close="updateTransaction"><i class="fa-solid fa-xmark"></i></div>
         </div>
-    </div>
-
-    <div class="modal" id="updateTransaction" >
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Update Transaction</h2>
-                <div class="close" data-close="updateTransaction"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ transaction_form }}
-                <input type="hidden" name="id" id="id">
-            </div>
-            <div class="footer">
-                <input class='button primary' type="submit" name="updateTransaction">
-                <button class="button hollow" data-close="updateTransaction">Cancel</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal" id="addTransaction">
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Add Transaction</h2>
-                <div class="close" data-close="addTransaction"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ transaction_form }}
-                <input type="hidden" name="addTransaction">
-            </div>
-            <div class="footer">
-                <input class="button primary" type="submit">
-                <button class="button hollow" data-close="addTransaction">Cancel</button>
-            </div>
-        </form>
-    </div>
-    <div class="modal" id="uploadCSV">
-        <form action="" method="post" class="modal-container" enctype="multipart/form-data">
-            <div class="header">
-                <h2>CSV Upload</h2>
-                <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ csv_form }}
-            </div>
-            <div class="footer">
-                <input class="button primary" type="submit">
-                <button class="button hollow" data-close="uploadCSV">Cancel</button>
-            </div>
-        </form>
-    </div>
-    <form action="" method="post" id="deleteForm" >
-        {% csrf_token %}
-        <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
+        <div class="body">
+            {% csrf_token %}
+            {{ transaction_form }}
+            <input type="hidden" name="id" id="id">
+        </div>
+        <div class="footer">
+            <input class='button primary' type="submit" name="updateTransaction">
+            <button class="button hollow" data-close="updateTransaction">Cancel</button>
+        </div>
     </form>
-
-    <div class="modal" id="updateAccount">
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Savings Accounts Details</h2>
-                <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body">
-                {% csrf_token %}
-                {{ savings_form }}
-                <input type="hidden" name="accountId" id="accountId" value="{{ account_details.id }}">
-                <input type="hidden" name="updateAccount">
-            </div>
-            <div class="footer">
-                <button class='button primary' id="confirmUpdate">Confirm</button>
-                <button class="button hollow">Cancel</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="modal" id="deleteAccount">
-        <form action="" method="post" class="modal-container">
-            <div class="header">
-                <h2>Delete Account</h2>
-                <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
-            </div>
-            <div class="body delete-confirmation">
-                <i class="fa-solid fa-warning"></i>
-                <h3>Are you sure you want to delete this account?</h3>
-                <p>By deleting this account you will also be deleting all the transactions related to it. Do you wish to continue?</p>
-                {% csrf_token %}
-                <input type="hidden" name="deleteAccount" value="{{ account_details.id }}">
-            </div>
-            <div class="footer">
-                <input class="button negative" type="submit" value="Delete Account">
-                <button class="button hollow" data-close="deleteAccount">Cancel</button>
-            </div>
-        </form>
-    </div>
+</div>
+<div class="modal" id="addTransaction">
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Add Transaction</h2>
+            <div class="close" data-close="addTransaction"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ transaction_form }}
+            <input type="hidden" name="addTransaction">
+        </div>
+        <div class="footer">
+            <input class="button primary" type="submit">
+            <button class="button hollow" data-close="addTransaction">Cancel</button>
+        </div>
+    </form>
+</div>
+<div class="modal" id="uploadCSV">
+    <form action="" method="post" class="modal-container" enctype="multipart/form-data">
+        <div class="header">
+            <h2>CSV Upload</h2>
+            <div class="close" data-close="uploadCSV"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ csv_form }}
+        </div>
+        <div class="footer">
+            <input class="button primary" type="submit">
+            <button class="button hollow" data-close="uploadCSV">Cancel</button>
+        </div>
+    </form>
+</div>
+<form action="" method="post" id="deleteForm" >
+    {% csrf_token %}
+    <input type="hidden" name="deleteTransaction" id="deleteID" value="0">
+</form>
+<div class="modal" id="updateAccount">
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Savings Accounts Details</h2>
+            <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body">
+            {% csrf_token %}
+            {{ savings_form }}
+            <input type="hidden" name="accountId" id="accountId" value="{{ account_details.id }}">
+            <input type="hidden" name="updateAccount">
+        </div>
+        <div class="footer">
+            <button class='button primary' id="confirmUpdate">Confirm</button>
+            <button class="button hollow">Cancel</button>
+        </div>
+    </form>
+</div>
+<div class="modal" id="deleteAccount">
+    <form action="" method="post" class="modal-container">
+        <div class="header">
+            <h2>Delete Account</h2>
+            <div class="close" data-close="updateAccount"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="body delete-confirmation">
+            <i class="fa-solid fa-warning"></i>
+            <h3>Are you sure you want to delete this account?</h3>
+            <p>By deleting this account you will also be deleting all the transactions related to it. Do you wish to continue?</p>
+            {% csrf_token %}
+            <input type="hidden" name="deleteAccount" value="{{ account_details.id }}">
+        </div>
+        <div class="footer">
+            <input class="button negative" type="submit" value="Delete Account">
+            <button class="button hollow" data-close="deleteAccount">Cancel</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

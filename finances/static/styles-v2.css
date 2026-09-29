@@ -57,13 +57,13 @@ body {
         }
     }
     /* Core Styling */
-    body #page .page--content .content--main.collapsibe {
+    body #page .page--content .content--main.collapsible {
         gap: 0;
 
         .main--container:first-child {
             flex: 0 0 250px;
             transition: flex 0.4s;
-            padding: 0;
+            padding: 15px 18px 0px 18px;
             overflow: hidden;
             display: flex;
 
@@ -73,7 +73,8 @@ body {
         }
         &.hide {
             .main--container:first-child {
-                flex: 0 0 0px;       
+                flex: 0 0 0px;    
+                padding: 15px 0 0 0;   
             }
         }
     }
@@ -109,9 +110,6 @@ body {
         }
         .close-sidebar {
             display: flex;
-            i {
-                rotate: 90deg;
-            }
         }
         .texture {
             position: absolute;
@@ -146,7 +144,7 @@ body {
             }
         }
         .close-sidebar i {
-            rotate: 270deg;
+            rotate: 180deg;
             margin-left: -3px;
         }
     }
@@ -182,17 +180,20 @@ body {
 }
 /* Enforces the onpage collapsible container to be an overlay when screen is between mobile and desktop */
 @media screen and (min-width: 600px) and (max-width: 1000px) {
-    body #page .page--content .content--main.collapsibe {
+    body #page .page--content .content--main.collapsible {
         
         .main--container:first-child {
             display: none;
             position: absolute;
-            height: calc(100% - 20px);
+            height: calc(100% - 70px);
             background-color: rgba(255, 255, 255, 0.48);
             backdrop-filter: blur(10px);
-            top: 10px;
-            left: 10px;
+            top: 18px;
+            left: 18px;
             border-radius: 7px;
+            z-index: 1000;
+            box-shadow: 0 0 20px 0 rgba(159, 10, 193, 0.15);
+            padding: 17px !important;
         }
         &.hide {
             .main--container:first-child {
@@ -328,6 +329,7 @@ body {
         border-radius: 8px;
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
         position: relative;
+        justify-content: center;
 
         .main--container {
             flex: 100%;
@@ -635,5 +637,52 @@ table.standard {
             color: #fff;
             background-color: purple;
         }
+    }
+}
+.no-data {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+
+    .image {
+        margin-bottom: 20px;
+
+        i {
+            font-size: 6em;
+        }
+    }
+
+    h4 {
+        font-size: 1.2rem;
+        margin-bottom: 4px;
+    }
+    p {
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+    .button {
+        font-size: 1rem;
+    }
+}
+.delete-confirmation {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 0;
+
+    i {
+        font-size: 10em;
+        color: red;
+        margin-bottom: 20px;
+    }
+    h3 {
+        font-size: 1.4em;
+        padding: 0 30px;
+    }
+    p {
+        max-width: 400px;
+        line-height: 1.4em;
     }
 }

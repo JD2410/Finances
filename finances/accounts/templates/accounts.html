@@ -28,86 +28,84 @@
             <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
         </div>
         {% if accounts %}
-        <div class="cards">
-            {% if account_highlights %}
-                {% for account in account_highlights.records %}
-                    <div class="card">
-                        <div class="title">{{account.name}}</div>
-                        <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
-                        <a href="{% url 'accounts' %}{{account.id}}" class="small-button hollow">See More</a>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-        <div class="content--main">
-            <div class="main--container">
-                <div class="container--header">
-                    {% if search_param %}
-                        <h2>Transactions named <i>'{{ search_param }}'</i></h2>
-                    {% else %}
-                        <h2>All Transactions</h2>
-                    {% endif %}
-                    <form action="" method="get" class="search-form">
-                        {% if search_param != None %}
-                            <input type="text" name="q" placeholder="Search" value="{{ search_param }}">
-                        {% else %}
-                            <input type="text" name="q" placeholder="Search">
-                        {% endif %}
-                        <div class="actions">
-                            <button type="button" id="resetSearchForm" class="small-button" >Reset</button>
-                            <input type="submit" value="Search" class="small-button primary">
-                        </div>
-                    </form>
-                    <div class="header-actions">
-                        <button class='open-modal button' data-modal="createTransaction">Add</button>
-                        <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
-                    </div>
-                </div>
-                {% if search_param %}
-                <div class="mini-cards">
-                {% for account in search_param_totals.records %}
-                    {% if account.total != 0.00 %}
+            <div class="cards">
+                {% if account_highlights %}
+                    {% for account in account_highlights.records %}
                         <div class="card">
                             <div class="title">{{account.name}}</div>
-                            <div class="main">£{{ account.total|floatformat:2|intcomma }}</div>
+                            <div class="main">£{{account.total|floatformat:2|intcomma }}</div>
+                            <a href="{% url 'accounts' %}{{account.id}}" class="small-button hollow">See More</a>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="content--main">
+                <div class="main--container">
+                    <div class="container--header">
+                        {% if search_param %}
+                            <h2>Transactions named <i>'{{ search_param }}'</i></h2>
+                        {% else %}
+                            <h2>All Transactions</h2>
+                        {% endif %}
+                        <form action="" method="get" class="search-form">
+                            {% if search_param != None %}
+                                <input type="text" name="q" placeholder="Search" value="{{ search_param }}">
+                            {% else %}
+                                <input type="text" name="q" placeholder="Search">
+                            {% endif %}
+                            <div class="actions">
+                                <button type="button" id="resetSearchForm" class="small-button" >Reset</button>
+                                <input type="submit" value="Search" class="small-button primary">
+                            </div>
+                        </form>
+                        <div class="header-actions">
+                            <button class='open-modal button' data-modal="createTransaction">Add</button>
+                            <button class='open-modal button' data-modal="uploadCSV">Bulk Upload</button>
+                        </div>
+                    </div>
+                    {% if search_param %}
+                        <div class="mini-cards">
+                        {% for account in search_param_totals.records %}
+                            {% if account.total != 0.00 %}
+                                <div class="card">
+                                    <div class="title">{{account.name}}</div>
+                                    <div class="main">£{{ account.total|floatformat:2|intcomma }}</div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                         </div>
                     {% endif %}
-                {% endfor %}
-                </div>
-                {% endif %}
-                <div class="container--content">
-                    {% if records %}
-                    <table class="standard">
-                        <thead>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Created</th>
-                            <th>Account</th>
-                            <th class="right">Amount</th>
-                            <th class="right">Action</th>
-                        </thead>
-                        <tbody>
-                        {% for action in records.transactions %}
-                            <tr id="record_{{ action.id }}">
-                                <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}?q={{action.name}}">{{ action.name }}</a></td>
-                                <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
-                                <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
-                                <td class="accountId"><a href="{% url 'accounts' %}{{action.accountId.id}}" class="small-button hollow">{{ action.accountId.name }}</a></td>
-                                <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
-                                <td class="right">
-                                    <button class="button edit update-transaction" data-value="{{ action.id }}" data-id="{{action.accountId.id}}"><i class="fa-solid fa-pencil"></i></button>
-                                    <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    {% else %}
-                        <p>There are no transactions in the database</p>
-                    {% endif %}
-                </div>
-                {% if records %}
-                <div class="page_footer">
+                        <div class="container--content">
+                            {% if records %}
+                            <table class="standard">
+                                <thead>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Created</th>
+                                    <th>Account</th>
+                                    <th class="right">Amount</th>
+                                    <th class="right">Action</th>
+                                </thead>
+                                <tbody>
+                                {% for action in records.transactions %}
+                                    <tr id="record_{{ action.id }}">
+                                        <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}?q={{action.name}}">{{ action.name }}</a></td>
+                                        <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
+                                        <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
+                                        <td class="accountId"><a href="{% url 'accounts' %}{{action.accountId.id}}" class="small-button hollow">{{ action.accountId.name }}</a></td>
+                                        <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
+                                        <td class="right">
+                                            <button class="button edit update-transaction" data-value="{{ action.id }}" data-id="{{action.accountId.id}}"><i class="fa-solid fa-pencil"></i></button>
+                                            <button class="button delete delete-transaction" data-value="{{ action.id }}"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                                <p>There are no transactions in the database</p>
+                            {% endif %}
+                        </div>
                     {% if record.number_of_pages != 1 %}
                         <div class="pagination">
                         {% for i in records.number_of_pages %}
@@ -128,21 +126,18 @@
                         </div>
                     {% endif %}
                 </div>
-                {% endif %}
-
             </div>
-        </div>
         {% else %}
-        <div class="page-section centre">
-            <div class="no-data">
-                <div class="image">
-                    <i class="fa-solid fa-binoculars"></i>
+            <div class="content--main">
+                <div class="no-data">
+                    <div class="image">
+                        <i class="fa-solid fa-binoculars"></i>
+                    </div>
+                    <h4>Sorry, can't find any accounts</h4>
+                    <p>You have no accounts created. Get started by clicking the button below.</p>
+                    <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
                 </div>
-                <h4>Sorry, can't find any accounts</h4>
-                <p>You have no accounts created. Get started by clicking the button below.</p>
-                <button class='open-modal button primary' data-modal="createAccount">Create Savings Account</button>
             </div>
-        </div>
         {% endif %}
     </div>
 </div>

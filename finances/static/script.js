@@ -39,12 +39,12 @@ let app = {
             })
         },
         contentMainSidebarControls() {
-            const $collapsible = document.querySelector('.content--main').classList.contains('collapsibe')
+            const $collapsible = document.querySelector('.content--main').classList.contains('collapsible')
 
             if ($collapsible) {
                 $buttons = document.querySelectorAll('.toggle-container-sidebar')
                 if($buttons.length > 0) {
-                    $containerToggle = document.querySelector('.collapsibe')
+                    $containerToggle = document.querySelector('.collapsible')
                     $buttons.forEach(button => {
                         button.addEventListener('click', () => {
                             $containerToggle.classList.toggle('hide')
