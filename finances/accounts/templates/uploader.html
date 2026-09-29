@@ -43,7 +43,7 @@
                             <option value="{{ account.id}}" data-key="{{ account.name }}">{{ account.name }}</option>
                             {% endfor %}
                         </select>
-                        <div>
+                        <div class="checkbox">
                             <input type="checkbox" id="overwriteExisting"><label for="overwriteExisting"> Overwrite verified</label>
                         </div>
                     </div>
@@ -57,11 +57,13 @@
                     </div>
                     <div class="tool">
                         <h4>Fill Description</h4>
-                        <input type="text" value="Transaction" id="transactionDescriptionText">
-                        <div>
-                            <input type="checkbox" id="overwriteFilled"> <label for="overwriteFilled">Overwrite Filled</label>
+                        <div class="float-button">
+                            <input type="text" value="Transaction" id="transactionDescriptionText">
+                            <button id="fillAllDescriptions" class="small-button primary">Fill</button>
                         </div>
-                        <button id="fillAllDescriptions" class="button primary">Fill Empty Descriptions</button>
+                        <div class="checkbox">
+                            <input type="checkbox" id="overwriteFilled"><label for="overwriteFilled">Overwrite Filled</label>
+                        </div>
                     </div>
                 </div>
             </div>

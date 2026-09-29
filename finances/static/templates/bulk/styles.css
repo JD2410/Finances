@@ -159,7 +159,9 @@ table.standard {
     h4 {
         margin-bottom: 8px;
     }
-    
+    .tool {
+        padding: 0 2px;
+    }
     .tool:not(:first-child) {
         margin-top: 12px;
         padding-top: 12px;
@@ -178,6 +180,10 @@ table.standard {
         border: 1px solid rgb(214, 214, 214);
         min-height: 35px;
     }
+    input[type=text]:focus, select:focus {
+        outline: none;
+        box-shadow: 0 0 5px 0 purple;
+    }
 
     select {
         padding: 8px;
@@ -189,6 +195,56 @@ table.standard {
         border-color: lightgray;
         border-radius: 4px;
         margin-bottom: 10px;
+    }
+    .float-button {
+        position: relative;
+
+        input[type=text] {
+            width: 100%;
+            padding-right: 44px;
+        }
+        .small-button {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+        }
+    }
+    .checkbox {
+
+        input[type=checkbox] {
+            display: none;
+        }
+        input[type=checkbox]:checked + label::before {
+            background-color: purple;
+            outline-color: purple;
+        }
+        label {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            user-select: none;
+            cursor: pointer;
+
+            &:hover {
+                color: purple;
+
+                &:before {
+                    outline-color: purple;
+                }
+            }
+        }
+        label::before {
+            content: "";
+            display: block;
+            width: 16px;
+            height: 16px;
+            outline: 1px solid gray;
+            background: #fff;
+            border-radius: 2px;
+            border: 3px solid rgb(255, 255, 255);
+            box-sizing: border-box;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
     }
 }
 .toggle {
