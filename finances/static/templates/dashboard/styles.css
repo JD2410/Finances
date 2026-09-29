@@ -89,6 +89,7 @@ body #page .page--content {
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 1px 1px 15px 0 rgba(112, 2, 112, 0.19);
+        overflow: hidden;
 
         .header {
             display: flex;
