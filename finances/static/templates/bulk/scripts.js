@@ -516,6 +516,7 @@ const tools = {
         document.getElementById('checkExisting').addEventListener('click', () => {
             checkExisting.start()
         })
+        this.invertCreditDebit.init()
         this.updateAccountId.init()
         this.updateDescription.init()
         this.dateFormatSelection.init()
@@ -701,6 +702,47 @@ const tools = {
             }
             
         },
+    },
+    'invertCreditDebit': {
+        init() {
+            document.getElementById('toggleSign').addEventListener('click', () => {
+                this.convert()
+            })
+        },
+        convert() {
+            $getAmounts = document.querySelectorAll("[data-key='amount']")
+            $getCredits = document.querySelectorAll("[data-key='credit']")
+            $getDebits = document.querySelectorAll("[data-key='debit']")
+
+            if($getAmounts.length > 0) {
+                $getAmounts.forEach(row => {
+                    if (cu.inputTest.numberChecker(row.dataset.value) && row.dataset.value != "") {
+                        const newValue = parseFloat(row.dataset.value) * -1;
+                        row.dataset.value = newValue
+                        row.querySelector('.display-value').innerHTML = newValue
+                        row.querySelector('.edit').value = newValue
+                    }
+                })
+            }
+            if($getCredits.length > 0 && $getDebits.length > 0) {
+                $getCredits.forEach(row => {
+                    if (cu.inputTest.numberChecker(row.dataset.value) && row.dataset.value != "") {
+                        const newValue = parseFloat(row.dataset.value) * -1;
+                        row.dataset.value = newValue
+                        row.querySelector('.display-value').innerHTML = newValue
+                        row.querySelector('.edit').value = newValue
+                    }
+                })
+                $getDebits.forEach(row => {
+                    if (cu.inputTest.numberChecker(row.dataset.value) && row.dataset.value != "") {
+                        const newValue = parseFloat(row.dataset.value) * -1;
+                        row.dataset.value = newValue
+                        row.querySelector('.display-value').innerHTML = newValue
+                        row.querySelector('.edit').value = newValue
+                    }
+                })
+            }
+        }
     },
     changeDateFormat(dateString) {
         const $dateDropdown = document.getElementById('dateFormat');
