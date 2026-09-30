@@ -333,10 +333,9 @@ let cu = {
         const $date = document.querySelectorAll("[data-key='date']");
         const $accountId = document.querySelectorAll("[data-key='accountid']");
 
-
         $names.forEach((transaction, index) => {
             if ($select[index].checked) {
-                if ($amountType) {
+                if ($amountType == 'true') {
                     records.push({
                         name: transaction.dataset.value,
                         amount: parseFloat(($amount[index].dataset.value).replace(/(\d+),(\d+)[\s\S]*/g, "$1$2")),
@@ -441,7 +440,7 @@ const checkExisting = {
             if(!row.classList.contains('deselect')) {
                 let amount = null
 
-                if (!$amountType) {
+                if ($amountType == "false") {
                     const debit = row.querySelector("[data-key='debit']").dataset.value
                     const credit = row.querySelector("[data-key='credit']").dataset.value
                     if (debit != "") {

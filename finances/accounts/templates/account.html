@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{% static 'modal/styles.css' %}?{% now "U" %}">
     <script src="{% static 'modal/scripts.js' %}?{% now "U" %}"></script>
 
-    <link rel="stylesheet" href="{% static 'templates/accounts/styles.css' %}?{% now "U" %}">
     <script src="{% static 'templates/accounts/account.js' %}?{% now "U" %}"></script>
     <script src="{% static 'templates/accounts/scripts.js' %}?{% now "U" %}"></script>
 
@@ -22,7 +21,7 @@
 
 </head>
 <body>
-{% include "errors.html" %}
+
 <div id="page">
     {% include "navigation.html" with page='accounts' %}
     <div class="page--content">
@@ -169,7 +168,6 @@
         {% endif %}
     </div>
 </div>
-
 <div class="modal" id="updateTransaction" >
     <form action="" method="post" class="modal-container">
         <div class="header">
@@ -261,5 +259,6 @@
         </div>
     </form>
 </div>
+{% include "errors.html" %}
 </body>
 </html>

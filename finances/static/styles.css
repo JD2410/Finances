@@ -691,3 +691,42 @@ table.standard {
         line-height: 1.4em;
     }
 }
+#messagesContainer {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .alert {
+        color: purple;
+        background-color: rgba(237, 211, 237, 1);
+        max-width: 300px;
+        border: 2px solid rgba(128, 0, 128, 0.26);
+        padding: 12px;
+        border-radius: 4px;
+        box-shadow: 0 0 7px 0 rgba(128, 0, 128, 0.33);
+
+        ul {
+            padding-left: 20px;
+        }
+
+        &.alert-warning {
+            background-color: rgba(255, 179, 179, 1);
+            border-color: rgba(255, 0, 0, 0.4);
+            box-shadow: 0 0 7px 0 rgba(255, 0, 0, 0.44);
+            color: red;
+        }
+        &.alert-success {
+            background-color: rgba(192, 228, 192, 1);
+            border-color: rgba(0, 128, 0, 0.5);
+            box-shadow: 0 0 7px 0 rgba(0, 128, 0, 0.54);
+            color: green;
+        }
+
+        &.clear {
+            display: none;
+        }
+    }
+}
