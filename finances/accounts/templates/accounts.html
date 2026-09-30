@@ -89,7 +89,7 @@
                                 {% for action in records.transactions %}
                                     <tr id="record_{{ action.id }}">
                                         <td class="name" data-value="{{ action.name }}"><a href="{% url 'accounts' %}?q={{action.name}}">{{ action.name }}</a></td>
-                                        <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y" }}</td>
+                                        <td class="date" data-value="{{ action.date|date:"Y-m-d" }}">{{ action.date|date:"jS M Y (D)" }}</td>
                                         <td class="created-date">{{ action.created_at|date:"jS M Y" }}</td>
                                         <td class="accountId"><a href="{% url 'accounts' %}{{action.accountId.id}}" class="small-button hollow">{{ action.accountId.name }}</a></td>
                                         <td class="right amount" data-value="{{ action.amount }}">£{{ action.amount|floatformat:2|intcomma }}</td>
