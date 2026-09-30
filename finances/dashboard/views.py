@@ -4,6 +4,7 @@ import json
 from django.shortcuts import render
 from django.contrib import messages
 from accounts.models import Transactions, Accounts
+from account_types.models import Type
 from django.db.models import Sum
 from decimal import Decimal
 
@@ -92,9 +93,14 @@ def get_progress_chart(date=None):
                     'daily_totals': daily_totals
                 })
 
+    account_type = None
+    if len(account_list) == 0:
+        account_type = Type.objects.count()
+
     return {
         'savings': accounts,
-        'total': total
+        'total': total,
+        'account_type': account_type
     }
 
 

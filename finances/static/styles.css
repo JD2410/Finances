@@ -658,11 +658,14 @@ table.standard {
 
     h4 {
         font-size: 1.2rem;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
+        max-width: 300px;
+        text-align: center;
     }
     p {
         font-size: 0.9rem;
         margin-bottom: 16px;
+        max-width: 400px;
     }
     .button {
         font-size: 1rem;

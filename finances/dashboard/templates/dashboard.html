@@ -24,6 +24,7 @@
             <h1>Dashboard</h1>
         </div>
         <div class="content--home">
+            {% if savings|length > 0 %}
             <div class="cards">
                 <div class="card">
                     <div class="title">Total Savings</div>
@@ -144,6 +145,27 @@
                     {% endif %}
                 </div>
             </div>
+            {% else %}
+            <div class="content--main">
+                <div class="no-data">
+                    {% if account_type > 0 %}
+                    <div class="image">
+                        <i class="fa-solid fa-binoculars"></i>
+                    </div>
+                    <h4>Sorry, can't find any accounts</h4>
+                    <p>You have no accounts created. Get started by clicking the button below.</p>
+                    <a href="{% url 'accounts' %}" class='button primary'>Create Savings Account</a>
+                    {% else %}
+                    <div class="image">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <h4>Hello and welcome to Running Finances Dashboard</h4>
+                    <p>Before you begin, there's a little bit of setup needed. To start we need to create some account types. This tells us how to handle your different accounts. To begin, click the button below.</p>
+                    <a href="{% url 'account_type' %}" class='button primary'>Account Types</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div> 
 </div>
